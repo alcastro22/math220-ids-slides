@@ -1,0 +1,50 @@
+---
+title: "Intro to Data Activity"
+author: "Your name here"
+date: "date"
+output: html_document
+---
+
+```{r message=FALSE}
+library(dplyr)
+library(fivethirtyeight)
+library(tidyverse)
+data(candy_rankings)
+
+```
+
+
+Answer the following questions about the `candy_rankings` data frame using functions for data frames when appropriate. Submit html file to corresponding Canvas assignment. 
+
+1. Use the help feature to find more information about the variables in the data set. Display the first few rows of the data set. 
+```{r}
+?candy_rankings
+head(candy_rankings)
+```
+
+
+2. What does the variable "pluribus" describe? 
+
+Describes whether a candy comes in a bag or a box. 
+
+
+3. How many observations are there in this data set?
+```{r}
+nrow(candy_rankings)
+glimpse(candy_rankings)
+```
+
+
+4. How many variables are there in this data set? Name 3 of them.
+```{r}
+ncol(candy_rankings)
+glimpse(candy_rankings)
+
+```
+
+Three of the variables are: chololate, fruity, and caramel.
+
+5. How many rows and columns does the data set have?
+
+There are 85 rows and 13 columns.
+

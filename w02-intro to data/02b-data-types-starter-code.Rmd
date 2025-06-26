@@ -1,0 +1,85 @@
+---
+title: "Data Types Notes"
+author: "your name here"
+date: "date here"
+output: html_document
+---
+
+
+```{r, message=FALSE}
+library(fivethirtyeight)
+library(openintro)
+library(tidyverse)
+library(titanic)
+```
+
+# Variables
+
+______________: Characteristics of the individuals within the population.                                            
+
+Variables can be classified into two groups: categorical or numeric.
+
+
+
+* ______________ (qualitative) variables allows for individuals to be classified based on some attribute or characteristic.
+
+
+
+* ______________ (quantitative) variables provides numerical measures of individuals.
+
+
+
+### Categorical Variables
+
+Categorical variables can be further classified as either nominal or ordinal.                                           
+
+* ___________ variables have categories that do not follow a natural order. 
+
+
+* ___________ variables have categories that have a natural order. 
+    
+
+
+
+### Numerical Variables
+
+Numerical variables can be further classified as either continuous or discrete.                                           
+
+* ____________ variables are not countable and have an infinite number of possible values. Any decimal value make sense. Continuous variables can be measured to a certain precision, e.g. days, hours, minutes, seconds, ... 
+    
+
+
+* ____________ variables have a finite or countable number of possible values. 
+
+
+
+
+### Data Types
+
+___________ (`chr`): takes string values (e.g. a person's name, address)
+
+___________ (`int`): integer (single precision)  
+
+___________ (`dbl`): floating decimal (double precision)   
+
+___________ (`num`): integer or double  
+
+___________ (`fct`): categorical variables with different levels  
+
+___________ (`lgl`): TRUE (1), FALSE (0)  
+
+---
+
+## Data Types Activity
+
+Download the "02b-data-types-activity.rmd" file from the Canvas activity, and answer the following questions using the `titanic_train` data frame.
+
+1. How many observations are there in this data set?
+
+2. How many variables are there in this data set?
+
+3. Which variables are considered categorical? 
+
+4. Which variables are considered numeric?
+
+5. Determine if the type of data for each variable was read correctly by R, if not then specify the most appropriate type of variable that it should be. Use the help feature to find more information about the variables if needed. 

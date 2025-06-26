@@ -1,0 +1,82 @@
+---
+title: "Intro to Data Notes"
+author: "Your name here"
+date: "date"
+output: html_document
+---
+
+```{r message=FALSE}
+library(dplyr)
+library(fivethirtyeight)
+data(bad_drivers)
+data(candy_rankings)
+data(bob_ross)
+```
+
+The data frames are in the package "fivethirtyeight". 
+
+In this file, you will take notes. Fill in the blanks and code as we go through the slides. I have included r chunks, but you may add more r chunks as you need them. Include any notes that will help you remember the code or concept. Make sure to Knit the document every so often to make sure that the code is running ok. 
+
+## Terminology
+- _____________: The entire group to be studied.
+- _____________: Subset of the population that is being studied.
+- _____________: Person or object that is a member of the population being studied.
+- _____________: A numerical summary of a population.
+- _____________: A numerical summary of a sample.
+- _____________: The characteristic of the individual.
+- _____________: Describing the data we have at hand using numerical summaries and graphs. 
+- _____________: Using results from sample data to make conclusions about the population and reporting the reliability of the result. 
+
+
+
+## Functions for data frames
+
+Getting to know the dataset.
+
+`head()`: Shows the first few rows of the data frame.
+```{r}
+
+```
+
+
+`tail()`: Shows the last few rows of the data frame. 
+
+```{r}
+
+```
+
+
+`glimpse()`: Displays the number of rows (observations or cases) and columns (variables) along with the list of variables and the first few data values of those variables.
+
+```{r}
+
+```
+
+
+`ncol()`: Shows the number of columns of the data frame. 
+```{r}
+
+```
+
+
+`nrow()`: Shows the number of rows of the data frame.
+
+```{r}
+
+```
+
+
+### Into to Data Activity
+
+Download the "02a-intro-to-data-activity.rmd" file from the Canvas activity, and answer the following questions about the `candy_rankings` data frame using functions for data frames when appropriate.
+
+1. Use the help feature to find more information about the variables in the data set. Display the first few rows of the data set.  
+
+2. What does the variable "pluribus" describe? 
+
+3. How many observations are there in this data set?
+
+4. How many variables are there in this data set? Name 3 of them. 
+
+5. How many rows and columns does the data set have?
+

@@ -1,0 +1,214 @@
+---
+title: "Introduction to Data"
+author: "Dr. Mine Dogucu, UCI"
+coauthor: "Alma Castro, Cypress College"
+output: 
+  xaringan::moon_reader:
+    css: slide-style.css
+    seal: false
+    nature:
+      ratio: 16:9
+      highlightStyle: "pygments"
+      highlightLines: true
+      highlightLanguage: "r"
+---
+
+class: title-slide
+
+```{r child = "../setup.Rmd"}
+```
+
+<br>
+<br>
+.right-panel[ 
+
+# `r rmarkdown::metadata$title`
+## `r rmarkdown::metadata$author`
+## `r rmarkdown::metadata$coauthor`
+]
+
+```{r echo = FALSE, message=FALSE}
+
+library(magrittr)
+library(dplyr)
+library(fivethirtyeight)
+```
+
+
+---
+class: middle
+
+## Terminology
+
+- __Population__: The entire group to be studied.
+- __Sample__: Subset of the population that is being studied.
+- __Individual__ or __case__: Person or object that is a member of the population being studied.
+- __Parameter__: A numerical summary of a population.
+- __Statistic__: A numerical summary of a sample.
+- __Variable__: The characteristic of the individual.
+- __Descriptive statistics__: Describing the data we have at hand using numerical summaries and graphs. 
+- __Inferential statistics__: Using results from sample data to make conclusions about the population and reporting the reliability of the result. 
+
+---
+
+class: middle
+
+
+## Data Frames 
+
+```{r echo = FALSE, message=FALSE}
+
+data(bad_drivers)
+candy_rankings <- candy_rankings %>% 
+  select(competitorname, chocolate, fruity, sugarpercent, pricepercent, winpercent)
+```
+
+[Dear Mona, Which State Has the Worst Drivers?](https://fivethirtyeight.com/features/which-state-has-the-worst-drivers/)
+
+---
+
+## Data Frame `bad_driver`  
+
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('img/data-matrix.png')
+knitr::include_graphics('img/data-matrix-tail.png')
+```
+
+---
+
+## Data Frame `bad_driver`  
+
+- The data frame has 8 __variables__ (`state`, `num_drivers`, `perc_speeding`, `perc_not_distracted`, `perc_no_previous`, `insurance_premiums`, `losses`). 
+
+- The data frame has 51 __cases__. Each case represents a US state (or District of Columbia). 
+
+---
+
+class: center
+
+## Description of dataset and its variables
+### 1. As an html
+```{r message = FALSE}
+?bad_drivers
+```
+
+```{r echo=FALSE, out.width='40%'}
+knitr::include_graphics('img/help-data-info.png')
+
+```
+
+---
+
+class: center
+## Description of dataset and its variables
+### 2. In the "Help" tab
+```{r echo=FALSE, out.width='60%'}
+knitr::include_graphics('img/help-data-info2.png')
+
+```
+
+---
+
+class: inverse center middle
+
+.font100[Functions for data frames]
+
+Getting to know the dataset
+
+---
+
+`head()`: Shows the first few rows of the data frame.
+
+```{r}
+head(bad_drivers)
+```
+
+
+---
+
+`tail()`: Shows the last few rows of the data frame. 
+
+```{r}
+tail(bad_drivers)
+```
+
+
+---
+
+`glimpse()`: Displays the number of rows (observations or cases) and columns (variables) along with the list of variables and the first few data values of those variables.
+
+```{r}
+glimpse(bad_drivers)
+```
+
+---
+
+`ncol()`: Shows the number of columns of the data frame. 
+
+```{r}
+ncol(bad_drivers)
+```
+--
+
+`nrow()`: Shows the number of rows of the data frame. 
+
+```{r}
+nrow(bad_drivers)
+```
+
+---
+
+class: center
+
+## Getting to Know the Data Frame in Action
+
+<video width="80%" height="45%%" align = "center" controls>
+  <source src="screencast/01i-data-interface.mp4" type="video/mp4">
+</video>
+
+---
+
+class: center middle
+
+## Bob Ross
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zIbR5TAz2xQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+
+```{r}
+glimpse(bob_ross)
+```
+
+---
+
+```{r}
+glimpse(candy_rankings)
+```
+
+---
+
+class: center middle 
+
+
+##`candy_rankings` vs `bob_ross`
+
+False - 0  
+True - 1
+
+---
+
+class: middle 
+
+## Intro to Data Activity
+
+Download the "02a-intro-to-data-activity.rmd" file from the Canvas activity, and answer the following questions about the `candy_rankings` data frame using functions for data frames when appropriate.
+
+1. Use the help feature to find more information about the variables in the data set. And display the first few rows of the data set.  
+2. What does the variable "pluribus" describe? 
+3. How many observations are there in this data set?
+4. How many variables are there in this data set? Name 3 of them. 
+5. How many rows and columns does the data set have?
+
+
+
