@@ -1,0 +1,127 @@
+---
+title: "hello woRld"
+author: "Alma Castro"
+output: 
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "slide-style.css"
+    seal: false
+    nature:
+      ratio: 16:9
+      highlightStyle: "pygments"
+      highlightLines: true
+      highlightLanguage: "r"
+---
+
+class: title-slide
+
+<br>
+<br>
+.right-panel[ 
+
+# `r rmarkdown::metadata$title`
+## `r rmarkdown::metadata$author`
+### ``
+]
+
+---
+
+class: middle center
+
+
+
+```{r echo=FALSE, fig.align='center', out.width="25%"}
+knitr::include_graphics("img/nsf-logo.png")
+```
+
+This class was created as part of the NSF HDR DSC grant awards #2123366 #2123380 and #2123384
+
+University California Irvine, California State University Fullerton, and Cypress College collaboration
+
+---
+
+class: middle
+
+## About Me
+
+- Assistant Professor at Cypress College
+- Associates in Liberal Studies from Bakersfield College
+- Bachelor's in Applied Mathematics from CSU Bakersfield
+- Masters in Pure Mathematics from CSU Long Beach
+- I started at Cypress College in Fall 2016
+- I teach Math 120 Intro to Statistics
+- Coordinator of Math 120
+- Coordinator of the SoCal Data Science Program
+
+---
+
+class: center middle
+
+#Math 220: Intro to Data Science
+##Introduction to the Course
+
+
+---
+
+class: middle
+
+## Course Description
+
+This course introduces the foundations of data science. Topics include data collection, data wrangling, exploratory analysis and visualization, introduction to statistical modeling, prediction and classification, and model outcome interpretations. Applications include real data from a wide-range of fields following reproducible practices. Applications to business, biological sciences, and social sciences are emphasized. Students will use computer software, RStudio, for statistical analysis of various topics.
+
+--
+
+### COURSE STUDENTS LEARNING OUTCOMES
+1. The student will be able to read and extract information from a given data set, and explore the data using numerical summaries and visualizations, while writing clean code using R.
+2. The student will be able to make predictions and conclusions using models, and consider the ethics and impact of decisions resulted from data analysis, while writing clean code using R.
+
+
+---
+
+class: middle
+
+**What is Data Science?**
+
+Data science is an interdisciplinary field that uses scientific methods, processes, algorithms and systems to extract knowledge and insights from noisy, structured and unstructured data, and apply knowledge and actionable insights from data across a broad range of application domains. Wikipedia
+
+--
+
+**What types of data will we use in this course?** 
+
+We will use a variety of datasets from biological studies to business, answering questions serving different purposes. Data will come in different sizes, shapes, and forms and will include numbers, categories, text etc.
+
+---
+class: middle
+
+##  Data Science Cycle
+
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('img/data-cycle.png')
+```
+
+.footnote[Image from Grolemund, G., & Wickham, H. (2018). R for data science (CC BY-NC-ND 3.0).]
+
+---
+
+class: middle
+
+**Is this a statistics course or a computing course?**
+
+A little bit of both. 
+
+--
+
+**Do I need prior programming/statistics experience?**
+
+No
+
+---
+class: middle
+
+**In this class, please do**
+
+- Ask questions 
+- Ask for help
+- Help each other
+
+
