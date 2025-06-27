@@ -80,7 +80,7 @@ R Markdown is a type of file format designed to produce documents that include b
 ---
 
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('img/icons.png')
+knitr::include_graphics('img/icons.PNG')
 ```
 
 
@@ -103,7 +103,7 @@ class: center middle
 File > New File > R Markdown
 
 ```{r echo=FALSE, out.width='40%'}
-knitr::include_graphics('img/new-rmarkdown.png')
+knitr::include_graphics('img/new-rmarkdown.PNG')
 ```
 
 
@@ -111,7 +111,7 @@ knitr::include_graphics('img/new-rmarkdown.png')
 
 ### Source Code
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('img/rmd-parts.png')
+knitr::include_graphics('img/rmd-parts.PNG')
 ```
 
 ---
@@ -171,7 +171,7 @@ class: center middle
 .pull-right[__html file__]
 
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('img/rmd-parts-doc.png')
+knitr::include_graphics('img/rmd-parts-doc.PNG')
 ```
 
 ---
