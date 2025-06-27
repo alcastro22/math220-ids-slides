@@ -39,7 +39,7 @@ class: middle
 #  Why R?
 
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('img/what-is-r.png')
+knitr::include_graphics('img/what-is-r.PNG')
 ```
 
 .footnote[Image from Jessica Jaynes, Teaching with R.]
