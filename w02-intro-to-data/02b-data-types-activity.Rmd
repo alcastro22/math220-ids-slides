@@ -1,0 +1,45 @@
+---
+title: "Data Types Activity"
+author: "your name here"
+date: "date here"
+output: html_document
+---
+
+
+```{r, message=FALSE}
+library(tidyverse)
+library(titanic)
+```
+
+
+Answer the following questions using the `titanic_train` data frame. Submit html file to corresponding Canvas assignment.
+
+1. How many observations are there in this data set?
+```{r}
+
+```
+
+
+2. How many variables are there in this data set?
+```{r}
+
+```
+
+
+3. Which variables are considered categorical? 
+```{r}
+
+```
+
+
+4. Which variables are considered numeric?
+```{r}
+
+```
+
+
+5. Determine if the type of data for each variable was read correctly by R, if not then specify the most appropriate type of variable that it should be. Use the help feature to find more information about the variables if needed. 
+```{r}
+
+```
+
