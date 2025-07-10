@@ -70,8 +70,8 @@ candy_rankings <- candy_rankings %>%
 ## Data Frame `bad_driver`  
 
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('img/data-matrix.PNG')
-knitr::include_graphics('img/data-matrix-tail.PNG')
+knitr::include_graphics('img/data-matrix.png')
+knitr::include_graphics('img/data-matrix-tail.png')
 ```
 
 ---
