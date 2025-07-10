@@ -35,7 +35,7 @@ Getting to know the dataset.
 
 `head()`: Shows the first few rows of the data frame.
 ```{r}
-
+head(candy_rankings)
 ```
 
 
