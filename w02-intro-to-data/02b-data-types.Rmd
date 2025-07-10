@@ -47,7 +47,7 @@ Variables can be classified into two groups: categorical or numeric.
 
 ```{r echo = FALSE, fig.align='center', out.width='50%'}
 
-knitr::include_graphics("img/diagram_small.PNG") 
+knitr::include_graphics("img/diagram_small.png") 
 ```
 
 ---
@@ -83,7 +83,7 @@ Not everything represented by numbers represents a numeric quantity. e.g. studen
 ### candy_rankings
 
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('img/data-candy.PNG')
+knitr::include_graphics('img/data-candy.png')
 ```
 
 --
@@ -116,7 +116,7 @@ Categorical variables can be further classified as either nominal or ordinal.
 
 ```{r echo = FALSE, fig.align='center'}
 
-knitr::include_graphics("img/diagram-cat.PNG") 
+knitr::include_graphics("img/diagram-cat.png") 
 ```
 
 ---
@@ -137,7 +137,7 @@ Numerical variables can be further classified as either continuous or discrete.
 
 ```{r echo = FALSE, fig.align='center'}
 
-knitr::include_graphics("img/diagram-num.PNG") 
+knitr::include_graphics("img/diagram-num.png") 
 ```
 
 
