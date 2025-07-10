@@ -387,18 +387,6 @@ about the population and reporting the reliability of the result.</li>
 <h2>Functions for data frames</h2>
 <p>Getting to know the dataset.</p>
 <p><code>head()</code>: Shows the first few rows of the data frame.</p>
-<pre class="r"><code>head(candy_rankings)</code></pre>
-<pre><code>## # A tibble: 6 × 13
-##   competitorname chocolate fruity caramel peanutyalmondy nougat crispedricewafer
-##   &lt;chr&gt;          &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt;   &lt;lgl&gt;          &lt;lgl&gt;  &lt;lgl&gt;           
-## 1 100 Grand      TRUE      FALSE  TRUE    FALSE          FALSE  TRUE            
-## 2 3 Musketeers   TRUE      FALSE  FALSE   FALSE          TRUE   FALSE           
-## 3 One dime       FALSE     FALSE  FALSE   FALSE          FALSE  FALSE           
-## 4 One quarter    FALSE     FALSE  FALSE   FALSE          FALSE  FALSE           
-## 5 Air Heads      FALSE     TRUE   FALSE   FALSE          FALSE  FALSE           
-## 6 Almond Joy     TRUE      FALSE  FALSE   TRUE           FALSE  FALSE           
-## # ℹ 6 more variables: hard &lt;lgl&gt;, bar &lt;lgl&gt;, pluribus &lt;lgl&gt;,
-## #   sugarpercent &lt;dbl&gt;, pricepercent &lt;dbl&gt;, winpercent &lt;dbl&gt;</code></pre>
 <p><code>tail()</code>: Shows the last few rows of the data frame.</p>
 <p><code>glimpse()</code>: Displays the number of rows (observations or
 cases) and columns (variables) along with the list of variables and the
