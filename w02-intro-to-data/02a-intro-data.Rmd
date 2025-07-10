@@ -70,8 +70,8 @@ candy_rankings <- candy_rankings %>%
 ## Data Frame `bad_driver`  
 
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('img/data-matrix.png')
-knitr::include_graphics('img/data-matrix-tail.png')
+knitr::include_graphics('img/data-matrix.PNG')
+knitr::include_graphics('img/data-matrix-tail.PNG')
 ```
 
 ---
@@ -93,7 +93,7 @@ class: center
 ```
 
 ```{r echo=FALSE, out.width='40%'}
-knitr::include_graphics('img/help-data-info.png')
+knitr::include_graphics('img/help-data-info.PNG')
 
 ```
 
@@ -103,7 +103,7 @@ class: center
 ## Description of dataset and its variables
 ### 2. In the "Help" tab
 ```{r echo=FALSE, out.width='60%'}
-knitr::include_graphics('img/help-data-info2.png')
+knitr::include_graphics('img/help-data-info2.PNG')
 
 ```
 
