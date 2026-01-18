@@ -1,7 +1,6 @@
 ---
 title: "Intro to RStudio"
-author: "Dr Mine Dogucu, UCI"
-coauthor: "Alma Castro, Cypress College"
+author: "Alma Castro, Cypress College"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -47,12 +46,10 @@ knitr::include_graphics('img/what-is-r.PNG')
 ---
 ## Resources
 
-- Setting Up R on your Computer: https://learnr-examples.shinyapps.io/ex-setup-r/#section-install-r
 - Cheat sheets: https://www.rstudio.com/resources/cheatsheets/
 - Data Camp Introduction to R: https://www.datacamp.com/courses/free-introduction-to-r
-- RStudio Education: https://education.rstudio.com/
 - RStudio Education Beginners: https://education.rstudio.com/learn/beginner/
-- RStudio Education Data Science Bootcamp for High School Students: https://education.rstudio.com/blog/2020/06/summer-camp-hs/
+
 
 
 ---
@@ -148,7 +145,7 @@ class: middle
 
 ```{r error=TRUE}
 
-my_age <- 2024 - birth_year
+my_age <- 2026 - birth_year
 
 My_age
 ```
