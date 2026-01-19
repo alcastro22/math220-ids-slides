@@ -1,7 +1,6 @@
 ---
 title: "Introduction to Data"
-author: "Dr. Mine Dogucu, UCI"
-coauthor: "Alma Castro, Cypress College"
+author: "Alma Castro, Cypress College"
 output: 
   xaringan::moon_reader:
     css: slide-style.css
@@ -24,14 +23,17 @@ class: title-slide
 
 # `r rmarkdown::metadata$title`
 ## `r rmarkdown::metadata$author`
-## `r rmarkdown::metadata$coauthor`
+
 ]
 
-```{r echo = FALSE, message=FALSE}
+```{r echo = FALSE, message=FALSE, warning = FALSE}
 
 library(magrittr)
 library(dplyr)
-library(fivethirtyeight)
+
+data(candy_rankings)
+data(bob_ross)
+
 ```
 
 
@@ -56,11 +58,12 @@ class: middle
 
 ## Data Frames 
 
-```{r echo = FALSE, message=FALSE}
+We will look at the `bad_drivers` dataset from the **fivethirtyeight** package.
 
+```{r message = FALSE, warning = FALSE}
+library(fivethirtyeight)
 data(bad_drivers)
-candy_rankings <- candy_rankings %>% 
-  select(competitorname, chocolate, fruity, sugarpercent, pricepercent, winpercent)
+
 ```
 
 [Dear Mona, Which State Has the Worst Drivers?](https://fivethirtyeight.com/features/which-state-has-the-worst-drivers/)
@@ -76,7 +79,7 @@ knitr::include_graphics('img/data-matrix-tail.png')
 
 ---
 
-## Data Frame `bad_driver`  
+## Data Frame `bad_drivers`  
 
 - The data frame has 8 __variables__ (`state`, `num_drivers`, `perc_speeding`, `perc_not_distracted`, `perc_no_previous`, `insurance_premiums`, `losses`). 
 
@@ -111,7 +114,7 @@ knitr::include_graphics('img/help-data-info2.PNG')
 
 class: inverse center middle
 
-.font100[Functions for data frames]
+.font100[Functions for Data Frames]
 
 Getting to know the dataset
 

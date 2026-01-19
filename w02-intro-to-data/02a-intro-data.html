@@ -3,7 +3,7 @@
   <head>
     <title>Introduction to Data</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Dr. Mine Dogucu, UCI" />
+    <meta name="author" content="Alma Castro, Cypress College" />
     <script src="02a-intro-data_files/header-attrs-2.29/header-attrs.js"></script>
     <link rel="stylesheet" href="slide-style.css" type="text/css" />
   </head>
@@ -22,8 +22,8 @@ class: title-slide
 .right-panel[ 
 
 # Introduction to Data
-## Dr. Mine Dogucu, UCI
 ## Alma Castro, Cypress College
+
 ]
 
 
@@ -50,7 +50,13 @@ class: middle
 
 ## Data Frames 
 
+We will look at the `bad_drivers` dataset from the **fivethirtyeight** package.
 
+
+``` r
+library(fivethirtyeight)
+data(bad_drivers)
+```
 
 [Dear Mona, Which State Has the Worst Drivers?](https://fivethirtyeight.com/features/which-state-has-the-worst-drivers/)
 
@@ -62,7 +68,7 @@ class: middle
 
 ---
 
-## Data Frame `bad_driver`  
+## Data Frame `bad_drivers`  
 
 - The data frame has 8 __variables__ (`state`, `num_drivers`, `perc_speeding`, `perc_not_distracted`, `perc_no_previous`, `insurance_premiums`, `losses`). 
 
@@ -92,7 +98,7 @@ class: center
 
 class: inverse center middle
 
-.font100[Functions for data frames]
+.font100[Functions for Data Frames]
 
 Getting to know the dataset
 
@@ -301,13 +307,20 @@ glimpse(candy_rankings)
 
 ```
 ## Rows: 85
-## Columns: 6
-## $ competitorname &lt;chr&gt; "100 Grand", "3 Musketeers", "One dime", "One quarter",…
-## $ chocolate      &lt;lgl&gt; TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, FAL…
-## $ fruity         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, …
-## $ sugarpercent   &lt;dbl&gt; 0.732, 0.604, 0.011, 0.011, 0.906, 0.465, 0.604, 0.313,…
-## $ pricepercent   &lt;dbl&gt; 0.860, 0.511, 0.116, 0.511, 0.511, 0.767, 0.767, 0.511,…
-## $ winpercent     &lt;dbl&gt; 66.97173, 67.60294, 32.26109, 46.11650, 52.34146, 50.34…
+## Columns: 13
+## $ competitorname   &lt;chr&gt; "100 Grand", "3 Musketeers", "One dime", "One quarter…
+## $ chocolate        &lt;lgl&gt; TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, F…
+## $ fruity           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE…
+## $ caramel          &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,…
+## $ peanutyalmondy   &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, …
+## $ nougat           &lt;lgl&gt; FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,…
+## $ crispedricewafer &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE…
+## $ hard             &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALS…
+## $ bar              &lt;lgl&gt; TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, F…
+## $ pluribus         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE…
+## $ sugarpercent     &lt;dbl&gt; 0.732, 0.604, 0.011, 0.011, 0.906, 0.465, 0.604, 0.31…
+## $ pricepercent     &lt;dbl&gt; 0.860, 0.511, 0.116, 0.511, 0.511, 0.767, 0.767, 0.51…
+## $ winpercent       &lt;dbl&gt; 66.97173, 67.60294, 32.26109, 46.11650, 52.34146, 50.…
 ```
 
 ---
@@ -340,10 +353,10 @@ Download the "02a-intro-to-data-activity.rmd" file from the Canvas activity, and
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightStyle": "pygments",
-"highlightLines": true,
-"highlightLanguage": "r"
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
