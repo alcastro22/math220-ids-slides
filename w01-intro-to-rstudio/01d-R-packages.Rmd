@@ -1,7 +1,6 @@
 ---
 title: "R Packages"
-author: "Dr. Mine Dogucu, UCI"
-coauthor: "Alma Castro, Cypress College"
+author: "Alma Castro, Cypress College"
 output: 
   xaringan::moon_reader:
     css: ["slide-style.css"]
@@ -28,7 +27,6 @@ options(scipen = 999)
 
 # `r rmarkdown::metadata$title`
 ## `r rmarkdown::metadata$author`
-## `r rmarkdown::metadata$coauthor`
 ]
 
 
@@ -93,13 +91,6 @@ __Good part:__ There is an R package for (almost) everything, from complex stati
 
 __Bad part:__ At the beginning it can feel overwhelming. 
 
----
-
-class: middle 
-
-## R packages
-
-All this time we have actually been using R packages. 
 
 ---
 
@@ -145,7 +136,7 @@ To install a package we use the function `install.packages("package_name")`. Not
 
 The function `beep()` exists in the package named `beepr`. 
 
-In your **Console**, install the beepr package
+In your **Console**, install the beepr package.
 
 ```{r eval = FALSE}
 install.packages("beepr")
@@ -171,7 +162,7 @@ Packages Pane > Install
 knitr::include_graphics("img/rstudio-install.png")
 ```
 
-If you save your file and are using a package, RStudio will tell you that you have not installed the package.
+If you open up a file and are using a package, RStudio will tell you that you have not installed the package.
 
 ---
 
@@ -221,7 +212,7 @@ Any one around the world can create R packages.
 
 --
 
-__Good part:__ We are able to do pretty much anything R because someone from around the world has developed the package and shared it. 
+__Good part:__ We are able to do pretty much anything in R because someone from around the world has developed the package and shared it. 
 
 --
 
@@ -236,8 +227,7 @@ Good news: We have tidyverse.
 
 ## Tidyverse
 
-
->The tidyverse is an opinionated collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures. 
+The tidyverse is an opinionated collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures. 
                   tidyverse.org
 
 ---
