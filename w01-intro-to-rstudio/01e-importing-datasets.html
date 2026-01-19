@@ -38,9 +38,9 @@ class:inverse middle
 
 Set working directory first to the folder where you have the dataset saved. 
 
-- You can see your current RStudio working directory by running the function `getwd()`.
+- You can see your current RStudio working directory by running the function `getwd()` in the Console.
 
-Once you know the working directory, you can leave as is or set it to what you want it to be:
+Once you know the working directory, you can leave it as is or set it to what you want it to be:
 
 - Go to "Session", then "Set Working Directory", then "Choose Directory".
 
@@ -50,7 +50,7 @@ If this still gives you an error that it cannot find the file, then you will als
 
 ---
 
-## Importing datasers with `read.csv()` from base R
+## Importing datasets with `read.csv()` from base R
 
 The base R function `read.csv("dataset_file_name")` will import a csv file. Hence the dataset has to be saved under a .csv format. 
 
@@ -115,7 +115,7 @@ glimpse(lapd)
 
 ## Importing datasets with `read_csv()` from tidyverse
 
-A more common function when using tidyverse packages and style is `read_csv()`. However, this function does not clean the variable names. It simply adds `' '` to the names.
+A more common function when using tidyverse packages and style is `read_csv()`. However, this function does not clean the variable names either. It simply adds `' '` to the names.
 
 ---
 
@@ -222,7 +222,7 @@ glimpse(lapd)
 
 ### Using variables within the imported dataset
   
-In order to work with variables from the dataset, we must tell R what dataset the variable is from by using `dataset_name$variable`.
+In order to work with variables from the dataset, we must tell R what dataset the variable is from by using `dataset_name$variable`. The $ operator extracts the variable form the dataset. 
 
 Or we can use the code `attach(dataset_name)` to set the dataset as our working dataset and be able to use the variables without having to recall the dataset every time.  
 
@@ -243,6 +243,8 @@ mean(lapd$projected_annual_salary)
 ## [1] 98005.26
 ```
 ]
+
+--
 
 .pull-right[
 Option 2
@@ -265,10 +267,10 @@ mean(projected_annual_salary)
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightStyle": "pygments",
-"highlightLines": true,
-"highlightLanguage": "r"
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
