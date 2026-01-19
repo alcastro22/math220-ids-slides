@@ -1,7 +1,6 @@
 ---
 title: "Intro to RMarkdown"
-author: "Dr Mine Dogucu, UCI"
-coauthor: "Alma Castro, Cypress College"
+author: "Alma Castro, Cypress College"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -22,7 +21,7 @@ class: title-slide
 
 # `r rmarkdown::metadata$title`
 ## `r rmarkdown::metadata$author`
-## `r rmarkdown::metadata$coauthor`
+
 ]
 
 ---
@@ -43,7 +42,7 @@ It's a simple formatting syntax that describes how text should look on a page.
 .pull-left[
 
 ```
-_Hello world_ 
+_Hello world_
 
 __Hello world__
 
