@@ -111,13 +111,26 @@ class: inverse middle center
 class: middle 
 
 ## Arithmetic operations
+RStudio performs operations as a calculator would do. 
 
 ```{r}
-2 + 4
+2 + 10
 
-(2 + 4)/40
+2 - 10
 ```
 
+---
+
+RStudio follows the order of operations as a calculator would do too. 
+
+```{r}
+
+2 + 10/4
+
+(2 + 10)/4
+```
+
+If you want addition or subtraction to be done before any of the prior operations (mult, div, exp, ...) then you must put parenthesis around the values.
 
 ---
 
