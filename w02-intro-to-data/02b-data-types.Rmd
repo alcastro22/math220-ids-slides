@@ -1,7 +1,6 @@
 ---
 title: "Data Types"
-author: "Dr. Mine Dogucu, UCI"
-coauthor: "Alma Castro, Cypress College"
+author: "Alma Castro, Cypress College"
 output: 
   xaringan::moon_reader:
     css: slide-style.css
@@ -24,12 +23,11 @@ class: title-slide
 
 # `r rmarkdown::metadata$title`
 ## `r rmarkdown::metadata$author`
-## `r rmarkdown::metadata$coauthor`
 ]
 
 ---
 
-```{r echo = FALSE, message=FALSE}
+```{r echo = FALSE, message=FALSE, warning = FALSE}
 library(fivethirtyeight)
 library(openintro)
 library(tidyverse)
@@ -37,6 +35,13 @@ library(DiagrammeRsvg)
 library(rsvg)
 library(titanic)
 ```
+
+class: inverse center middle
+
+.font100[Variable Types in Statistics]
+
+
+---
 
 ## Variables
 
@@ -54,7 +59,7 @@ knitr::include_graphics("img/diagram_small.png")
 
 ## Categorical Variables
 
-__Categorical__ (qualitative) variables allows for individuals to be classified based on some attribute or characteristic.
+__Categorical__ (qualitative) variables often represent labels and allow for individuals to be classified based on some attribute or characteristic.
 
 * Variables such as `eye_color` (brown, blue, black, green, other), `own_car` (true, false), `class_year` (freshman, sophomore, junior, senior) are _categorical variables_. 
 
@@ -66,7 +71,7 @@ Categorical variables have __levels__ (categories). For instance `own_car` has t
 
 ## Numerical Variables
 
-__Numeric__ (quantitative) variables provides numerical measures of individuals.
+__Numerical__ (quantitative) variables represent a quantity and provide numerical measures of individuals.
 
 * Variables  such as `n_kids` (number of kids), `height`, and `course_units` are _numerical variables_. 
 
@@ -76,7 +81,12 @@ We can do certain analyses using these variables such as finding an average or t
 
 --
 
-Not everything represented by numbers represents a numeric quantity. e.g. student ID, cell phone number, zip code. 
+Not everything represented by numbers represents a numerical quantity. e.g. student ID, cell phone number, zip code. 
+
+---
+### Note 
+
+A numerical variable can be turned into a categorical variable, as we can categorize observations based on a range of values. However, a categorical variable cannot be turned into a numerical variable. Thus, it is best to collect numerical information when possible and is appropriate to do so. Consider age as an example variable. If you know that somebody is 48 years old, you can categorize them as “40-49 years old”. However, if you know that someone is “40-49 years old” then you cannot know their exact age
 
 ---
 
@@ -149,23 +159,25 @@ glimpse(candy_rankings)
 
 ---
 
-```{r}
-glimpse(mariokart)
-```
+class: inverse center middle
+
+.font100[Storage Types in R]
 
 ---
-class: middle
+
+In R, variables are stored as: 
+
 
 `character` (`chr`): takes string values (e.g. a person's name, address)  
 --
 
-`integer` (`int`): integer (single precision)  
+`integer` (`int`): integer (no decimals)  
 --
 
-`double` (`dbl`): floating decimal (double precision)   
+`double` (`dbl`): floating decimal    
 --
 
-`numeric` (`num`): integer or double  
+`numeric` (`num`): general type including integer and double  
 --
 
 `factor` (`fct`): categorical variables with different levels  
@@ -177,11 +189,17 @@ class: middle
 
 class: middle
 
-As a data scientist it is .font30[**your**] job to check the type(s) of data that you are working with. 
+As a data scientist it is **your** job to check the type(s) of data that you are working with. 
   The type of variables you have will determine the type of analysis you will do. 
+  And often times, the analysis you want to do will determine how you change or keep the storage type in R or create new variables.
 
-Do .font30[**not**]  assume you will work with clean data frames, with clean names, labels, and types. 
+Do **not** assume you will work with clean data frames, with clean names, labels, and types. 
 
+---
+
+```{r}
+glimpse(mariokart)
+```
 
 ---
 
@@ -191,7 +209,7 @@ class: inverse middle
 
   One of the first steps you'll do as a data scientist, is to determine if you have "clean" data, if you don't then it is a good idea to __tidy__ and __transform__ it to get the data in a form that is natural to work with. 
   
-- __Tidying__ data means to put your data in a way that every column is a variable and every row is an observation.
+- __Tidying__ data means to put your data in a way that every column is a variable and every row is an observation, and where variable names are all lower case and separated with an underscore. 
     
 - __Transformation__ includes narrowing in on observations of interest,  creating new variables that are functions of existing variables (like computing speed from distance and time), changing data types, and cleaning names. 
     
@@ -208,6 +226,6 @@ Download the "02b-data-types-activity.rmd" file from the Canvas activity, and an
 
 3. Which variables are considered categorical? 
 
-4. Which variables are considered numeric?
+4. Which variables are considered numerical?
 
-5. Determine if the type of data for each variable was read correctly by R, if not then specify the most appropriate type of variable that it should be. Use the help feature to find more information about the variables if needed. 
+5. Determine if each variable was stored appropriately by R. If not, then specify the most appropriate type of variable that it should be. Use the help feature to find more information about the variables if needed. 
