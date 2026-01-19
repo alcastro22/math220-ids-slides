@@ -33,7 +33,6 @@ library(openintro)
 library(tidyverse)
 library(DiagrammeRsvg)
 library(rsvg)
-library(titanic)
 ```
 
 class: inverse center middle
@@ -86,7 +85,7 @@ Not everything represented by numbers represents a numerical quantity. e.g. stud
 ---
 ### Note 
 
-A numerical variable can be turned into a categorical variable, as we can categorize observations based on a range of values. However, a categorical variable cannot be turned into a numerical variable. Thus, it is best to collect numerical information when possible and is appropriate to do so. Consider age as an example variable. If you know that somebody is 48 years old, you can categorize them as “40-49 years old”. However, if you know that someone is “40-49 years old” then you cannot know their exact age
+A numerical variable can be turned into a categorical variable, as we can categorize observations based on a range of values. However, a categorical variable cannot be turned into a numerical variable. Thus, it is best to collect numerical information when possible and is appropriate to do so. Consider age as an example variable. If you know that somebody is 48 years old, you can categorize them as “40-49 years old”. However, if you know that someone is “40-49 years old” then you cannot know their exact age.
 
 ---
 
@@ -135,13 +134,13 @@ knitr::include_graphics("img/diagram-cat.png")
 
 Numerical variables can be further classified as either continuous or discrete.                                           
 
-* _Continuous_ variables are not countable and have an infinite number of possible values. Any decimal value make sense. Continuous variables can be measured to a certain precision, e.g. days, hours, minutes, seconds, ... 
+* __Continuous__ variables are not countable and have an infinite number of possible values. Any decimal value make sense. Continuous variables can be measured to a certain precision, e.g. days, hours, minutes, seconds, ... 
     
     e.g. `weight`, `commute_time`
 
 --
 
-* _Discrete_ variables have a finite or countable number of possible values. 
+* __Discrete__ variables have a finite or countable number of possible values. 
     
     e.g. `n_kids`, `class_units`
 
@@ -200,6 +199,24 @@ Do **not** assume you will work with clean data frames, with clean names, labels
 ```{r}
 glimpse(mariokart)
 ```
+
+---
+
+Classify variables in the `mariokart` dataset. 
+
+Numerical: duration, n_bids, start_pr, ship_pr, 
+total_pr, seller_rate, wheels
+
+Categorical: id, cond, ship_sp, stock_photo, title
+
+--
+
+- character: id
+- integer: duration, n_bids, seller_rate, wheels
+- double: start_pr, ship_pr, total_pr
+- factor: cond, ship_sp, title
+- logical: stock_photo
+
 
 ---
 
