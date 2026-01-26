@@ -1,0 +1,104 @@
+---
+title: "Homework 4: Ethical Guidelines (28 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+---
+
+Read the [Ethical Guidelines for Statistical Practice](https://www.amstat.org/your-career/ethical-guidelines-for-statistical-practice). 
+
+For each section, either complete the sentence or fill in the blank. Note that your answer will be inside ** so that it is **bold** and stands out. Your knitted document should be all complete sentences. There is no code. 
+
+# Purpose of the Guidelines
+
+The ethical guidelines aim to promote accountability by informing those who rely on any aspects of **_________________**. 
+
+
+### PRINCIPLE A: Professional Integrity and Accountability
+
+The ethical statistical practitioner:
+
+Uses methodology and data that are **_______________________**, without favoritism or prejudice, and in a manner intended to produce valid, interpretable, and reproducible results.
+
+Discloses **___________________**, financial and otherwise, and manages or resolves them according to established policies, regulations, and **__________**.
+
+Acquires and maintains competence through upgrading of skills as needed to maintain a **_______________________**.
+
+
+### PRINCIPLE B: Integrity of Data and Methods
+
+The ethical statistical practitioner:
+
+Is transparent about assumptions made in the execution and interpretation of statistical practices, including **__________________**.
+
+Exercises due caution to **_______________________**, including all data that might inappropriately harm data subjects.
+
+Strives to promptly correct substantive **______** discovered after publication or implementation. 
+
+
+### PRINCIPLE C: Responsibilities to Stakeholders
+
+The ethical statistical practitioner:
+
+Regardless of personal or institutional interests or external pressures, does not use statistical practices to **_______________________**.
+
+Explains any expected adverse consequences from failing to follow through on an agreed-upon **______________________**.
+
+Protects the **__________________** accordingly. 
+
+
+### PRINCIPLE D: Responsibilities to Research Subjects, Data Subjects, or Those Directly Affected by Statistical Practices
+
+The ethical statistical practitioner:
+
+Makes informed recommendations for **___________________** to avoid the use of excessive or inadequate numbers of subjects and excessive risk to subjects.
+    
+Protects people’s privacy and the confidentiality of data concerning them, whether obtained from **_________________________**. 
+
+Knows the **_____________________** assurances and does not **_______________** legal privacy and confidentiality protections where they may not apply.
+
+
+### PRINCIPLE E: Responsibilities to Members of Multidisciplinary Teams
+
+The ethical statistical practitioner:
+
+Recognizes and respects that other professions may have different **____________**.
+
+Promotes **_________** in all statistical practices.
+
+Regardless of pressure on or within the team, does not use **___________________**.
+
+
+### PRINCIPLE F: Responsibilities to Fellow Statistical Practitioners and the Profession
+
+The ethical statistical practitioner:
+
+Helps **__________**, and does not undermine, the work of others through appropriate **________________________**.
+
+Promotes reproducibility and replication, whether results are **_________________**, by sharing data, methods, and documentation to the extent possible.
+
+Serves as an ambassador for statistical practice by promoting thoughtful choices about data acquisition, analytic procedures, and data structures among **____________________________**.
+
+
+### PRINCIPLE G: Responsibilities of Leaders, Supervisors, and Mentors in Statistical Practice
+
+Those leading, supervising, or mentoring statistical practitioners are expected to:
+
+Protect the **_____________________** who comply with these guidelines and advocate for a culture that supports ethical statistical practice.
+
+Promote a **_________________** work environment. Encourage constructive engagement to improve statistical practice.
+ 
+Communicate with relevant stakeholders regarding **_____________________**.
+
+
+### PRINCIPLE H: Responsibilities Regarding Potential Misconduct
+
+The ethical statistical practitioner:
+
+Recognizes that differences of opinion and honest error do not constitute **______________**.
+
+Insists upon a **______________________** process to adjudicate claims of misconduct. Maintains confidentiality when participating in an investigation. 
+
+Avoids and acts to discourage retaliation against or damage to the employability of those who responsibly call attention to **_______________________**.
+
+

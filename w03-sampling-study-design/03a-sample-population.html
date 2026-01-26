@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Samples and Populations</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="03a-sample-population_files/header-attrs-2.29/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# Samples and Populations
+## Alma Castro, Cypress College
+
+]
+
+---
+
+## Research Question
+
+
+Do Cypress College students who exercise regularly have higher GPA?
+
+--
+
+## Relationship Between Two Variables
+
+In research, we often want to examine the relationship between two variables.  
+
+For instance, is there an association between exercising and having a higher GPA? 
+
+
+---
+## Relationship Between Two Variables
+
+- The __response variable__ measures or records the outcome of the study. Denoted by `\(y\)`.
+- The __explanatory variable__ may potentially explain changes in the response variable. It is any factor that can influence the response variable. Denoted by `\(x\)`.
+
+Exercising may e**X**plain high GPA.
+
+---
+
+## Research Question
+
+Do Cypress College students who exercise regularly have higher GPA?
+
+--
+
+### Population
+
+Each research question aims to examine a __population__. 
+
+Population for this research question is Cypress College (CC) students.
+
+
+---
+
+class: inverse middle
+
+.font75[Types of Studies]
+
+There are various ways of collecting data from the population. 
+
+---
+
+## Observational Study
+
+In an __observational study__, data is recorded on individuals without attempting to influence the responses. 
+
+- There is no treatment/intervention.
+- Data is collected as is. 
+- No control over factors.
+- Causal relationships cannot not be made.
+
+---
+
+## Experimental Study 
+
+An __experiment__ is a controlled study. 
+
+- The researcher deliberately imposes a treatment on individuals.
+- Responses are recorded at end of experiment to determine the effect of one or more explanatory variables (factors) on a response variable (outcome).
+
+
+---
+
+## Collecting Data for Observational Studies
+
+Surveys are often used when collecting data for observational studies. 
+
+
+### Survey Example
+
+Based on our research question: Do Cypress College students who exercise regularly have higher GPA? We can ask the following questions. 
+
+- Do you exercise at least once every week?
+
+- What is your GPA?
+
+---
+
+## Sampling
+
+When it is impossible or costly to get information from all individuals of the __population__ we take a __sample__. 
+
+--
+
+Since it would be almost impossible to give the survey to ALL CC students, we can give the survey to a sample of students. 
+
+Let's say we want to select a sample of 100 students.
+
+Population: All CC students  
+Sample: 100 students who respond
+
+---
+
+## Generalizibility
+
+The goal is to have a sample that is **representative** of the population. 
+
+--
+
+Why do we care to have a sample that is **representative** of the population?
+
+--
+
+- We want the findings of studies to be **generalizable** to the population.
+
+--
+
+This could only happen if **randomness** is involved in the process of selecting the sample. 
+
+---
+
+class: inverse middle
+
+.font75[Sampling Techniques]
+
+---
+
+## Simple Random Sample
+
+We can use __simple random sampling__ to select the sample. Using simple random sampling technique any sample of size n from the population has an equal chance of being selected.
+
+--
+
+.pull-left[
+Methods: 
+- Draw names out of a hat
+- Use [table of random digits](https://www.google.com/search?q=table+of+random+digits)
+- Use software/computer program such as RStudio
+- [Random Number Generator](https://www.google.com/search?channel=cus2&amp;client=firefox-b-1-d&amp;q=random+number+generator)]
+
+.pull-right[
+&lt;img src="img/ims-srs.png" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+.footnote[Image from [Intro to Modern Statistics 1st ed](https://openintro-ims.netlify.app/) licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported United States License.]
+
+
+---
+
+### Example: Simple Random Sample
+
+The researcher can 
+- reach out to the registrar to get student emails. 
+- randomly select 100 students.
+- email them the survey.
+
+
+---
+
+### Taking random samples using R
+
+We use the function `slice_sample(dataset, n = #)` to take a random sample of size `n` rows from our `dataset`. 
+
+- The `set.seed()` function will be used prior to selecting our sample so that you generate the same sample as the instructor for checking work and grading purposes. The seed will always be given. 
+
+
+
+``` r
+set.seed(12345)
+sample_1 &lt;- slice_sample(lapd, n = 10)
+```
+
+
+- Note that your random sample would contain the `n = 10` random rows selected form the data set.
+
+---
+
+
+
+``` r
+sample_1
+```
+
+```
+## # A tibble: 10 × 35
+##    row_id            year department_title payroll_department record_number
+##    &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;                         &lt;dbl&gt;         &lt;dbl&gt;
+##  1 6-4064229894ctFu  2016 Police (LAPD)                  4301    4064229894
+##  2 6-4272129274ctFu  2016 Police (LAPD)                  4301    4272129274
+##  3 6-3339645368ctFu  2016 Police (LAPD)                  4301    3339645368
+##  4 4-626758206ctFu   2014 Police (LAPD)                  4302     626758206
+##  5 3-110937975ctFu   2013 Police (LAPD)                  4301     110937975
+##  6 4-3194772820ctFu  2014 Police (LAPD)                  4302    3194772820
+##  7 3-1819403442ctFu  2013 Police (LAPD)                  4302    1819403442
+##  8 8-1212536333ctFu  2018 Police (LAPD)                  4301    1212536333
+##  9 5-2695212039ctFu  2015 Police (LAPD)                  4302    2695212039
+## 10 3-251230709ctFu   2013 Police (LAPD)                  4301     251230709
+## # ℹ 30 more variables: job_class_title &lt;chr&gt;, employment_type &lt;chr&gt;,
+## #   hourly_or_event_rate &lt;dbl&gt;, projected_annual_salary &lt;dbl&gt;,
+## #   q1_payments &lt;dbl&gt;, q2_payments &lt;dbl&gt;, q3_payments &lt;dbl&gt;, q4_payments &lt;dbl&gt;,
+## #   payments_over_base_pay &lt;dbl&gt;, percent_over_base_pay &lt;dbl&gt;,
+## #   total_payments &lt;dbl&gt;, base_pay &lt;dbl&gt;, permanent_bonus_pay &lt;dbl&gt;,
+## #   longevity_bonus_pay &lt;dbl&gt;, temporary_bonus_pay &lt;dbl&gt;, lump_sum_pay &lt;dbl&gt;,
+## #   overtime_pay &lt;dbl&gt;, other_pay_adjustments &lt;dbl&gt;, …
+```
+
+---
+
+- You can then work with or select the variable you want.
+
+
+``` r
+sample_1$base_pay
+```
+
+```
+##  [1] 109968.81  95287.70  96138.74  67238.23 100143.37  59377.96  69039.16
+##  [8] 108169.21  63903.90 111663.74
+```
+
+``` r
+mean(sample_1$base_pay)
+```
+
+```
+## [1] 88093.08
+```
+
+
+---
+
+## Stratified Random Sample
+
+To obtain a __stratified random sample__, the population is divided into disjoint groups then obtaining a simple random sample from each group. The full sample is formed by combining the random samples. 
+
+
+&lt;img src="img/ims-stratified.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+--
+
+- The groups are divided based on a characteristic that classifies individuals based on the category they identify with. Hence individuals within each group tend to share a similar characteristic. 
+- A stratified random sample guarantees that each group is represented in the sample.
+
+.footnote[Image from [Intro to Modern Statistics 1st ed](https://openintro-ims.netlify.app/) licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported United States License.]
+
+---
+
+### Example: Stratified Sample
+
+The researcher can 
+- reach out to the registrar to get student major and emails. 
+- divide students based on their major.
+- randomly select some students from each major for a total of 100 students. 
+- email them the survey.
+
+---
+
+## Systematic Sample
+
+ A __systematic sample__ is obtained by selecting every kth individual from the population. The first individual selected corresponds to a random number between 1 and k, then selecting every kth individual after that. 
+
+--
+  
+- The researcher can decide on the K or estimate it by doing k = N/n, where N = population size and n = sample size. 
+
+---
+
+### Example: Systematic Sample
+
+The researcher can 
+- reach out to the registrar to get student emails. 
+- randomly select a number between 1 and 120 and then select every 120th student from the list. This is assuming there are 12,000 students at Cypress College, and the researcher wants a sample of 100.  
+- email them the survey.
+
+---
+
+## Cluster Sample
+
+In a __cluster sample__ the population is divided in to groups called clusters, then selecting a random sample of clusters. The sample is composed of all individuals within the selected clusters.
+
+
+&lt;img src="img/ims-cluster.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+
+--
+
+- Individuals within the clusters have different characteristics. 
+
+
+.footnote[Image from [Intro to Modern Statistics 1st ed](https://openintro-ims.netlify.app/) licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported United States License.]
+
+---
+
+### Example: Cluster Sample
+
+The researcher can 
+- reach out to the registrar to get the schedule of classes.  
+- randomly select 5 classes. 
+- visit each class and obtain the students names and emails.   
+- email the survey to all students in the 5 classes. 
+
+---
+
+## Convenience Sampling
+
+__Convenience sampling__ is one where individuals are easily obtained and not based on randomness.
+
+--
+
+This could introduce __sampling bias__, which means that information obtained from the individuals in the sample tends to favor one part of the population over another.
+
+---
+### Example: Convenience Sampling
+
+The researcher can
+- stand next to the front door of the Library/Learning Resource Center (LLRC).
+- give the survey to the first 100 CC students that go inside the LLRC.
+
+This type of sample will have sampling bias because it is possible that those that go to the LLRC
+
+- may study more and thus may have higher GPA.
+- may be more active than those who study at home.
+
+---
+
+### Example: Convenience Sampling
+
+To determine customer satisfaction at a retail store, every paying customer given a receipt is suggested to answer the survey printed in the back of their receipt and receive 10% discount on their next purchase. 
+
+ - The sample is based on self-selection. Those who want to provide opinion provide it. Not a random sample!
+
+
+&lt;img src="https://cdn.pixabay.com/photo/2017/01/13/18/56/feedback-1977986_960_720.jpg" width="30%" style="display: block; margin: auto;" /&gt;
+
+Image by &lt;a href="https://pixabay.com/users/Tumisu-148124/?utm_source=link-attribution&amp;amp;utm_medium=referral&amp;amp;utm_campaign=image&amp;amp;utm_content=1977986"&gt;Tumisu&lt;/a&gt; from &lt;a href="https://pixabay.com/?utm_source=link-attribution&amp;amp;utm_medium=referral&amp;amp;utm_campaign=image&amp;amp;utm_content=1977986"&gt;Pixabay&lt;/a&gt;
+
+---
+
+## Non-response Bias
+
+In either sampling example, it is unlikely that all students selected will respond. Assume that 86% respond. 
+
+It is possible that those 14% who did not respond
+
+- may be busy exercising and did not have the time to respond.
+- may be busy studying and did not have the time to respond. 
+
+--
+
+This kind of bias is called __non-response bias__, meaning that individuals selected to be in the sample who do not respond to the survey have different characteristics from those who do. If the non-response rate is high then it is unclear whether the results are representative of the entire population. 
+
+  Non-response can be improved through the use of callbacks/emailing repeated times or give rewards/incentives. 
+
+
+---
+
+## Response Bias
+
+__Response bias__ occurs when the responses of the individuals in the sample do not reflect their true feelings. 
+
+Reasons for response bias:
+- Interviewer error
+- Misrepresented answers
+- Words used in survey question
+- Question in the survey is very personal
+- Order of the questions
+
+---
+
+### Exploring sampling methods 
+
+For the following articles, scroll to the bottom of the report to find the survey or sampling methods. 
+
+[Social Media and Teens](https://news.gallup.com/poll/512576/teens-spend-average-hours-social-media-per-day.aspx)
+
+[Economic Well-being of U.S. Households](https://www.federalreserve.gov/publications/files/2023-report-economic-well-being-us-households-202405.pdf)
+
+[President Trump's January Approval Numbers](https://maristpoll.marist.edu/polls/the-trump-administration-january-2025/)
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

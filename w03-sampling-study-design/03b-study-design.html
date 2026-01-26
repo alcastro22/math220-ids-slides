@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Study Designs</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="03b-study-design_files/header-attrs-2.29/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# Study Designs
+## Alma Castro, Cypress College
+
+]
+
+---
+
+## Research Question
+
+
+Do Cypress College students who exercise regularly have higher GPA?
+
+--
+
+## Relationship Between Two Variables
+
+In the previous topic, we looked into how to collect samples to examine the relationship between two variables through observational studies. 
+
+However, often times we want to know if the relationship between them is causal. In other words, does one variable __causes__ the other? 
+
+With our research question, we wan to determining if exercising is the reason for higher GPA? 
+
+
+---
+
+Recall, that in an __observational study__, data is recorded on individuals without attempting to influence the responses. 
+
+- There is no treatment/intervention.
+- No attempting to influence the value either the response or explanatory variable.
+- Data is collected as is. 
+- No control over factors.
+- __Causal relationships cannot not be made.__
+
+Even if we observe that CC students who exercise regularly have higher GPA, we cannot conclude that regular exercise increases GPA.
+
+
+---
+
+.pull-left[
+&lt;img src="img/confounding.png" width="90%" /&gt;
+]
+
+--
+
+.pull-right[
+A __confounding variable__ is an explanatory variable that was not considered in the study, but that affects the value of the response variable in the study. 
+
+A confounding variable (e.g. time management skills) often times correlates with the the explanatory and the response variable.
+]
+
+---
+
+### Rephrasing the Research Question
+
+~~Do CC students who exercise regularly have higher GPA?~~
+
+Does exercising regularly increase GPA for CC students?
+
+---
+
+## Relationship Between Two Variables
+
+A relationship between two variables does not imply one causes the other. 
+
+We need rigorously designed studies to make generalizations and to establish causal relationships.
+
+---
+
+## Experimental Study 
+
+Recall, that an __experiment__ is a controlled study.
+
+- The researcher deliberately imposes a treatment on individuals.
+- Responses are recorded at end of experiment to determine the effect of one or more explanatory variables (factors) on a response variable (outcome).
+- Commonly used to establish casual relationships. 
+
+---
+
+### Terminology Related to Experiments
+
+In experiments, researchers assign cases (individuals) to treatments/interventions.
+
+- A __treatment__ is a value or combination of values of the explanatory variable(s).
+
+- A __control group__ is the set of individuals that are assigned to a fake treatment or no active treatment. It is often used as a baseline treatment that can be used to compare to other treatments.
+
+---
+
+### Terminology Related to Experiments 
+
+- A __placebo__ is a fake treatment, that looks, smells, and tastes like the real treatment. 
+  - Often treated as the baseline treatment that can be used to compare to the real treatments. 
+  - Used to determine if the response to the actual treatment is due to the actual treatment and not the subject’s apparent treatment. 
+  - If a patient shows an improvement by taking a placebo then this is called a __placebo effect__.
+
+- In __blind__ studies, individuals do not know what treatment they receive. In __double blind__ studies individuals who receive the treatment and the researcher who provides the treatment do not know the type of the treatment the individuals are getting. 
+
+---
+
+class: inverse middle
+
+.font75[Types of Experiments]
+
+---
+
+## Randomized Experiment
+
+In order to reduce biases and establish a casual link between variables, we need to randomize the design of the experiment. 
+
+In __randomized experiments__, researchers randomly assign cases to treatments/interventions. 
+
+
+---
+
+### Example 1 of Randomized Experiment
+
+Does exercising regularly increase GPA for CC students?
+
+&lt;img src="img/cc-experiment.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Image Copyright Derenik Haghverdian. Used with permission.]
+
+---
+
+### Example 2 of Randomized Experiment 
+
+__A/B testing__ is a randomized experiment that compares two versions (A and B) of a single variable. It is used to determining which variation performs better. 
+
+
+- It is commonly used on measuring online activities such as revenue per user, click through rates for online ads, number of returning users.
+
+
+&lt;img src="img/ab_testing.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Block Experiment
+
+If researchers suspect that an additional variable may influence the response variable, then they may use __blocks__ determeined by characteristics within the variable.
+
+In __block experiments__ cases are divided into groups, or blocks, prior to randomly assigned them to treatments. It is used to test hypotheses about differences between the groups.
+
+---
+
+### Example 1 of Block Experiment
+
+A doctor has developed a drug called `i.d.s.` to treat some disease. She wants to know if patients who take drug `i.d.s.` are free of the disease for at least a year. The doctor suspects that the drug may affect adults and kids differently.
+
+&lt;img src="img/blocking.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Image Copyright Federica Ricci. Used with permission.]
+
+---
+
+class: center middle
+
+Federal regulations, state laws, and school policy require review and approval before researchers may conduct research involving human subjects.
+
+[Institutional Review Board](https://research.uci.edu/compliance/human-research-protections/index.html)
+
+---
+
+## Random Sampling vs. Random Assignment
+
+- Random sampling is used to select the sample from the population randomly. Random sampling allows for findings to be generalized to the population.
+
+- Random assignment is used to put participants to treatment/intervention groups randomly in experiments. Random assignment allows us to make causal relationships.
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

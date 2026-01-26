@@ -1,0 +1,73 @@
+---
+title: "Samples and Populations Activity"
+author: "Your name here"
+date: "date here" 
+output: html_document
+
+---
+
+
+```{r warning = FALSE, message = FALSE}
+library(tidyverse)
+
+```
+
+
+
+1. A scientist is interested in counting the number of different species of bacteria in the San Diego Creek. She takes a bucket of water from the San Diego Creek and counts the different specifies of bacteria.
+  
+  a) What is the population?
+  
+
+  b) What is the sample?
+    
+    
+  c) Is this a simple random sample? Explain. 
+  
+
+
+
+2. To determine customer satisfaction, AMTRAK randomly selects 50 trains from a certain week and surveys all passengers on every of the 50 selected trains. 
+  
+  a) What is the population?
+  
+  
+  b) What is the sample?
+  
+  
+  c) What type of sampling is this?
+
+
+
+
+3. A cell phone factory wants to do quality control of their products to ensure that their customers do not get malfunctioning products. They randomly select 3% of the phones that they produce and manually check if there are any problems or not. 
+
+  a) What is the population?
+  
+  
+  b) What is the sample?
+  
+  
+  c) What type of sampling is this?
+  
+  
+
+4. Explore one of the articles bellow and answer the questions.
+
+[Social Media and Teens](https://news.gallup.com/poll/512576/teens-spend-average-hours-social-media-per-day.aspx)
+
+[Economic Well-being of U.S. Households](https://www.federalreserve.gov/publications/files/2023-report-economic-well-being-us-households-202405.pdf)
+
+  a) what is the population?
+  
+  
+  b) What is the sample?
+  
+  
+  c) How did they obtain the sample?
+  
+  
+  d) Do they mention any method used to improve responses? Explain.
+  
+  
+  e) Do they mention or are there any potential bias? Explain. 
