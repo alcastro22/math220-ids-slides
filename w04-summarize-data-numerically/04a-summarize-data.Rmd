@@ -1,0 +1,233 @@
+---
+title: "Summarizing Data Numerically"
+author: "Alma Castro, Cypress College"
+output: 
+  xaringan::moon_reader:
+    css: ["slide-style.css"]
+    seal: false
+    nature:
+      ratio: 16:9
+      highlightStyle: "pygments"
+      highlightLines: true
+      highlightLanguage: "r"
+---
+
+class: title-slide
+
+```{r child = "setup.Rmd"}
+```
+
+
+```{r echo = FALSE, message = FALSE}
+library(tidyverse)
+library(janitor)
+options(scipen = 999)
+```
+
+
+<br>
+<br>
+.right-panel[ 
+
+# `r rmarkdown::metadata$title`
+## `r rmarkdown::metadata$author`
+
+]
+
+
+---
+
+class: inverse middle
+
+```{r echo = FALSE, message = FALSE}
+lapd <- 
+  read_csv(here::here("Police_Payroll.csv")) |> 
+  clean_names() |>
+  filter(year == 2018) |> 
+  select(job_class_title, 
+         employment_type, 
+         base_pay) |>
+  mutate(employment_type = as.factor(employment_type),
+           job_class_title = as.factor(job_class_title))
+```
+
+
+
+.font75[Summarizing Categorical Data]
+
+
+---
+
+class: middle
+
+Categorical data are summarized with **counts** or **proportions**.
+
+In statistics, summarized categorical data based on counts (frequencies) is called a __frequency distribution__. If it is based on proportions (relative frequencies) then it is called a __relative frequency distribution__.
+
+---
+
+## Frequency Distribution
+
+To create a quick frequency distribution with the counts(frequencies) for each category in the categorical variable, we use the function `count(dataset, variable)` from the dplyr package.  
+
+```{r}
+count(lapd, employment_type)
+```
+
+---
+
+## Relative Frequency Distribution
+
+A relative frequency distribution displays the proportion of observations for each category of a categorical variable. 
+
+$$relative frequency = \frac{frequency}{total frequencies}$$
+---
+
+To create a more detailed summary that include both the count and relative frequencies, we can use the `tabyl(dataset, variable)` function from the janitor package.
+
+
+```{r}
+tabyl(lapd, employment_type)
+```
+
+---
+
+class: inverse middle
+
+.font75[Summarizing Numerical Data]
+
+---
+
+class: middle
+
+## Measures of Center
+
+**Mean**: The average of a list of data values. The mean for a sample of size `n` is denoted with "x bar".
+
+$$\bar x = \frac{\Sigma_{i = 1}^{n} x_i}{n}$$
+
+**Median**: The middle value of an ordered data set.
+
+**Mode**: The value that appears the most often (local maxima for continuous variables). 
+
+  - A set of data can have no mode, one mode, or more than one mode. You can find the mode for quantitative and qualitative data.
+
+---
+
+class: middle
+
+To summarize numerical data we can use the function `summarize()`, with the dataset as the first argument and the function of the numerical summary we want to compute as subsequent arguments.
+
+`summarize(data, function(variable))`
+  - where the `function` can be a summary function like `mean()`, `median()`...
+  - The output will be a tibble. 
+  
+We can also simply use the function of the numerical summary we need with the input `data$variable` as the argument.
+
+`function(data$variable)`
+  - The output will be a single value.
+
+---
+
+## Mean
+
+.pull-left[
+```{r}
+summarize(lapd, mean(base_pay))
+```
+]
+
+--
+
+.pull-right[
+
+```{r}
+mean(lapd$base_pay)
+```
+
+]
+
+---
+
+## Median
+
+.pull-left[
+```{r}
+summarize(lapd, median(base_pay))
+```
+]
+
+--
+
+.pull-right[
+
+```{r}
+median(lapd$base_pay)
+```
+
+]
+
+---
+
+We can calculate multiple statistics and use multiple functions inside the summarize function, and we can add names to the output.
+
+```{r}
+summarize(lapd,
+          minimum_base_pay = min(base_pay),
+          mean_base_pay = mean(base_pay),
+          med_base_pay = median(base_pay),
+          maximum_base_pay = max(base_pay))
+```
+
+---
+
+## Mode
+
+```{r}
+count(lapd, base_pay, sort = TRUE)
+```
+
+We don't use the function mode since it will only return the type of variable. 
+
+
+---
+
+## Measures of Position
+
+**Quantiles**: cut points (values) that divide an ordered data set into equal parts, having equal probabilities. To find them, we specify the quantiles we want inside the function `quantile()` in the `summarize()` function. Commonly used quantiles: percentiles and quartiles. 
+
+- __Percentiles__ divide the data into 100 equal parts. The kth percentile, denoted P_k, of a set of data is a value such that k percent of the observations are less than or equal to the value.
+
+- __Quartiles__ divide the data into 4 equal parts (quarters). The quartiles are the 25th, 50th, and 75th  percentiles, where Q1 = 25th percentile, Q2 = 50th percentile, i.e. the median, and Q3 = 75th percentile. 
+
+---
+
+## Quartiles
+
+
+- First quartile (Q1): 25% of the data falls at or below this value, and 75% falls above it.
+
+- Median (Q2): 50% of the data falls at or below this value, and 50% falls above it - this is the middle value we discussed earlier.
+
+- Third quartile (Q3): 75% of the data falls at or below this value, and 25% falls above it.
+
+
+---
+
+## Quartiles
+
+
+```{r warning = FALSE}
+summarize(lapd, quantile(base_pay, c(0.25, 0.50, 0.75)))
+```
+
+```{r echo = FALSE}
+q1 <- summarize(lapd, quantile(base_pay, c(0.25))) %>%
+  round(0) %>% 
+  pull()
+```
+
+
+We would expect 25% of the data to be less than or equal to `r q1`.
+
+Context: We expect 25% of employees at the Los Angeles Police Department to have a base pay less than or equal to $67,266.

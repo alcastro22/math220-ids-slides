@@ -1,0 +1,158 @@
+---
+title: "Summarizing Data Numerically"
+author: "Your name here"
+date: "date here"
+output: html_document
+
+---
+
+```{r message = FALSE}
+
+library("tidyverse")
+library("janitor")
+options(scipen = 999) #to change scientific notation to standard
+```
+
+
+Import `lapd` data set, clean names, subset data to only focus on the year 2018, and the variables `job_class_title`, `employment_type`, and `base_pay`, and change variables to their correct type. Then reassign it to `lapd`.
+
+```{r message = FALSE}
+lapd <- read_csv("Police_Payroll.csv") %>% 
+  clean_names() %>% 
+  filter(year == 2018) %>% 
+  select(job_class_title, 
+         employment_type, 
+         base_pay) %>% 
+  mutate(employment_type = as.factor(employment_type),
+         job_class_title = as.factor(job_class_title))
+```
+
+# Summarizing Categorical Data
+
+Categorical data are summarized with **counts** or **proportions**
+
+In statistics, summarized categorical data based on counts (frequencies) is called a ___________________. 
+
+If it is based on proportions (relative frequencies) then it is called a ____________________.
+
+
+
+## Frequency Distribution
+
+To create a frequency distribution with the counts(frequencies) for each category in the categorical variable, we use the function `count(dataset, variable)` from the dplyr package.
+
+```{r}
+
+```
+
+
+
+## Relative Frequency Distribution
+
+A relative frequency distribution displays the proportion of observations for each category of a categorical variable. 
+
+$$relative frequency = \frac{frequency}{total frequencies}$$
+
+To create a more detailed summary that include both the count and relative frequencies, we can use the `tabyl(dataset, variable)` function from the janitor package. 
+
+```{r}
+
+```
+
+
+---
+
+# Aggregating Numerical Data
+
+
+## Measures of Center
+
+_________: The average of a list of data values. 
+$$\bar x = \frac{\Sigma_{i = 1}^{n} x_i}{n}$$
+
+_________: The middle value of an ordered data set.
+
+_________: The value that appears the most often (local maxima for continuous variables). 
+
+  - A set of data can have no mode, one mode, or more than one mode. You can find the mode for quantitative and qualitative data.
+
+
+
+To summarize numerical data we can use the function `summarize()`, with the data set as the first argument and the function of the numerical summary we want to compute as subsequent arguments.
+
+`summarize(data, function(variable))`
+  - where the `function` can be a summary function like `mean()`, `median()`...
+  - The output will be a tibble. 
+  
+We can also simply use the function of the numerical summary we need with the input `data$variable` as the argument.
+
+`function(data$variable)`
+  - The output will be a single value.
+
+
+## Mean
+
+```{r}
+
+```
+
+
+## Median
+
+```{r}
+
+```
+
+
+We can use multiple functions inside the summarize function, and we can add names to the output.
+
+```{r}
+
+```
+
+
+
+## Mode
+
+```{r}
+
+```
+
+
+Note that we don't use the function mode since it will only return the type of variable.  
+
+--- 
+
+## Measures of Position
+
+____________" cut points (values) that divide an ordered data set into equal parts, having equal probabilities. To find them, we specify the quantiles we want inside the function quantile() in the summarize() function. Commonly used quantiles: percentiles and quartiles. 
+
+- ______________ divide the data into 100 equal parts. The kth percentile, denoted P_k, of a set of data is a value such that k percent of the observations are less than or equal to the value.
+
+- ______________ divide the data into 4 equal parts (quarters). The quartiles are the 25th, 50th, and 75th  percentiles, where Q1 = 25th percentile, Q2 = 50th percentile, i.e. the median, and Q3 = 75th percentile. 
+
+
+
+### Quartiles
+
+
+- First quartile (Q1): 25% of the data falls at or below this value, and 75% falls above it.
+
+- Median (Q2): 50% of the data falls at or below this value, and 50% falls above it - this is the middle value we discussed earlier.
+
+- Third quartile (Q3): 75% of the data falls at or below this value, and 25% falls above it.
+
+#### Example
+
+```{r warning = FALSE}
+
+```
+
+
+We would expect 25% of the data to be less than or equal to _________.
+
+Context: _______________________.
+
+
+
+

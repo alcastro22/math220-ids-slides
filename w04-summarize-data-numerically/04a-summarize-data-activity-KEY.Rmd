@@ -1,0 +1,59 @@
+---
+title: "Summarize Data Avtivity KEY (10 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+---
+
+
+```{r message = FALSE}
+library(tidyverse)
+library(janitor)
+```
+
+
+Use the `mpg` data to answer the following questions. Use the ?mpg to find more information about the data set and its variables.
+
+1. (2 pts) Find the mean and median for highway mpg. Use the `summarize()` function.
+```{r}
+summarize(mpg, 
+            mean(hwy),
+            median(hwy))
+```
+
+
+2. (2 pts) Construct a relative frequency distribution for the type of car. What percent of the cars in the data set are SUVs?
+```{r}
+tabyl(mpg, class)
+
+```
+
+3. (2 pts) Find P_90 for the highway mpg variable. Interpret result in the context of the problem.
+```{r}
+quantile(mpg$hwy, c(0.9))
+```
+
+
+4. (2 pts) Find the first and third quartiles for the highway mpg variable. Interpret the third quartile in the context of the problem.
+    
+```{r warning = FALSE}
+mpg %>% 
+  summarize(quantile(hwy, c(0.25, 0.75)))
+```
+
+5. (2 pts) Find the standard deviation mpg in highway, both using the formula and with R. 
+  a. step-by-step with formula
+```{r}
+xbar <- mean(mpg$hwy)
+xbar
+sqr_dist <- (mpg$hwy - xbar)^2
+sum_dev <- sum(sqr_dist)
+sd_hwy <- sqrt(sum_dev/(nrow(mpg)-1))
+sd_hwy
+```
+
+  b. using R.
+```{r}
+sd(mpg$hwy)
+```
+

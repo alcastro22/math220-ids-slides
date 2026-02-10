@@ -1,0 +1,52 @@
+---
+title: "Summarizing Data Avtivity (10 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+---
+
+
+```{r message = FALSE}
+library(tidyverse)
+library(janitor)
+```
+
+
+Use the `mpg` data to answer the following questions. Use ?mpg or help pane to find more information about the data set and its variables.
+
+1. (2 pts) Find the mean and median for highway mpg. Use the `summarize()` function.
+```{r}
+
+```
+
+
+2. (2 pts) Construct a relative frequency distribution for the type of car. What percent of the cars in the data set are SUVs?
+```{r}
+
+```
+
+
+3. (2 pts) Find P_90 for the highway mpg variable. Interpret result in the context of the problem.
+```{r}
+
+```
+  
+
+4. (2 pts) Find the first and third quartiles for the highway mpg variable. Interpret the third quartile in the context of the problem. 
+```{r}
+
+```
+  
+
+5. (2 pts)  Find the standard deviation mpg in highway, both using the formula and with R. 
+
+    a. step-by-step with formula
+```{r}
+
+```
+
+    b. using R.
+```{r}
+
+```
+

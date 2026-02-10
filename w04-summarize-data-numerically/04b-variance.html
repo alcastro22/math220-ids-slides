@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Variance</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="04b-variance_files/header-attrs-2.29/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# Variance
+## Alma Castro, Cypress College
+]
+
+---
+
+class: inverse middle
+
+.font75[If there was no variance there would be no statistics.]
+
+
+---
+
+## What if?
+
+- We want to understand the average hours of sleep Cypress residents get.  What if everyone in Cypress slept 8 hours every night? (`sleep` = {8, 8,..., 8})
+
+--
+
+- We want to predict who will graduate college. What if everyone graduated college? (`graduate` = {TRUE, TRUE,..., TRUE})
+
+--
+
+- We want to understand if Android users spend more time on their phones when compared to iOS users. What if everyone spent 3 hours per day on their phones? (`time` = {3, 3,..., 3}, `os` = {Android, Android, .... iOS})
+
+--
+
+- We want to understand, if birth height and weight are positively associated in babies. What if every baby was 7.5 lbs? (`weight` = {7.5, 7.5,..., 7.5}, `height` = {20, 22,..., 18})
+
+---
+
+class: middle
+
+In all these fake scenarios there would be no **variance** in `sleep`, `graduate`, `time`, and `weight`. These variables would all be constants thus they would not even be **vari**ables.
+
+--
+
+.font45[However, in real life, things vary. We use statistics to understand **how** things vary, and in many instances we want to know **why** they vary.] 
+
+---
+
+Consider professor Castro teaching three classes. All of these classes have 5 students. Below are midterm results from these classes. Which of the classes has a higher variance?
+
+Class 1: 80 80 80 80 80  
+Class 2: 76 78 80 82 84  
+Class 3: 60 70 80 90 100  
+
+--
+
+All of these classes have a mean of 80 points. But the data differ! In order to explain how these are different we examine how far the observed values are relative to the mean; in other words, we look at how far off each observed value is from the mean on "average". 
+
+In class 1, all students are at the mean value so there is no variance. Class 2 students deviate from the mean slightly on "average". Class 3 has the highest deviation from the mean on "average". 
+
+---
+
+class: inverse middle
+
+.font75[Calculating the Variance]
+
+---
+
+## Sample Variance (var)
+
+.formula[
+
+`$$s^2 = \frac{\Sigma_{i = 1}^{n} (x_i - \bar x )^2}{n-1}$$` 
+]
+
+- **The variance is defined as the average of the squared deviations (distances) from the mean.**
+- The result is in squared units. 
+
+
+---
+
+## Example
+
+Consider the following data which represents the number of hours slept for a sample of 10 people who were surveyed. 
+
+`\(x_i = \{7, 7.5, 8, 5.5, 10, 7.2, 7, 8, 9, 8\}\)`
+
+
+Calculate the variance and standard deviation using the formula and then using R.
+
+---
+
+### Calculating the Variance Step-by-Step
+
+The variance and standard deviation measure variability; they are based on distances from the **mean**, so the first thing is to find the mean of our variable.
+
+
+``` r
+xi &lt;- c(7, 7.5, 8, 5.5, 10, 7.2, 7, 8, 9, 8)
+xbar &lt;- mean(xi)
+xbar
+```
+
+```
+## [1] 7.72
+```
+
+`\(\bar x\)` = 7.72
+
+---
+
+### Calculating the Variance Step-by-Step
+
+Then we need to find the square distances from the mean: 
+
+
+``` r
+(xi - xbar)^2
+```
+
+```
+##  [1] 0.5184 0.0484 0.0784 4.9284 5.1984 0.2704 0.5184 0.0784 1.6384 0.0784
+```
+
+The next step is to sum up the squared distances: 
+
+
+``` r
+sum((xi - xbar)^2)
+```
+
+```
+## [1] 13.356
+```
+
+---
+
+### Calculating the Variance Step-by-Step
+
+And lastly, we divide the sum by n - 1. 
+
+
+``` r
+sum((xi - xbar)^2)/(10 - 1)
+```
+
+```
+## [1] 1.484
+```
+
+The result is the sample variance, `\(s^2\)` = 1.484 `\({hr}^2\)`
+
+---
+
+class: inverse middle
+
+.font75[Calculating the Standard Deviation]
+
+---
+
+## Sample Standard Deviation (sd)
+
+.formula[
+
+`$$s = \sqrt{s^{2}} = \sqrt{\frac{\Sigma_{i = 1}^{n} (x_i - \bar x )^2}{n-1}}= \sqrt{var}$$` 
+]
+
+- The standard deviation is the square root of the variance.
+- **The standard deviation is defined as the average distance from the mean.** 
+- The result has the same units as the variable used to calculate the sd. 
+- __Most commonly used than the variance.__
+
+---
+
+
+### Calculating the Sample Standard Deviation
+
+Once we have calculated the variance, we simply take the square root of the variance to find the standard deviation. 
+
+
+``` r
+sqrt(sum((xi - xbar)^2)/(10 - 1))
+```
+
+```
+## [1] 1.218195
+```
+
+The sample standard deviation is `\(s = 1.218\)` hr
+
+---
+
+## Sample Variance
+
+.formula[
+
+`$$s^2 = \frac{\Sigma_{i = 1}^{n} (x_i - \bar x )^2}{n-1}= \frac{13.356}{10-1} = 1.484\text{ hr}^2$$` 
+]
+
+--
+
+
+## Sample Standard Deviation
+
+.formula[
+
+`$$s = \sqrt{s^{2}} = \sqrt{\frac{\Sigma_{i = 1}^{n} (x_i - \bar x )^2}{n-1}} = \sqrt{\frac{13.356}{10-1}} = \sqrt{1.484} = 1.218195\text{ hr}$$` 
+
+]
+
+---
+## Finding Sample Variance and Standard Deviation using R
+
+.pull-left[### Sample Variance
+
+
+``` r
+var(xi)
+```
+
+```
+## [1] 1.484
+```
+
+`\(s^2 = 1.484 \text{ hr}^2\)`
+
+]
+
+
+.pull-right[### Sample Standard Deviation
+
+
+``` r
+sd(xi)
+```
+
+```
+## [1] 1.218195
+```
+
+`\(s = 1.218195 \text{ hr}\)`
+
+]
+
+---
+
+&lt;br&gt;
+&lt;br&gt;
+
+`\(n = 10\)`, `\(\bar x = 7.72 \text{ hr}\)`, `\(s = 1.218195 \text{ hr}\)`
+
+Among 10 people the average number of sleep was 7.72 hours. However, everybody did not sleep 7.72 hours. There was deviation from the mean. The standard deviation from the mean was 1.22 hours. The variance is the squared standard deviation which was `\(1.48 \text{ hr}^2\)`. 
+
+---
+
+## Notation
+
+&lt;table align ="center"&gt;
+
+&lt;thead&gt;
+&lt;th&gt; &lt;/th&gt;
+&lt;th&gt;Sample Statistic&lt;/th&gt;
+&lt;th&gt;Population Parameter&lt;/th&gt;
+&lt;/thead&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Mean&lt;/td&gt;
+&lt;td align ="center"&gt; x&amp;#772; &lt;/td&gt;
+&lt;td align ="center"&gt; &amp;mu;&lt;/td&gt;
+
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt; Standard Deviation &lt;/td&gt;
+&lt;td align ="center"&gt; s &lt;/td&gt;
+&lt;td align ="center"&gt; &amp;sigma;&lt;/td&gt;
+
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt; Variance &lt;/td&gt;
+&lt;td align ="center"&gt; s&lt;sup&gt;2&lt;/sup&gt; &lt;/td&gt;
+&lt;td align ="center"&gt; &amp;sigma;&lt;sup&gt;2&lt;/sup&gt;&lt;/td&gt;
+
+&lt;/tr&gt;
+
+&lt;/table&gt;
+
+Sample size is denoted by `\(n\)`.
+
+Population size is denoted by `\(N\)`. 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
