@@ -649,19 +649,6 @@ ggplot(data = titanic,
 ```
 
 ---
-## Intro to ggplot Activity
-
-Download the "03b-intro-ggplot-one-variable-activity.rmd" file from the Canvas activity. Use the `titanic` data to answer the following questions. Use `?titanic_train` to find more information about the data set and its variables. 
-
-1. Make a bar graph to determine the number of passengers that embarked at each of the destinations. What city had the most passengers that got on the Titanic?
-
-2. Construct a histogram to look a the distribution for the age of the passengers. Pick a binwidth that you find appropriate and color it as you like.
-
-3. Pick a variable of interest and create a graph. 
-
-4. Explore other graphs, for a single variable, not covered in class.
-
----
 
 ```{r echo = FALSE, out.width ="75%"}
 knitr::include_graphics("img/ggplot-summary.jpeg")
