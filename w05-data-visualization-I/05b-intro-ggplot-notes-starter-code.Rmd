@@ -1,0 +1,271 @@
+---
+title: "Data Visualization: Intro to ggplot and Visualizing One Variable"
+author: "Name"
+date: "Date"
+output: html_document
+---
+
+```{r echo=FALSE, message=FALSE }
+library(palmerpenguins)
+library(tidyverse)
+library(titanic)
+library(janitor)
+titanic <- titanic_train %>% 
+  clean_names() %>% 
+  select(survived, pclass, sex, age, fare, embarked) %>% 
+  mutate(pclass = case_when(pclass == 1 ~ "First", 
+                            pclass == 2 ~ "Second",
+                            pclass == 3 ~ "Third"),
+         embarked = case_when(embarked == "S" ~ "Southampton",
+                              embarked == "C" ~ "Cherbourg",
+                              embarked == "Q" ~ "Queenstown"),
+         embarked = as.factor(embarked),
+         sex = as.factor(sex),
+         pclass = as.factor(pclass),
+         survived = as.logical(survived))
+```
+
+Main components of data analysis: Visualization and Modeling
+
+- **Visualization**: Looking at the overall picture to help you understand data. 
+
+- **Model**: Mathematical or computational tool used to make predictions and answer very precise questions.
+
+## Data Visualizations
+
+- are graphical representations of data
+
+- use different colors, shapes, and the coordinate system to summarize data
+
+- tell a story
+
+- are useful for exploring data
+
+- help you raise new questions or hint that you’re asking the wrong question 
+
+## ggplot
+
+*gg*plot is a function that creates a coordinate system that you can add layers to, such as type of graph, labels, color, and much more. It is a function within the *gg*plot2 package, which is a system for creating graphics based on *g*rammar of *g*raphics.
+
+
+ggplot2 is a package of the tidyverse. The tydiverse is a collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures. 
+
+### Resources 
+
+[The Layered Grammar of Graphics](http://vita.had.co.nz/papers/layered-grammar.pdf) by Hadley Wickham.
+
+A comprehensive introduction to the tydiverse is given in the free online book [R for Data Science](https://r4ds.had.co.nz/).
+
+### Types of graphs: 
+
+- One categorical variable -> **bar** plot, pie chart
+- One numerical variable -> **histogram**, box plot, dot plot, stem-and-leaf plot
+- Two categorical variables -> stacked bar plot, dodged bar plot
+- Two numerical variables -> scatter plot (**point**)
+- One numerical and one categorical variable -> violin graph, side-by-side box plots
+- Two numerical and one or more additional variables -> scatter plot with points differentiated using scale, shape, and color based on numerical or categorical variables
+
+---
+
+# Visualizing a Single Categorical Variable
+
+We will visualize **categorical** variables using **barplots**.
+
+### Data 
+*Note:* The data frame has been cleaned for you.
+
+```{r}
+glimpse(titanic)
+```
+
+
+## Barplot: geom_bar
+
+In a **barplot** each bar represents a category within the variable, and the height of the bar is determined by the count or proportion of the category.
+
+1. Create ggplot and pick data
+```{r}
+ggplot(data = titanic)
+```
+
+2. Map data to aesthetics: map **categorical** variable to x-axis.
+```{r}
+ggplot(data = titanic,
+       aes(x = pclass))
+```
+
+3. Add the geometric layer: use `geom_bar()` to create a **bar** plot.
+```{r}
+
+```
+
+---
+
+# Visualizing a Single Numerical Variable
+
+We will visualize **numerical** variables using **histograms** and **boxplots**.
+
+## Histogram: geom_histogram
+
+ 
+A **histogram** is one of the most fundamental tools for exploring numeric data. It displays the distribution of a numeric variable by dividing the range of the variable into bins (intervals or classes) and showing the frequency of observations in each bin.
+
+
+- create a ggplot using data frame
+- map __numerical__ variable to x-axis
+- add geometric layer of a __histogram__.
+
+```{r}
+
+```
+
+
+### binwidth: width of bars
+
+```{r}
+
+```
+
+
+[There is no "best" number of bins](https://en.wikipedia.org/wiki/Histogram#Number_of_bins_and_width)
+
+- Using too few classes will cause a bunching effect (skyscrapers) and too many classes will spread the data out (pancake); Therefore, no pattern will be revealed. This is crucial when constructing a histogram.
+- Experimenting with the binwidth is essential to determining the appropriate histogram for the data.
+- Use the distribution that provides the best overall summary of the data, but at the same time shows important details.
+
+
+---
+
+### Skewness
+
+Once a histogram is created we need to determine its skewness, meaning its overall shape and pattern to see if data tend to one side or the other and where the bulk of the data is located at. 
+
+```{r echo = FALSE, out.width ="75%"}
+knitr::include_graphics("skewness.PNG")
+```
+
+Image from Dogucu, M, et all, (2025). Hello Data Science (CC BY-NC-ND 4.0).
+
+
+
+#### Mean is not a good measure of center when the data are skewed
+
+```{r echo = FALSE, message = FALSE}
+ggplot(data = titanic,
+       aes(x = fare)) +
+  geom_histogram()
+```
+
+```{r}
+
+```
+ 
+
+
+
+#### Choosing the best numerical summary to represent data
+
+```{r echo = FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("dist-shape.png")
+```
+
+
+- Use **mean** when distribution is roughly symmetric.
+
+- Use **median** when distribution is skewed right or skewed left. 
+
+Image from Kozak, K., (2015), Statistics Using Technology, 2nd edition, CC-By-SA.
+
+  
+---
+
+## Boxplot
+
+A **boxplot** is a visual display of the five-number summary: **Minimum, Q1, Median, Q3, Maximum**.
+
+In addition, a boxplot shows any potential **outliers**, which are values that deviate from the overall pattern of the distribution.
+
+
+```{r echo = FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("box-plot.png")
+```
+
+Image from Grolemund, G., & Wickham, H. (2018). R for data science (CC BY-NC-ND 3.0).
+
+
+If were to create a boxplot by hand: 
+
+  - find the five number summary: min, Q1, med, Q3, Max
+  - find the **interquartile range** (IQR = Q3-Q1), the range of the middle 50% of the data.
+  - use the **1.5(IQR) Rule for outliers**: find lower limit Q1-1.5(IQR) and upper limit Q3 +1.5(IQR). Any data values that are smaller than lower limit or larger than the upper limit are considered outliers.
+
+
+### Example
+
+Let's determine if fare has any potential outliers. 
+
+#### Five-number summary:
+
+```{r warning = FALSE}
+
+```
+
+
+#### IQR: 
+
+```{r}
+
+```
+
+
+#### 1.5(IQR) Rule for outliers:
+
+```{r}
+
+```
+
+
+Based on the limits, we know that there is at least one outlier, the maximum of ____________.
+
+
+
+## Creating a Boxplot in R
+
+To create a boxplot in R:
+  - Create a ggplot using the data frame
+  - Map the numerical variable to the one of the axes (horizontal: x-axis, vertical: y-axis) 
+  - Add the geometric layer of a boxplot 
+
+```{r}
+
+
+```
+
+
+
+
+## Adding color to histograms, barplots, and boxplots
+
+Pick your favorite color(s) from the list at:
+
+[bit.ly/colors-r](https://bit.ly/colors-r)
+
+Color is added as an argument inside the geometric layer. 
+
+`color = "color you want"`: colors the outline (borders) of the graph. 
+
+`fill = "color you want"`: colors the inside of the graph.
+
+```{r message = FALSE}
+
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+

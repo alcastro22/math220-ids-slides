@@ -1,0 +1,97 @@
+---
+title: "Intro to ggplot Activity KEY (16 pts)"
+author: "Name"
+date: "Date"
+output: html_document
+---
+
+```{r message=FALSE }
+library(tidyverse)
+library(titanic)
+library(janitor)
+titanic <- titanic_train %>% 
+  clean_names() %>% 
+  select(survived, pclass, sex, age, fare, embarked) %>% 
+  mutate(pclass = case_when(pclass == 1 ~ "First", 
+                            pclass == 2 ~ "Second",
+                            pclass == 3 ~ "Third"),
+         embarked = case_when(embarked == "S" ~ "Southampton",
+                              embarked == "C" ~ "Cherbourg",
+                              embarked == "Q" ~ "Queenstown"),
+         embarked = as.factor(embarked),
+         sex = as.factor(sex),
+         pclass = as.factor(pclass),
+         survived = as.logical(survived))
+```
+
+
+
+Use the `titanic` data to answer the following questions. Use `?titanic_train` to find more information about the data set and its variables. 
+
+1. (2 pts) Make a bar graph to determine the number of passengers that embarked at each of the destinations. What city had the most passengers that got on the Titanic?
+
+```{r}
+ggplot(data = titanic,
+       aes(x = embarked)) +
+  geom_bar()
+```
+
+
+2. (4 pts) Construct a histogram to look a the distribution for the age of the passengers. Pick a binwidth that you find appropriate and color it as you like. Describe the shape of the distribution. 
+
+```{r warning = FALSE}
+ggplot(data = titanic,
+       aes(x = age)) +
+  geom_histogram(binwidth = 8,
+                 color = "red",
+                 fill = "darkgreen")
+```
+
+
+3. (2 pts) Find the five-number summary for age. Describe the third quartile. 
+
+```{r}
+
+```
+
+
+4. (1 pts) Find the IQR for age. 
+
+```{r}
+
+```
+
+
+5. (3 pts) Find the lower and upper limits for age and determine if there are any outliers. 
+
+```{r}
+
+```
+
+
+6. (2 pts) Construct a boxplot for age. Color it. 
+
+```{r}
+ggplot(titanic, 
+       aes(y = age)) +
+  geom_boxplot(color = "pink")
+```
+
+
+
+7. (2 pts) Pick a variable of interest and create a graph. 
+
+```{r}
+ggplot(data = titanic,
+       aes(x = survived)) +
+  geom_bar()
+```
+
+```{r}
+ggplot(data = titanic,
+       aes(x = sex)) +
+  geom_bar()
+```
+ 
+
+

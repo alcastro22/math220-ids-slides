@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Visualization</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="05a-data-viz_files/header-attrs-2.29/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+
+&lt;br&gt;
+&lt;br&gt;
+.right-panel[ 
+
+# Data Visualization
+## Alma Castro, Cypress College
+
+]
+
+
+---
+
+
+class: middle
+
+&lt;img src="img/data-cycle.png" width="70%" /&gt;
+
+
+Main components of data analysis: Visualization and Modeling
+
+- **Visualization**: Looking at the overall picture to help you understand data. 
+
+- **Model**: Mathematical or computational tool used to make predictions and answer very precise questions. 
+
+.footnote[Image from Grolemund, G., &amp; Wickham, H. (2018). R for data science (CC BY-NC-ND 3.0).]
+
+---
+
+### A picture is worth a thousand words (Fred R. Barnard)
+
+.pull-left[
+In 1854, cholera struck in the Soho district of London. A doctor named John Snow believed that water contaminated by sewage was the cause.  He recorded each death diligently using a street map of the district. Each black bar in the map represents one death.
+
+]
+
+.pull-right[
+&lt;img src="img/snow-cholera-map.jpg" width="80%" /&gt;
+
+]
+
+.pull-left[
+Conclusion: the deaths are roughly clustered around the Broad Street pump.
+]
+
+Snow's map is one of the earliest and most powerful uses of data visualization. 
+
+.footnote[Image from Adhikari, A., DeNero, J., and Wagner, D. (2022). Computational and Inferential Thinking (CC BY-NC-ND 4.0).]
+---
+
+class: middle
+
+## Cool Visuals
+
+[Orange County Data Dashboards](https://www.ochealthinfo.com/news-data/data-dashboards)
+
+[Economic Well-Being of U.S. Households in 2023](https://www.federalreserve.gov/publications/files/2023-report-economic-well-being-us-households-202405.pdf)
+
+[Why Time Flies](https://maximiliankiener.com/digitalprojects/time/)
+
+[Mandatory Paid Vacation](https://www.instagram.com/p/CE1kpM5FhWR/?utm_source=ig_web_copy_link)
+
+[Why are K-pop groups so big?](https://pudding.cool/2020/10/kpop/)
+
+---
+
+class: middle
+# Visualization
+
+Data Visualizations
+
+- are graphical representations of data
+
+--
+
+- use different colors, shapes, and the coordinate system to summarize data
+
+--
+
+- tell a story
+
+--
+
+- are useful for exploring data
+
+--
+
+- help you raise new questions or hint that you’re asking the wrong question 
+
+---
+
+class: middle 
+
+# Visualization
+
+- In this class, we will create plots using the function _ggplot_ within the **ggplot2** system for making graphs.
+
+--
+
+- This specific lecture will focus on how ggplot works. 
+
+--
+
+- This lecture will not necessarily show you beautiful plots. 
+
+--
+
+- In the next lecture, we will improve the plots that we make.
+
+---
+
+center: invisible 
+## ggplot
+
+__gg__plot is a function that creates a coordinate system that you can add layers to, such as type of graph, labels, color, and much more. It is a function within the __gg__plot2 package, which is a system for creating graphics based on __g__rammar of __g__raphics.
+
+
+ggplot2 is a package of the tidyverse. The tydiverse is a collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures. 
+
+---
+
+### Resources 
+
+[The Layered Grammar of Graphics](http://vita.had.co.nz/papers/layered-grammar.pdf) by Hadley Wickham.
+
+![](img/grammar_graphics.jpeg)&lt;!-- --&gt;
+
+A comprehensive introduction to the tydiverse is given in the free online book [R for Data Science](https://r4ds.had.co.nz/).
+
+---
+
+### Types of graphs: 
+
+- One categorical variable -&gt; **bar** plot, pie chart
+- One numerical variable -&gt; **histogram**, box plot, dot plot, stem-and-leaf plot
+- Two categorical variables -&gt; stacked bar plot, dodged bar plot
+- Two numerical variables -&gt; scatter plot (**point**)
+- One numerical and one categorical variable -&gt; violin graph, side-by-side box plots
+- Two numerical and one or more additional variables -&gt; scatter plot with points differentiated using scale, shape, and color based on numerical or categorical variables
+
+
+
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
