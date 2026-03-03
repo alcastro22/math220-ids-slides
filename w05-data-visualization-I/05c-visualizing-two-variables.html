@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Visualization: Visualizing Two or More Variables</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="05c-visualizing-two-variables_files/header-attrs-2.30/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+
+&lt;br&gt;
+&lt;br&gt;
+.right-panel[ 
+
+# Data Visualization: Visualizing Two or More Variables
+## Alma Castro, Cypress College
+]
+
+---
+
+class: inverse middle
+
+.font75[Visualizing Two Categorical Variables]
+
+When we have two categorical variables, we want to understand how the categories of one variable are distributed within the categories of another. 
+
+- Stacked Barplot
+- Dodged (Side-by-Side) Barplot
+- Standardize Barplot
+
+---
+
+## Stacked Barplot
+
+A **stacked barplot** shows both the overall distribution of one variable and how it breaks down based on the second variable.
+
+
+``` r
+ggplot(data = data_name,
+       aes(x = cat_variable1, 
+*          fill = cat_variable2)) +
+  geom_bar() 
+```
+
+The code `fill = cat_variable2` inside the `aes()` function will use the specified categorical variable2 to break up the main categorical variable1 assigned to the x-axis.
+
+
+---
+
+## Stacked Barplot
+
+.pull-left[
+
+
+``` r
+ggplot(data = titanic,
+       aes(x = pclass, 
+*          fill = survived)) +
+  geom_bar() 
+```
+
+]
+
+.pull-right[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+## Standardized Barplot
+
+In a **standardized barplot** each bar is scaled to the same height representing 100% of observations per bar, and the colored segments show the relative proportions of each category within each bar group. This visualization is useful for comparing the distribution patterns across categories, as it eliminates the effect of different group sizes and focuses purely on proportional relationships.
+
+
+``` r
+ggplot(data = data_nam,
+       aes(x = cat_variable1, 
+           fill = cat_variable2)) + 
+* geom_bar(position = "fill")
+```
+
+The code `position = "fill"` inside the geometric layer, will convert the counts into proportions within each of the categories. Hence, note that the y-axis is should no longer be a count, but a proportion.
+
+
+---
+
+## Standardized Bar Plot
+
+.pull-left[
+
+
+``` r
+ggplot(data = titanic,
+       aes(x = pclass, 
+           fill = survived)) + 
+* geom_bar(position = "fill")
+```
+
+For example: About 25% of those traveling in third class survived the trip on the Titanic. Whereas, about 60% of those traveling in first class survived the trip.
+
+]
+
+.pull-right[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+
+]
+
+
+---
+
+## Dodged (side-by-side) Barplot
+
+In a **dodged barplot**, bars are placed side-by-side rather than stacked. The grouped layout allows for direct visual comparison of bar heights both within and across groups.
+
+
+``` r
+ggplot(data = data_name,
+       aes(x = cat_variable1, 
+           fill = cat_variable2)) + 
+* geom_bar(position = "dodge")
+```
+
+The code `position = "dodge"` inside the geometric layer, will break up the main categorical variable assigned to the x-axis into side-by-side bars. 
+
+---
+
+## Dodged (side-by-side) Bar Plot
+
+.pull-left[
+
+
+``` r
+ggplot(data = titanic,
+       aes(x = pclass, 
+           fill = survived)) + 
+* geom_bar(position = "dodge")
+```
+
+]
+
+.pull-right[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+]
+
+
+---
+
+class: middle inverse
+
+.font75[Visualizing One Numerical and One Categorical variable]
+
+When we want to explore the relationship between a categorical variable and a numerical variable, we need visualization techniques that can show how the distribution of the numerical variable differs across the categories. 
+
+- side-by-side boxplots
+
+---
+
+## New Data
+
+&lt;img src="img/penguins.png" alt="" style="display: block; margin: auto;" /&gt;
+
+.footnote[Artwork by [@allison_horst](https://twitter.com/allison_horst) ]
+
+---
+
+## New Data
+
+
+``` r
+glimpse(penguins)
+```
+
+```
+## Rows: 344
+## Columns: 8
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+## $ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+## $ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
+## $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+## $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
+## $ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…
+```
+
+---
+
+&lt;img src="img/penguin_bill.png" alt="" style="display: block; margin: auto;" /&gt;
+
+.footnote[Artwork by [@allison_horst](https://twitter.com/allison_horst) ]
+
+
+---
+
+### Side-by-Side Boxlot
+
+In a **side-by-side boxplot** we create separate boxplots for each category of the categorical variable, allowing us to compare the distribution of the numerical variable across different groups. 
+
+
+
+``` r
+    ggplot(data_name,
+           aes(x = cat_variable,
+               y = num_variable))  +
+*     geom_boxplot()
+```
+
+We can reverse the x and y assignments and create horizontal boxplots.
+
+---
+
+class: middle 
+
+### Side-by-Side Boxlot
+
+.pull-left[
+
+&lt;img src="05c-visualizing-two-variables_files/figure-html/unnamed-chunk-15-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+
+``` r
+    ggplot(penguins,
+           aes(x = species,
+               y = bill_length_mm))  +
+*     geom_boxplot()
+```
+
+]
+
+
+
+---
+
+.pull-left[
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+
+]
+
+.pull-right[
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+]
+
+---
+class: inverse middle
+
+.font75[Visualizing Two Numerical Variables]
+
+- Scatter Plot
+
+---
+
+## Scatter Plot
+
+In a scatter plot we want to explore how the values of one variable are associated with the values of another. Each point represents an observation, and its location shows the combination of values for both variables for that particular observation.
+
+
+``` r
+ggplot(data_name,
+       aes(x = num_variable,
+           y = num_variable))  +
+* geom_point()
+```
+
+Note that to create a scatter plot, the added geometric layer is that of a `geom_point()`.
+
+---
+## Scatter Plot
+
+.pull-right[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+
+]
+
+.pull-left[
+
+
+``` r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm))  +
+* geom_point()
+```
+
+]
+
+
+---
+
+### How to assign variable to the x and y axes? 
+
+When we look at two variables, we often want to explore their relationship. We often think of y as a function of x, meaning that y is the one that could possibly react or change based on changes in x. Hence x is called the **explanatory variable**; whereas y is called the **response variable**.
+
+To classify the variables, we need context or information on how one would affect or influence the other. 
+
+  - For example, the number of hours a student studies for an exam would likely influence their exam score. In this case, x = number of hours, and y = exam score.  
+
+If there is no clear or logical understanding of this relationship then it's up to the researcher to assigned them. 
+
+---
+
+class: middle inverse
+
+.font75[Visualizing Two Numerical and One or Two Categorical Variables]
+
+
+- We can create a scatter plot with two numerical variables then group the points based on the categories of a categorical variable using color or shape or both.
+
+---
+
+### Grouping points using color
+
+.left-panel[
+
+
+``` r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+*          color = species)) +
+  geom_point()
+```
+
+We can group the points based on a categorical variable by assigning the categorical variable to the color argument in the aesthetics. We enter `color = "cat_variable"` inside the `aes()` function.
+]
+
+.right-panel[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+
+]
+
+---
+
+### Grouping points using shape
+
+.left-panel[
+
+
+``` r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+*          shape = species)) +
+  geom_point()
+```
+
+To group the points based on a shape, we assign the categorical variable to the shape aesthetics. We enter `shape = "cat_variable"` in the `aes()` function. ggplot2 will only use six shapes at a time; additional groups will go unplotted.
+
+]
+
+.right-panel[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+
+]
+
+---
+
+### Grouping using both color and shape
+
+.left-panel[
+ 
+
+``` r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+*          shape = species,
+*          color = island)) +
+  geom_point()
+```
+
+Grouping the points using both `color` and `shape` based on two categorical variables.
+]
+
+.right-panel[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+
+]
+
+
+---
+
+class: middle inverse
+
+.font75[Visualizing Three Numerical Variables]
+
+- We can create a scatter plot with two numerical variables then distinguish the size of the points based on a third numerical variable. 
+
+---
+
+.left-panel[
+
+``` r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+*          size = body_mass_g)) +
+  geom_point()
+```
+
+We can distinguish the size of the points by assigning a numerical variable to the size aesthetics. We enter `size = "num_variable"` inside the `aes()` function.
+
+]
+
+.right-panel[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+class: middle inverse
+
+.font75[Visualizing Three Numerical and One or two Categorical Variables]
+
+We can create a scatter plot with two numerical variables then:
+
+- group the points based on categorical variables using color or shape or both.
+- distinguish the size of the points based on a numerical variable. 
+
+
+---
+
+.left-panel[
+
+
+``` r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+*          shape = species,
+*          size = body_mass_g)) +
+  geom_point()
+```
+
+Grouping the points using `shape` based on a categorical variable and distinguishing the `size` of the points based on a numerical variable.
+]
+
+.right-panel[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+.left-panel[
+
+
+``` r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+*          shape = species,
+*          color = island,
+*          size = body_mass_g)) +
+  geom_point()
+```
+
+Grouping the points using both `color` and `shape` based on categorical variables and distinguishing the `size` of the points based on a numerical variable.
+]
+
+.right-panel[
+
+![](05c-visualizing-two-variables_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+&lt;img src="img/ggplot-summary.jpeg" alt="" width="75%" /&gt;
+
+Downloadable [ggplot Cheat Sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization-2.1.pdf)
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
