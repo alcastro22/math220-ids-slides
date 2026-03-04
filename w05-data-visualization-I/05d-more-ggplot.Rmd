@@ -1,0 +1,777 @@
+---
+title: "Data Visualization: More ggplot"
+author: "Alma Castro, Cypress College"
+output: 
+  xaringan::moon_reader:
+    css: ["slide-style.css"]
+    seal: false
+    nature:
+      ratio: 16:9
+      highlightStyle: "pygments"
+      highlightLines: true
+      highlightLanguage: "r"
+---
+
+class: title-slide
+
+
+<br>
+<br>
+.right-panel[ 
+
+# `r rmarkdown::metadata$title`
+## `r rmarkdown::metadata$author`
+]
+
+
+
+
+```{r echo = FALSE, message=FALSE, warning = FALSE}
+library(palmerpenguins)
+library(tidyverse)
+library(titanic)
+library(janitor)
+library(fivethirtyeight)
+titanic <- titanic_train %>% 
+  clean_names() %>% 
+  select(survived, pclass, sex, age, fare, embarked) %>% 
+  mutate(pclass = case_when(pclass == 1 ~ "First", 
+                            pclass == 2 ~ "Second",
+                            pclass == 3 ~ "Third"),
+         embarked = case_when(embarked == "S" ~ "Southampton",
+                              embarked == "C" ~ "Cherbourg",
+                              embarked == "Q" ~ "Queenstown"),
+         embarked = as.factor(embarked),
+         sex = as.factor(sex),
+         pclass = as.factor(pclass),
+         survived = as.logical(survived))
+```
+
+
+---
+
+## Data
+
+```{r}
+glimpse(penguins)
+```
+
+---
+
+.left-panel[
+### R
+```{r eval = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+- gray background
+- white gridlines
+- small black points
+- original variable names on axes
+- no title
+]
+
+.right-panel[
+### Default Scatter Plot
+
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point() 
+```
+
+]
+
+---
+
+class: middle inverse
+
+.font75[Changing size, shape, and color of *ALL* the points in a **scatter plot**]
+
+
+
+---
+
+We had talked about how we can use color, shape, and size to distinguish/group poins based on other variables.
+
+But what if we simply wan to change the size, shape, and color of **ALL** the points in a plot to change the look?
+
+We can do so by specifying: 
+
+- `size = #` 
+- `color = "color_you_want"`
+- `shape = "shape_you_want"` 
+
+inside the `geom_point()` function. 
+
+---
+
+.left-panel[
+
+```{r eval = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+
+]
+
+.right-panel[
+
+
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 2) 
+```
+
+]
+
+---
+
+.left-panel[
+### changing size
+```{r eval = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4) #<<
+```
+
+Default size of points is 2.
+]
+
+.right-panel[
+
+
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4) 
+```
+
+]
+
+
+---
+
+
+.left-panel[
+### changing color
+```{r eval = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, #<<
+             color = "purple") #<<
+```
+
+
+]
+
+.right-panel[
+
+
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4,
+             color = "purple") 
+```
+
+]
+
+---
+
+.left-panel[
+### changing shape
+```{r eval = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, #<<
+             color = "purple", #<<
+             shape = "triangle") #<<
+```
+ 
+]
+
+.right-panel[
+
+
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") 
+```
+
+]
+
+---
+
+class: middle inverse
+
+.font75[Labeling the axes and adding a title to a plot]
+
+---
+
+
+We can change the labels on the x and y axes and include a title on our plot by **adding** another layer using the function `labs()` then specifying the labels and title inside the function.
+
+`labs(x = "Label of x-axis", y = "Label of y-axis",  title = "Title of Plot")` 
+
+---
+
+.left-panel[
+### labels
+
+```{r eval = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)", #<<
+       y = "Bill Length (mm)", #<<
+       title = "Palmer Penguins") #<<
+```
+]
+
+.right-panel[
+
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       title = "Palmer Penguins")
+```
+]
+
+---
+
+class: middle inverse
+
+.font75[Changing the look of the rectangular coordinate system]
+
+We can **add** another layer to our scatter plots to change the look of the coordinate's background. 
+
+---
+
+`theme_bw()`
+
+.left-panel[
+```{r eval = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)", 
+       y = "Bill Length (mm)", 
+       title = "Palmer Penguins") +
+  theme_bw() #<<
+  
+```
+
+]
+
+.right-panel[
+```{r echo = FALSE, fig.height=5, warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       title = "Palmer Penguins") +
+  theme_bw()
+```
+
+]
+
+---
+
+`theme_gray()`
+
+```{r echo = FALSE, fig.height=4, fig.align='center', warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       title = "Palmer Penguins") +
+  theme_gray()
+```
+
+- Note: this is the default theme.
+
+---
+
+`theme_classic()`
+
+```{r echo = FALSE, fig.height=4, fig.align='center', warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       title = "Palmer Penguins") +
+  theme_classic()
+```
+
+---
+
+`theme_dark()`
+
+```{r echo = FALSE, fig.height=4, fig.align='center', warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       title = "Palmer Penguins") +
+  theme_dark()
+```
+
+---
+
+`theme_minimal()`
+
+```{r echo = FALSE, fig.height=4, fig.align='center', warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       title = "Palmer Penguins") +
+  theme_minimal()
+```
+
+---
+
+`theme_void()`
+
+```{r echo = FALSE, fig.height=4, fig.align='center', warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       title = "Palmer Penguins") +
+  theme_void()
+```
+
+- Note: labels on the axes are deleted even when included in the code.
+
+---
+
+class: middle inverse
+
+.font75[Changing the font size and color of labels]
+
+---
+
+To change the __font size__ and **color** of the labels and the title we **add** another layer using the function `theme()` and indicate the desired text size # and color for of the title and axes. 
+
+`theme(plot.title = element_text(size = #, color = "color"),`
+        `axis.title = element_text(size = #, color = "color"),`
+        `axis.text = element_text(size = #, color = "color")`
+
+If we want to make all the labels the exact same font size and color then we we can do that by adding the code: 
+
+`theme(text = element_text(size = #, color = "color_you _want"))`
+
+---
+
+
+```{r eval = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)", 
+       y = "Bill Length (mm)", 
+       title = "Palmer Penguins") +
+  theme_bw() +
+  theme(plot.title = element_text(size=30,  #<<
+                                  color = "blue"), #<<
+        axis.title = element_text(size = 20, #<<
+                                  color = "purple"), #<<
+        axis.text = element_text(size = 18, #<<
+                                 color = "black")) #<<
+  
+```
+
+---
+
+
+```{r echo = FALSE, warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4, 
+             color = "purple",
+             shape = "triangle") +
+  labs(x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       title = "Palmer Penguins") +
+  theme_bw() +
+  theme(plot.title = element_text(size=30, 
+                                  color = "blue"),
+        axis.title = element_text(size = 20,
+                                  color = "darkgreen"),
+        axis.text = element_text(size = 18,
+                                 color = "black"))
+```
+
+
+---
+
+Customization of color, labels, text size, and theme backgrounds also works for other graphs, not just scatter plots. 
+
+.left-panel[
+
+```{r eval = FALSE}
+ggplot(data = titanic,
+       aes(x = pclass)) +
+  geom_bar(color = "green", #<<
+           fill = "orange") + #<<
+  labs(x = "Class Rankings", #<<
+       y = "Passengers", #<<
+       title = "Class Distribtion Among Titanic Passengers") + #<<
+  theme_bw() + #<<
+  theme(text = element_text(size= 18, color = "blue")) #<<
+```
+]
+
+.right-panel[
+
+```{r echo = FALSE, fig.height=5}
+ggplot(data = titanic,
+       aes(x = pclass)) +
+  geom_bar(color = "green", 
+           fill = "orange") + 
+  labs(x = "Class Rankings", 
+       y = "Passengers",
+       title = "Class Distribtion Among Titanic Passengers") + 
+  theme_bw() + 
+  theme(text = element_text(size= 18, color = "blue")) #<<
+```
+
+]
+
+---
+
+```{r eval = FALSE}
+?theme
+```
+
+
+---
+
+class: middle inverse
+
+.font75[Splitting the x-y grid based on a categorical variable]
+
+- Splitting side-by-side barplots
+- Splitting scatter plots 
+
+An additional feature you can consider is facets, which is an added layer used to create separate panels (splits the grid) to distinguish groups.
+
+---
+
+How can we add a third categorical variable to a side-by-side barplot? 
+
+.left-panel[
+
+
+```{r eval = FALSE }
+ggplot(data = penguins,
+       aes(x = island, 
+           fill = species)) + 
+  geom_bar(position = "dodge")
+```
+
+]
+
+.right-panel[
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height=5 }
+ggplot(data = penguins,
+       aes(x = island, 
+           fill = species)) + 
+  geom_bar(position = "dodge")
+```
+
+]
+
+---
+
+We can include an additional categorical variable to split plots based on the categories of the variable by **adding** a layer using the function `facet_grid()`.
+
+- **Splitting the x-axis**: add `facet_grid(cols = vars(variable))`
+
+.left-panel[
+
+```{r eval = FALSE }
+ggplot(data = penguins,
+       aes(x = island, 
+           fill = species)) + 
+  geom_bar(position = "dodge") +
+  facet_grid(cols = vars(sex)) #<<
+```
+
+This plot involves **3 categorical variables**, where a side-by-side bar plot is created for each category.
+
+]
+
+.right-panel[
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height=5 }
+ggplot(data = penguins,
+       aes(x = island, 
+           fill = species)) + 
+  geom_bar(position = "dodge") +
+  facet_grid(cols = vars(sex))
+```
+
+]
+
+---
+
+We can also split scatter plots.
+
+.left-panel[
+
+```{r eval = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4,
+             color = "purple")
+```
+
+]
+
+.right-panel[
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4,
+             color = "purple")
+```
+]
+
+
+---
+
+This plot involves **2 numerical variables and 1 categorical variable**, where scatter plots are created for each category.
+
+.left-panel[
+
+```{r eval = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4,
+             color = "purple") +
+  facet_grid(cols = vars(sex)) #<<
+```
+
+]
+
+.right-panel[
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4,
+             color = "purple") +
+  facet_grid(cols = vars(sex))
+```
+]
+
+---
+
+This plot involves **2 numerical variables and 2 categorical variable**, where scatter plots are created for each category and points are grouped based on color. 
+
+.left-panel[
+
+```{r eval = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+           color = island)) + #<<
+  geom_point(size = 4) +
+  facet_grid(cols = vars(sex)) #<<
+```
+
+]
+
+.right-panel[
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+           color = island)) +
+  geom_point(size = 4) +
+  facet_grid(cols = vars(sex))
+```
+]
+
+---
+
+
+This plot involves **2 numerical variables and 3 categorical variable**, where scatter plots are created for each category and points are grouped based on color and shape. 
+
+.left-panel[
+
+```{r eval = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+           shape = species, #<<
+           color = island)) + #<<
+  geom_point(size = 4) +
+  facet_grid(cols = vars(sex)) #<<
+```
+
+]
+
+.right-panel[
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+           shape = species,
+           color = island)) +
+  geom_point(size = 4) +
+  facet_grid(cols = vars(sex))
+```
+]
+
+
+---
+
+
+This plot involves **3 numerical variables and 3 categorical variable**, where scatter plots are created for each category and points are grouped based on color and shape, and size of points are distinguished. 
+
+.left-panel[
+
+```{r eval = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+           shape = species, #<<
+           color = island, #<<
+           size = body_mass_g)) + #<<
+  geom_point() +
+  facet_grid(cols = vars(sex)) #<<
+```
+
+]
+
+.right-panel[
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+           shape = species,
+           color = island,
+           size = body_mass_g)) +
+  geom_point() +
+  facet_grid(cols = vars(sex))
+```
+]
+
+
+---
+
+class: middle 
+
+We may split the grid horizontally instead of vertically. 
+ 
+ - **Splitting the y-axis**: `facet_grid(rows = vars(variable))`
+
+.left-panel[
+
+```{r eval = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4,
+             color = "purple") +
+  facet_grid(rows = vars(sex)) #<<
+```
+
+]
+
+.right-panel[
+```{r echo = FALSE, fig.align='center', warning = FALSE, fig.height=5}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point(size = 4,
+             color = "purple") +
+  facet_grid(rows = vars(sex))
+```
+]
+
+---
+
+class: middle
+
+You can do much more in ggplot. 
+
+- Use images 
+- Make maps
+- Pick colors for every aspect of a graph
+- Customize legends
+
+
+We don't have time to cover all these. However, as we go along, you will become fluent in reading R code and Googling. 
+
+
+Check out [the ggplot flipbook](https://evamaerey.github.io/ggplot_flipbook/ggplot_flipbook_xaringan.html#1) for some inspiration. 
+
+For more on labels and chaging legends, see the Graphics for Cummunication section in the [R for Data Science](https://r4ds.had.co.nz/graphics-for-communication.html) book.
+

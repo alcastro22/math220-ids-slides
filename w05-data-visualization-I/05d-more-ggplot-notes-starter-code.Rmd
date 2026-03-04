@@ -1,0 +1,325 @@
+---
+title: "Data Visualization: More ggplot"
+author: "Name"
+date: "Date"
+output: html_document
+---
+
+```{r echo=FALSE, message=FALSE }
+library(palmerpenguins)
+library(tidyverse)
+library(titanic)
+library(janitor)
+titanic <- titanic_train %>% 
+  clean_names() %>% 
+  select(survived, pclass, sex, age, fare, embarked) %>% 
+  mutate(pclass = case_when(pclass == 1 ~ "First", 
+                            pclass == 2 ~ "Second",
+                            pclass == 3 ~ "Third"),
+         embarked = case_when(embarked == "S" ~ "Southampton",
+                              embarked == "C" ~ "Cherbourg",
+                              embarked == "Q" ~ "Queenstown"),
+         embarked = as.factor(embarked),
+         sex = as.factor(sex),
+         pclass = as.factor(pclass),
+         survived = as.logical(survived))
+```
+
+
+### Data
+
+```{r}
+glimpse(penguins)
+```
+
+---
+
+### Default Scatter Plot
+
+- gray background
+- white gridlines
+- small black points
+- original variable names on axes
+- no title
+
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point() 
+```
+
+
+## Changing size, shape, and color of *ALL* the points in a **scatter plot**
+
+We had talked about how we can use color, shape, and size aesthetics to distinguish/group points based on other variables.
+
+But what if we simply wan to change the size, shape, and color of **ALL** the points in a plot to change the look?
+
+We may change the size, shape, and color of **ALL** the points in a plot by customizing them inside the `geom_point()` function.  
+
+- `size = #` 
+- `color = "color_you_want"`
+- `shape = "shape_you_want"` 
+ 
+### changing size of points
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+
+### changing color
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+
+### changing shape
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+
+---
+
+## Labeling the axes of a scatter plot
+
+
+We can change the labels on the x and y axes and include a title on our plot by **adding** another layer using the function `labs()` then specifying the labels and title inside the function.
+
+`labs(x = "Label of x-axis", y = "Label of y-axis",  title = "Title of Plot")` 
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+---
+
+## Changing the look of the rectangular coordinate system
+
+We can **add** another layer to our scatter plots to change the look of the coordinate's background. 
+
+- `theme_bw()`
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+  
+```
+
+
+
+- `theme_gray()`
+   - Note: this is the default theme.
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+  
+```
+
+
+- `theme_classic()`
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+  
+```
+
+
+- `theme_dark()`
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+  
+```
+
+
+- `theme_minimal()`
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+  
+```
+
+
+- `theme_void()`
+    - Note: labels on the axes are deleted even when included in the code. 
+
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+  
+```
+
+---
+
+## Changing the font size and color of labels
+
+To change the __font size__ and **color** of the labels and the title we **add** another layer using the function `theme()` and indicate the desired text size # and color for of the title and axes. 
+
+`theme(plot.title = element_text(size = #, color = "color"),`
+        `axis.title = element_text(size = #, color = "color"),`
+        `axis.text = element_text(size = #, color = "color")`
+
+If we want to make all the labels the exact same font size and color then we we can do that by adding the code: 
+
+`theme(text = element_text(size = #, color = "color_you _want"))`
+
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+  
+```
+
+
+Customization of color, labels, text size, and theme backgrounds also works for other graphs, not just scatter plots. 
+
+```{r}
+ggplot(data = titanic,
+       aes(x = pclass)) +
+  geom_bar(color = "green",
+           fill = "orange") +
+  labs(x = "Class Rankings",
+       y = "Passengers",
+       title = "Class Distribtion Among Titanic Passengers") +
+  theme_bw() + 
+  theme(text = element_text(size= 18, color = "blue"))
+```
+
+
+
+## Splitting the x-y grid based on a categorical variable
+
+- Splitting side-by-side barplots
+- Splitting scatter plots 
+
+An additional feature you can consider is facets, which is an added layer used to create separate panels (splits the grid) to distinguish groups.
+
+We can include an additional categorical variable to split plots based on the categories of the variable by **adding** a layer using the function `facet_grid()`.
+
+- **Splitting the x-axis**: `facet_grid(cols = vars(variable))`
+
+The plot below involves **3 categorical variables**, where side-by-side bar plots are created for each category.
+
+```{r}
+ggplot(data = penguins,
+       aes(x = island, 
+           fill = species)) + 
+  geom_bar(position = "dodge")
+```
+
+
+
+### Splitting scatter plots.
+
+
+- This plot involves **2 numerical variables and 1 categorical variable**, where scatter plots are created for each category.
+
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+
+
+- This plot involves **2 numerical variables and 2 categorical variable**, where scatter plots are created for each category and points are grouped based on color. 
+
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+
+
+- This plot involves **2 numerical variables and 3 categorical variable**, where scatter plots are created for each category and points are grouped based on color and shape. 
+
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+
+- This plot involves **3 numerical variables and 3 categorical variable**, where scatter plots are created for each category and points are grouped based on color and shape, and size of points are distinguished. 
+
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+
+We may **split the grid horizontally** instead of vertically. 
+ 
+ - **Splitting the y-axis**: `facet_grid(rows = var(variable))`
+
+
+```{r warning = FALSE}
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) +
+  geom_point()
+```
+
+
+---
+
+You can do much more in ggplot. 
+
+- Use images 
+- Make maps
+- Pick colors for every aspect of a graph
+- Customize legends
+
+
+We don't have time to cover all these. However, as we go along, you will become fluent in reading R code and Googling. 
+
+
+Check out [the ggplot flipbook](https://evamaerey.github.io/ggplot_flipbook/ggplot_flipbook_xaringan.html#1) for some inspiration. 
+
+For more on labels and chaging legends, see the Graphics for Cummunication section in the [R for Data Science](https://r4ds.had.co.nz/graphics-for-communication.html) book.
+

@@ -1,0 +1,63 @@
+---
+title: "Data Visualization: More ggplot Activity (25 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+---
+
+
+```{r echo = FALSE, message=FALSE}
+library(tidyverse)
+data(mpg)
+```
+
+---
+
+
+Use the `mpg` data to create the following plot.
+
+1. (2 pts) Use `?mpg` to find more information about the data set and its variables. Write one or two sentences describing the data set. Include information about the number of observations and variables.
+```{r}
+
+```
+
+
+
+2.  (4 pts) Classify all the variables as either categorical or numerical. Then further classify them as continuous, discrete, nominal, or ordinal. 
+```{r}
+
+```
+
+
+3.  (3 pts) Create an appropriate graph for the variables highway mpg and type of transmission. Add a title and appropriate labels for the axes. Write a sentence to describe what you see.
+```{r }
+
+```
+
+4.  (6 pts) Construct a plot to look at the relationship between city mpg (x) and highway mpg (y). Change the default background of the coordinate plane. Color the points and change their size and shape to your liking. Write a sentence to describe what you see.
+```{r}
+
+```
+
+
+
+5.  (5 pts) Recreate the plot from question 4 and group the data points using color for each type of drive train. Change the size and color the x and y labels.  Write a couple of sentences to describe what you see.
+```{r}
+
+```
+
+
+6.  (2 pts) Create a graph to answer the question: What percent of of cars with a manual m6 transmission are suv's, minivans, and pickups? 
+
+```{r }
+
+```
+
+
+
+7.  (3 pts) Pick four variables of interest and create a graph. Add a title and appropriate x and y labels. Write a sentence to describe what you see.
+```{r }
+
+```
+
+
