@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Changing Variables</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="06c-changing-variables_files/header-attrs-2.30/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+
+
+
+
+
+
+
+&lt;br&gt;
+&lt;br&gt;
+.right-panel[ 
+
+# Changing Variables
+## Alma Castro, Cypress College
+
+]
+
+---
+
+## Data
+
+``` r
+lapd &lt;- read_csv("Police_Payroll.csv")
+```
+
+Let's clean names and subset data to only focus on the year 2018, and the variables `job_class_title`, `employment_type`, and `base_pay`. Then reassign it to `lapd`.
+
+--
+
+
+``` r
+lapd &lt;- clean_names(lapd) |&gt; 
+  filter(year == 2018) |&gt; 
+  select(job_class_title, 
+         employment_type, 
+         base_pay)
+```
+
+---
+
+
+``` r
+glimpse(lapd)
+```
+
+```
+## Rows: 14,824
+## Columns: 3
+## $ job_class_title &lt;chr&gt; "Police Detective II", "Police Sergeant I", "Police Li…
+## $ employment_type &lt;chr&gt; "Full Time", "Full Time", "Full Time", "Full Time", "F…
+## $ base_pay        &lt;dbl&gt; 119321.60, 113270.70, 148116.00, 78676.87, 109373.63, …
+```
+
+---
+
+## Creating New Variables
+
+To create a new variable we use the function `mutate()`, with the data set as the first argument, then specifications on how we want to create the new variable in subsequent arguments. Or we can pipe the data set to the function. 
+
+New variables will be added to the right of the other variables. 
+
+---
+
+### Creating new variables using operations between existing variables
+
+We can use an existing numerical variable in a mathematical expression to define the new numerical variable. 
+ 
+---
+
+### Example 1
+
+Create a new variable called `base_pay_k` that represents `base_pay` in thousand of dollars.
+
+--
+
+Note that we first define the new variable before the equal sign within the mutate() function.
+
+
+``` r
+lapd |&gt; 
+  mutate(base_pay_k = base_pay/1000)
+```
+
+```
+## # A tibble: 14,824 × 4
+##   job_class_title                  employment_type base_pay base_pay_k
+##   &lt;chr&gt;                            &lt;chr&gt;              &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Police Detective II              Full Time        119322.      119. 
+## 2 Police Sergeant I                Full Time        113271.      113. 
+## 3 Police Lieutenant II             Full Time        148116       148. 
+## 4 Police Service Representative II Full Time         78677.       78.7
+## 5 Police Officer III               Full Time        109374.      109. 
+## 6 Police Officer II                Full Time         95002.       95.0
+## # ℹ 14,818 more rows
+```
+
+---
+
+### Creating new variables based on conditions
+
+**Two conditions**
+
+When we have **two outcomes** of a condition, either or, then we can utilize the `if_else()` function to define our conditions.
+
+
+&lt;img src="img/if-else.PNG" alt="" width="40%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Example 2
+
+According to Business Insider, in 2018, a household was considered "wealthy" or upper class if they earn more than $188,000 annually.
+
+Let's say we wanted to classify LAPD staff as wealthy or not. 
+
+---
+
+we can create a variable called "wealth_status". If the base_pay is “more than 188000” for any row then the wealth_status" will be set to “wealthy”, else (i.e., if the base_pay is “less than or equal to 188000”) wealth_status will be set to “not wealthy”.
+
+
+``` r
+mutate(lapd, wealth_status = if_else(base_pay &gt; 188000,
+      "wealthy",
+      "not wealthy"))
+```
+
+```
+## # A tibble: 14,824 × 4
+##   job_class_title                  employment_type base_pay wealth_status
+##   &lt;chr&gt;                            &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;        
+## 1 Police Detective II              Full Time        119322. not wealthy  
+## 2 Police Sergeant I                Full Time        113271. not wealthy  
+## 3 Police Lieutenant II             Full Time        148116  not wealthy  
+## 4 Police Service Representative II Full Time         78677. not wealthy  
+## 5 Police Officer III               Full Time        109374. not wealthy  
+## 6 Police Officer II                Full Time         95002. not wealthy  
+## # ℹ 14,818 more rows
+```
+
+
+---
+
+**More than two conditions**
+
+Sometimes we need to create variables based on **multiple conditions** rather than just two. The `case_when()` function is perfect for these situations where we have more than two possible conditions and actions.
+
+In such case, we create a new categorical variable, where its categories correspond to intervals created from braking the range of a numerical variable. 
+
+We use the function `case_when()` inside `mutate()`.
+
+---
+
+### Example 3
+
+Create a new variable called `base_pay_level` which has `Less Than 0`, `No Income`, `Greater than 0 and less than Median` and `Greater than Median`. We will consider $62474 as the median (from previous lecture).
+
+--
+
+Let's first check if there is anyone earning exactly the median value.
+
+
+``` r
+lapd |&gt; 
+  filter(base_pay == 62474)
+```
+
+```
+## # A tibble: 0 × 3
+## # ℹ 3 variables: job_class_title &lt;chr&gt;, employment_type &lt;chr&gt;, base_pay &lt;dbl&gt;
+```
+
+There is no one earning the median, hence we can use the strictly "less than" or "greater than" operators to create our conditions. 
+
+---
+
+
+``` r
+lapd |&gt; 
+  mutate(base_pay_level = case_when(
+    base_pay &lt; 0 ~ "Less than 0", 
+    base_pay == 0 ~ "No Income",
+    base_pay &gt; 0 &amp; base_pay &lt; 62474 ~ "Greater than 0 and less than Median",
+    base_pay &gt; 62474 ~ "Greater than Median")) 
+```
+
+```
+## # A tibble: 14,824 × 4
+##   job_class_title                  employment_type base_pay base_pay_level     
+##   &lt;chr&gt;                            &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;              
+## 1 Police Detective II              Full Time        119322. Greater than Median
+## 2 Police Sergeant I                Full Time        113271. Greater than Median
+## 3 Police Lieutenant II             Full Time        148116  Greater than Median
+## 4 Police Service Representative II Full Time         78677. Greater than Median
+## 5 Police Officer III               Full Time        109374. Greater than Median
+## 6 Police Officer II                Full Time         95002. Greater than Median
+## # ℹ 14,818 more rows
+```
+
+---
+
+We can't really __see__ what we have created. 
+
+
+``` r
+lapd |&gt; 
+  mutate(base_pay_level = case_when(
+    base_pay &lt; 0 ~ "Less than 0", 
+    base_pay == 0 ~ "No Income",
+    base_pay &lt; 62474 &amp; base_pay &gt; 0 ~ "Less than Median, Greater than 0",
+    base_pay &gt; 62474 ~ "Greater than Median")) |&gt; 
+  select(base_pay_level)
+```
+
+```
+## # A tibble: 14,824 × 1
+##   base_pay_level     
+##   &lt;chr&gt;              
+## 1 Greater than Median
+## 2 Greater than Median
+## 3 Greater than Median
+## 4 Greater than Median
+## 5 Greater than Median
+## 6 Greater than Median
+## # ℹ 14,818 more rows
+```
+
+
+---
+
+We can visualize the new variable we have created.
+
+.left-panel[
+
+``` r
+lapd |&gt; 
+  mutate(base_pay_level = case_when(
+    base_pay &lt; 0 ~ "Less than 0", 
+    base_pay == 0 ~ "No Income",
+    base_pay &lt; 62474 &amp; base_pay &gt; 0 ~ "Less than Median, Greater than 0",
+    base_pay &gt; 62474 ~ "Greater than Median")) |&gt; 
+  select(base_pay_level) |&gt; 
+  ggplot(aes(x = base_pay_level)) +
+  geom_bar()
+```
+
+We can use pipes with ggplot too!
+]
+
+.right-panel[
+&lt;img src="06c-changing-variables_files/figure-html/unnamed-chunk-13-1.png" alt="" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+
+``` r
+glimpse(lapd)
+```
+
+```
+## Rows: 14,824
+## Columns: 3
+## $ job_class_title &lt;chr&gt; "Police Detective II", "Police Sergeant I", "Police Li…
+## $ employment_type &lt;chr&gt; "Full Time", "Full Time", "Full Time", "Full Time", "F…
+## $ base_pay        &lt;dbl&gt; 119321.60, 113270.70, 148116.00, 78676.87, 109373.63, …
+```
+
+__Note__: the data remains unchanged unless we "save" it. You may choose to save as you go; however, as we work on data cleaning and creating variables, it makes sense not to "save" the data frames. Once we see the final data frame we want then we can "save" (i.e. overwrite) it.
+
+---
+
+## Changing a variable type
+
+There will be times when R does not assign the correct variable type or when you want to change it based on the analysis you want to do on it. 
+
+We use one of the following functions inside `mutate()` to assign the correct variable type. 
+
+`as.factor()` - makes a vector factor  
+`as.numeric()` - makes a vector numeric  
+`as.integer()` - makes a vector integer  
+`as.double()` - makes a vector double  
+`as.character()` - makes a vector character
+
+---
+
+### Example 4
+
+
+``` r
+glimpse(lapd)
+```
+
+```
+## Rows: 14,824
+## Columns: 3
+## $ job_class_title &lt;chr&gt; "Police Detective II", "Police Sergeant I", "Police Li…
+## $ employment_type &lt;chr&gt; "Full Time", "Full Time", "Full Time", "Full Time", "F…
+## $ base_pay        &lt;dbl&gt; 119321.60, 113270.70, 148116.00, 78676.87, 109373.63, …
+```
+
+
+Change `job_class_title` and `employment_type` to factor variables. 
+
+
+---
+
+
+``` r
+lapd |&gt; 
+  mutate(employment_type = as.factor(employment_type),
+         job_class_title = as.factor(job_class_title)) 
+```
+
+```
+## # A tibble: 14,824 × 3
+##   job_class_title                  employment_type base_pay
+##   &lt;fct&gt;                            &lt;fct&gt;              &lt;dbl&gt;
+## 1 Police Detective II              Full Time        119322.
+## 2 Police Sergeant I                Full Time        113271.
+## 3 Police Lieutenant II             Full Time        148116 
+## 4 Police Service Representative II Full Time         78677.
+## 5 Police Officer III               Full Time        109374.
+## 6 Police Officer II                Full Time         95002.
+## # ℹ 14,818 more rows
+```
+
+---
+
+class: middle
+
+Now that we know the final data frame that we want, we can now "save" (i.e. overwrite) it.
+
+
+
+``` r
+lapd &lt;- lapd |&gt; 
+    mutate(employment_type = as.factor(employment_type),
+           job_class_title = as.factor(job_class_title),
+           base_pay_k = base_pay/1000,
+           wealth_status = if_else(base_pay &gt; 188000,
+                                   "wealthy",
+                                   "not wealthy"),
+           base_pay_level = case_when(
+             base_pay &lt; 0 ~ "Less than 0", 
+             base_pay == 0 ~ "No Income",
+             base_pay &lt; 62474 &amp; base_pay &gt; 0 ~ "Less than Median, Greater than 0",
+             base_pay &gt; 62474 ~ "Greater than Median"))
+```
+
+---
+
+Take a look at the data set to verify that the changes were made and saved.
+
+
+``` r
+glimpse(lapd)
+```
+
+```
+## Rows: 14,824
+## Columns: 6
+## $ job_class_title &lt;fct&gt; Police Detective II, Police Sergeant I, Police Lieuten…
+## $ employment_type &lt;fct&gt; Full Time, Full Time, Full Time, Full Time, Full Time,…
+## $ base_pay        &lt;dbl&gt; 119321.60, 113270.70, 148116.00, 78676.87, 109373.63, …
+## $ base_pay_k      &lt;dbl&gt; 119.32160, 113.27070, 148.11600, 78.67687, 109.37363, …
+## $ wealth_status   &lt;chr&gt; "not wealthy", "not wealthy", "not wealthy", "not weal…
+## $ base_pay_level  &lt;chr&gt; "Greater than Median", "Greater than Median", "Greater…
+```
+
+---
+
+class: middle
+
+### Word of caution
+
+The functions `clean_names()`, `select()`, `filter()`, `slice()`, and `mutate()` take a data frame as the first argument. When we use `|&gt;`, the data frame is piped through from the previous step of code at each step. When we use these functions without the `|&gt;` we have to include the data frame explicitly.
+
+.pull-left[
+Data frame is used as the first argument
+
+``` r
+select(lapd, base_pay)
+```
+
+```
+## # A tibble: 14,824 × 1
+##   base_pay
+##      &lt;dbl&gt;
+## 1  119322.
+## 2  113271.
+## 3  148116 
+## 4   78677.
+## 5  109374.
+## 6   95002.
+## # ℹ 14,818 more rows
+```
+]
+
+.pull-right[
+Data frame is piped
+
+
+``` r
+lapd |&gt; 
+  select(base_pay)
+```
+
+```
+## # A tibble: 14,824 × 1
+##   base_pay
+##      &lt;dbl&gt;
+## 1  119322.
+## 2  113271.
+## 3  148116 
+## 4   78677.
+## 5  109374.
+## 6   95002.
+## # ℹ 14,818 more rows
+```
+]
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

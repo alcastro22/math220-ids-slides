@@ -1,0 +1,65 @@
+---
+title: "Changing Variables Activity (13 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+---
+
+
+```{r message = FALSE}
+library(tidyverse)
+library(janitor)
+data(mpg)
+
+```
+
+
+
+Use the `mpg` data to answer the following questions. 
+```{r}
+
+```
+
+
+1. (2 pts) Assuming that the average fuel tank capacity for a car is 14 gallons, create a new variable called `city_tank` that gives the total miles per tank in the city. 
+
+```{r}
+
+```
+
+
+2. (2 pts) Create a new variable called `diff_mpg` that gives the difference between highway and city miles per gallon. 
+
+```{r}
+
+```
+
+
+3. (3 pts) Create new variable called `energy_ efficiency` that will classify a vehicle as a fuel efficient car based on its highway miles per gallon. Assume the following breakdowns: `Low` if highway mpg is less than to 23, `Good` if highway mpg is between 23 and 34, inclusive, and `High` if highway mpg is greater than 34.
+
+```{r}
+
+```
+
+
+4. (2 pts) Change `manufacturer`, and `class` to factor variables, and save these changes. 
+
+```{r}
+
+```
+
+
+5. (2 pts) Subset the `mpg` data set to only have the variables `manufacturer`, `class`, `hwy`, `city_tank`, `diff_mpg`, and `energy_ efficiency`, and save under same data set name.   
+
+```{r}
+
+```
+
+
+6. (2 pts) Create a graph to visualize the new variable `energy_ efficiency`.
+
+```{r}
+
+```
+
+
