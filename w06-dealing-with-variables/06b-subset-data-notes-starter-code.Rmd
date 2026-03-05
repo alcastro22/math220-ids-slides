@@ -1,0 +1,218 @@
+---
+title: "Data Wrangling"
+author: "Your name here"
+date: "date here"
+output: html_document
+---
+
+```{r message = FALSE}
+library("tidyverse")
+library("janitor")
+```
+
+## Pipe Operator |> 
+
+### What is the average of 4, 8, 16 approximately?
+
+**Solution 1: Functions within Functions**
+
+```{r}
+
+```
+
+The problem with writing functions within functions is that things will get messy and more difficult to read and debug as we deal with more complex operations on data.
+
+**Solution 2: Creating Objects**
+
+```{r}
+
+```
+
+The problem with creating many objects is that we will end up with too many objects in `Environment`.
+
+
+**Solution 3: The (forward) Pipe Operator |> **
+
+The pipe operator allows for the output of a function to be the argument of another function.
+
+```{r}
+
+```
+
+
+The output of the first function is the first argument of the second function.
+
+# Subsetting Data
+
+### Import Data Set
+
+Import the Police_Payroll.csv data file using `read_csv()` function and assign it to `lapd`. Glimpse the data.
+```{r message = FALSE}
+lapd <- read_csv("Police_Payroll.csv")
+glimpse(lapd)
+```
+
+
+## Cleaning variable names to fit Tidyverse style
+
+Recall, `clean_names()` is a function from the Janitor package. It will convert names to tidyverse style: all lower case and with underscores in place of spaces.
+
+```{r}
+
+```
+
+### Importing data and cleaning names using `pipe operator |>`
+
+```{r eval = FALSE, message = FALSE}
+
+
+```
+
+
+## Subsetting variables/columns
+
+`select()` is used to select the variables we want to keep from the data frame. The first argument is the dataset followed by the list of variables we want to select. 
+
+This is useful when working with large datasets that contain many variables, but you only need a few for your specific analysis. The resulting data frame would have the **chosen columns** and keep **all the rows**.
+
+We can either enter the data frame as the first argument.
+
+```{r}
+
+```
+
+
+or we can pipe the data frame.
+```{r}
+
+```
+
+
+`select` can also be used to drop certain variables if used with a negative sign.
+
+```{r}
+
+```
+
+
+or we can use the exclamation mark (!) with the `c()` function to list the ones we want to drop.
+
+```{r}
+
+```
+
+
+### Selection helpers
+
+These functions are used as an argument in the `select()` function to narrow it down to the specified variables you want.
+
+`starts_with()`  
+```{r}
+
+```
+
+`ends_with()`  
+```{r}
+
+```
+
+`contains()` 
+```{r}
+
+```
+
+
+## Subsetting observations/rows
+
+The `slice()` function allows us to examine (subset) rows by their position (**row number**) in the dataset.
+
+The data below includes all the rows from third to seventh. Including third and seventh.
+
+```{r}
+
+```
+
+
+The `filter()` function allows us to subset rows based on **conditions**, while keeping all the columns.
+
+We use relational and logical operators to create these conditions.
+
+### Relational Operators in R
+
+
+| Operator | Description              |
+|----------|--------------------------|
+| <        | Less than                |
+| >        | Greater than             |
+| <=       | Less than or equal to    |
+| >=       | Greater than or equal to |
+| ==       | Equal to                 |
+| !=       | Not equal to             |
+
+
+
+### Logical Operators in R
+
+| Operator | Description |
+|----------|-------------|
+| &        | and         |
+| &#124;   | or          |
+
+
+
+### Examples 
+
+Q1. According to [datausa.io](https://datausa.io/profile/geo/los-angeles-ca#:~:text=In%202018%2C%20Los%20Angeles%2C%20CA,%2462%2C474%2C%20a%203.78%25%20increase.) Los Angeles had a median household income of \$62,474 in 2018. How many LAPD staff members had a base pay higher than $62,474 in year 2018 according to this data?
+
+```{r}
+
+```
+
+
+- We can pipe the filtered data into the `nrow()` function to only obtain the number of observations that satisfy the stated condition.
+
+```{r}
+
+```
+
+According to this data, ________ LAPD staff members had a base pay higher than $62474 in the year 2018.
+
+Q2. How many observations are available between 2013 and 2015 including 2013 and 2015?
+
+```{r}
+
+```
+
+There are 40227 observations are available between 2013 and 2015 including 2013 and 2015.
+
+Q3. How many LAPD staff were employed full time in 2018?
+
+```{r}
+
+```
+
+There were _______ LAPD staff that were employed full time in 2018.
+
+---
+
+### Remarks when selecting variables and filtering observations
+
+When selecting variables or filtering observations or both, there are two ways to go about saving the new filtered data: 
+
+- assign it to a new data set name, keeping the original data set intact. 
+- assign it to the same name, overriding the original data set.  
+
+Also, when doing both, selecting variables and filtering observations, there is a correct order of doing it. We must **first filter** the observations and **then select** the desired variables. 
+
+Suppose that we wanted to only focus on the year 2018, and the variables job_class_title, employment_type, and base_pay. Let's subset our data accordingly and assign it to lapd.
+
+```{r}
+
+```
+
+
+Let's glimpse the new filtered data frame. 
+```{r}
+
+```
+
