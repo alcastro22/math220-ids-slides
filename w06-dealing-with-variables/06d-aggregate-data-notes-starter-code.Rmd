@@ -1,0 +1,96 @@
+---
+title: "Aggregating Data"
+author: "Your name here"
+date: "date here"
+output: html_document
+
+---
+
+```{r message = FALSE, warning = FALSE}
+
+library("tidyverse")
+library("janitor")
+options(scipen = 999) #to change scientific notation to standard
+```
+
+
+Import `lapd` data set, clean names, subset data to only focus on the year 2018, and the variables `job_class_title`, `employment_type`, and `base_pay`, and change variables to their correct type. Then reassign it to `lapd`.
+
+```{r message = FALSE}
+lapd <- read_csv("Police_Payroll.csv") |> 
+  clean_names() |> 
+  filter(year == 2018) |> 
+  select(job_class_title, 
+         employment_type, 
+         base_pay) |> 
+  mutate(employment_type = as.factor(employment_type),
+         job_class_title = as.factor(job_class_title))
+```
+
+
+Recall that categorical data can be summarized with counts or proportions. 
+
+
+```{r}
+
+```
+
+
+
+Whereas, numerical variables can be summarized with means, medians, standard deviations, five-number summary, ...
+
+```{r}
+
+```
+
+
+**But what if we wanted to find numerical summaries for each of the categories in a categorical variable?** 
+
+
+---
+
+## Aggregating Data by Groups
+
+Often we want to calculate statistics for different groups in our data.
+
+We can find numerical summaries for each category of a categorical variable using the function `group_by()` to first group observations based on their corresponding category and then finding the numerical summary we want using the `summarize()` function. 
+
+`group_by(data, variable)`
+
+
+### Example
+
+What is the median salary for each employment type?
+
+First, we group individuals based on their employment type.
+
+```{r}
+
+```
+
+
+Then, we find the median salary for `base_pay`. 
+
+```{r}
+
+```
+
+
+We can also remind ourselves how many staff members there were in each group using the function `n()`, but only works inside `summarize()` and `mutate()`.
+
+```{r}
+
+```
+
+
+### Using a boxplot to compare the median salary per employment type  
+
+
+```{r}
+
+```
+
+
+
+
+
