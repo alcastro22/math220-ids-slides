@@ -1,0 +1,259 @@
+---
+title: "Writing Functions"
+author: "Your name here"
+date: "date here"
+output: html_document
+---
+
+```{r message = FALSE}
+library("tidyverse")
+library(titanic)
+library(janitor)
+titanic <- titanic_train %>% 
+  clean_names()
+```
+
+
+# Functions
+There are two types of functions in R: 
+
+- Functions that are already written commands in R or from libraries that you install. 
+
+- Functions that the users create. These functions will
+remain in the command memory of the software unless you delete them or overwrite them. 
+
+The command to create a function is `function()`.
+
+
+## Writing functions
+There are three key steps to creating a new function:
+
+  - You need to pick a __name__ for the function. 
+
+  - You list the inputs, or __arguments__, inside the function. If we had more than one argument, then the call would look like function(x, y, z).
+
+  - You place the code you have developed in the __body__ of the function, a { block that immediately follows function(...).
+
+__Template:__ 
+```{r eval = FALSE}
+name <- function(arguments) {
+  body
+}
+```
+
+
+There are main groups of functions: 
+
+- Vector functions take one or more vectors as input and return a vector as output.
+- Data frame functions take a data frame as input and return a data frame as output.
+- Plot functions that take a data frame as input and return a plot as output.
+
+---
+
+## Vector Functions
+
+### Simple example
+
+Using mathematical operations
+
+```{r}
+
+```
+
+
+- Name: `double()`
+- Argument: `number`
+- Body: `number*2`
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+
+### Having multiple arguments
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+
+### Another example
+
+```{r}
+
+
+```
+
+
+```{r}
+
+```
+
+
+
+### Using a vector as the argument
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+---
+
+## Data Frame Functions
+
+### Filtering Function
+
+Suppose we wanted to filter passengers on the titanic based on the their travel class and create a separate data frame for each where the only information we keep is their name, age, and survival status. 
+
+We can start with the filtering code for first class
+
+```{r}
+
+```
+
+
+
+To filter passenger traveling on second class, we can use the previous code and only change pclass to 2.
+
+```{r}
+
+```
+
+
+Whenever you catch yourself copying and pasting code and only modifying a tiny part (e.g. pclass), write a function to automate the process. The tiny part that needs the modification can be the argument of the function.
+
+```{r}
+
+
+```
+
+
+
+Passengers traveling in first class. 
+
+```{r}
+
+```
+
+
+Passengers traveling in second class.
+
+```{r}
+
+
+```
+
+
+Because the filtering function creates a data frame, we can save it if we would like.
+
+```{r}
+
+```
+
+
+---
+
+## Ploting Functions
+
+### Histogram Function
+
+Imagine you wanted to create a lot of histograms with only varying binwidths. 
+
+Let `bin` stand for binwidth.
+
+```{r}
+
+```
+
+
+binwidth = 30
+```{r}
+
+```
+
+
+
+binwidth = 100
+```{r}
+
+```
+
+
+Lets change the previous function so that we can create a histogram with various bindwiths for any numerical variable in any dataframe.
+
+Let's use `df` to stand for data frame and `var` stands for variable, and `bin` stand for binwidth.  
+
+```{r}
+
+```
+
+We can use ggplot2 to create a plotting function because `aes()` is a data-masking function.
+
+To pass a column name or expression supplied as an argument to your function to another data-masking function, you must "embrace" the argument name with double curly braces ({{ ).
+
+Embracing a variable tells ggplot to use the value stored inside the argument, not the argument as the literal variable name. { var } will make the function look inside of var rather than looking for a variable called var.
+
+variable = age 
+binwidth = 10
+
+```{r}
+
+```
+
+variable = age
+binwidth 15
+
+```{r}
+
+```
+
+
+---
+
+## Creating a new function:
+
+  - Pick a name for the function; short if possible and describing what the function does.
+
+  - List the inputs, or arguments, to the function inside function. If we had more than one argument, then the code would look like function(x, y, z).
+
+  - Place the code you have developed in body of the function, a { block that immediately follows function(...).
+
+
+Note the overall process: you can make the function after you had figured out how to make it work with a simple input. It’s easier to start with working code and turn it into a function; it’s harder to create a function and then try to make it work.

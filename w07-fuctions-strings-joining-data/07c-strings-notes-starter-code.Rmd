@@ -1,0 +1,196 @@
+---
+title: "Working with Strings"
+author: "Name here"
+date: "date here" 
+output: html_document
+
+---
+
+```{r message=FALSE}
+library(tidyverse)
+```
+
+
+## What is a string?
+
+A string is a data type used to represent text rather than numbers. It is a sequence of characters and can contain letters, numbers, symbols and even spaces. __It must be enclosed in quotation marks for it to be recognized as a string.__ 
+
+You can create a string using either single quotes (') or double quotes ("). There’s no difference in behavior between the two, so in the interests of consistency, the tidyverse style guide recommends using ", unless the string contains multiple ".
+
+```{r}
+
+```
+
+
+## Data
+
+[Friends](https://www.imdb.com/title/tt0108778)
+
+__Storyline:__
+Ross Geller, Rachel Green, Monica Geller, Joey Tribbiani, Chandler Bing, and Phoebe Buffay are six twenty-somethings living in New York City. Over the course of 10 years and seasons, these friends go through life lessons, family, love, drama, friendship, and comedy.
+
+
+```{r message = FALSE}
+friends <- read_csv("friends.csv")
+glimpse(friends)
+```
+
+
+Let's look at first description only and assign it to `first_episode_des`. 
+
+```{r}
+
+```
+
+
+## stringr package
+
+Base R contains many functions to work with strings but they can be inconsistent.
+To work with strings, we’ll use functions from `stringr` package which is part of Tidyverse. Functions in this package have very intuitive names, and all start with `str_`. 
+Note that the first argument is a character vector. 
+
+```{r eval=FALSE}
+str_something(some_character_vector, ....)
+```
+
+
+## `str_length()`
+
+Returns the length of string, including spaces.
+
+```{r}
+string1 <- "This is a string"
+string2 <- 'If I want to include a "quote" inside a string, I use single quotes'
+```
+
+
+```{r}
+
+```
+
+
+### Friends Example
+
+Which episode has the longest description?
+
+
+```{r}
+
+```
+
+Which episode has the shortest description?
+```{r}
+
+```
+
+
+## `str_sub()`
+
+Takes a subset of string characters. 
+
+```{r}
+# 2nd to 8th character
+
+```
+
+--
+
+```{r}
+# 4th to fifth-to-last character 
+
+```
+
+
+
+
+## `str_to_lower()`  
+
+Converts all letters to lower case.
+
+```{r}
+
+```
+
+## `str_to_upper()`
+
+Converts all letters to upper case. 
+
+```{r}
+
+```
+
+
+### Example
+
+Change all the titles to capital letters.
+
+```{r}
+
+```
+
+
+## `str_detect()` 
+
+Determines if a string has a specific set of characters. 
+
+Does the first episode description contains "Rachel"?
+
+```{r}
+
+```
+
+
+Does the first episode description contains "Ross"?
+
+```{r}
+
+```
+
+
+### Example 
+
+How many episodes have "Phoebe" in the description?
+
+```{r}
+
+```
+
+
+How many episodes DO NOT have "Phoebe" in the description?
+```{r}
+
+```
+
+
+## `str_split()`
+
+Splits a string specified by a boundary.
+
+- by "word"
+
+```{r}
+
+```
+
+- by "character"
+
+```{r}
+
+```
+
+
+
+## `str_replace()`
+
+Replaces a string of characters with another. 
+
+### Example
+
+Replace "Monica" with "Monika". 
+
+```{r}
+
+```
+
+
+[stringr cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/strings.pdf)
