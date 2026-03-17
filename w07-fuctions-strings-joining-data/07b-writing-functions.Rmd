@@ -310,7 +310,7 @@ histogram <- function(df, var, bin) {
 
 We can use ggplot2 to create a plotting function because `aes()` is a data-masking function.
 
-To pass a column name or expression supplied as an argument to your function to another data-masking function, you must "embrace" the argument name with double curly braces ({{ ).
+To pass a column name or expression supplied as an argument to your function to another data-masking function, you must "embrace" the argument name with double curly braces ({{ }} ).
 
 Embracing a variable tells ggplot to use the value stored inside the argument, not the argument as the literal variable name. { var } will make the function look inside of var rather than looking for a variable called var.
 
