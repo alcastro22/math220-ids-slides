@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Joining Data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="07a-joining-data_files/header-attrs-2.30/header-attrs.js"></script>
+    <link href="07a-joining-data_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
+    <script src="07a-joining-data_files/panelset-0.3.0/panelset.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+
+
+
+
+
+
+
+&lt;br&gt;
+&lt;br&gt;
+.right-panel[ 
+
+# Joining Data
+## Alma Castro, Cypress College
+## 
+]
+
+
+---
+
+## Keys
+
+A key is a variable that connects two tables.
+
+- A __primary Key__ is a variable or set of variables that uniquely identifies each observation in a table.
+
+  - A __compound key__ a set of variables needed to uniquely identify each observation. 
+
+- A __foreign key__ is a variable (or set of variables) that corresponds to a primary key in another table.
+
+The primary and foreign keys almost always have the same names, which will make your joining life much easier.
+
+---
+
+class: middle
+
+## Keys
+
+How do we verify that a primary key has indeed uniquely identified each observation? What if it’s not possible to know from the data alone whether or not a combination of variables makes a good primary key? What happens if it matches more than one row? What if the observations do not match even if the keys are the same in both tables?
+
+To answer these questions read the [R 4 Data Science](https://r4ds.hadley.nz/joins) book chapter 19 on Joins. 
+
+__In this class we will only look at those instances where the observations match when the key is the same in both tables.__
+
+
+---
+
+## Data
+
+.panelset[
+.panel[
+.panel-name[artists]
+
+
+``` r
+artists
+```
+
+```
+## # A tibble: 4 × 2
+##   name          followers
+##   &lt;chr&gt;             &lt;dbl&gt;
+## 1 Beyoncé        24757958
+## 2 Taylor Swift   33098116
+## 3 Ariana Grande  51807131
+## 4 Drake          50252529
+```
+
+
+]
+
+.panel[
+.panel-name[songs]
+
+
+``` r
+songs
+```
+
+```
+## # A tibble: 5 × 4
+##   name          song_name                            album_name  song_popularity
+##   &lt;chr&gt;         &lt;chr&gt;                                &lt;chr&gt;                 &lt;dbl&gt;
+## 1 Beyoncé       Savage Remix (feat. Beyoncé)         Savage Rem…              83
+## 2 Taylor Swift  cardigan                             folklore                 85
+## 3 Drake         Laugh Now Cry Later (feat. Lil Durk) Laugh Now …              95
+## 4 Beyoncé       Halo                                 I AM…SASHA…              NA
+## 5 Ariana Grande Stuck with U (with Justin Bieber)    Stuck with…              NA
+```
+
+]
+
+.panel[
+.panel-name[albums]
+
+
+``` r
+albums
+```
+
+```
+## # A tibble: 4 × 2
+##   album_name                           album_release_date
+##   &lt;chr&gt;                                &lt;date&gt;            
+## 1 Savage Remix (feat. Beyoncé)         2020-04-29        
+## 2 I AM…SASHA FIERCE                    2008-11-14        
+## 3 Stuck with U                         2020-05-08        
+## 4 Laugh Now Cry Later (feat. Lil Durk) 2020-08-14
+```
+
+]
+]
+
+---
+
+class: middle
+
+&lt;img src="img/data-joins-spotify.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+
+Primary key in `artists` dataset: `name`
+
+Primary key in `songs` dataset: `song name`
+
+Primary key in `albums` dataset: `album_name`
+
+Foreign keys in `songs` dataset: `name`, and `album_name`
+
+---
+
+class: middle
+
+## Joining data 
+
+Once we have identify a key, we have to determine how we want to `join` our tables. 
+
+
+&lt;img src="img/data_joins.png" alt="" style="display: block; margin: auto;" /&gt;
+
+
+The colored `key` columns map background color to key value. The grey columns represent the “value” columns that are carried along for the ride.
+
+.footnote[Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/)] 
+
+---
+
+### Types of Joins
+
+- A __mutating join__ allows you to combine variables from two data frames: it first matches observations by their keys, then copies across variables from one data frame to the other. 
+  - Like `mutate()`, the join functions add variables to the right. Note that if your dataset has many variables, you won’t see the new ones being displayed.  
+
+- A __filtering join__ filters (keeps or deletes) the rows in a table that match or don't match in another table specified by a key. 
+
+__In this class we will only look at mutating joins.__
+
+---
+
+class: middle
+
+## Mutating Joins
+
+`something_join(x, y, join_by(key))` All the join functions in dplyr package are in this fashion where x represents the first data frame and y represents the second data frame, and `key` is the variable that the two frames are connected by. 
+
+  - They take a pair of data frames (x and y) and return a data frame.
+  - It takes the variables in x and adds the variables of y to the right. 
+  - The order of the rows and columns in the output is primarily determined by x.
+  - The rows that are kept depend on the type of join you do. 
+
+
+&lt;img src="img/join_venn.png" alt="" width="60%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/)] 
+
+---
+class: middle
+
+### Left Join
+
+`left_join(x, y, join_by(key))` includes all rows from x. 
+
+  - When it fails to find a match for a row in x, it fills in the new variables with missing values.
+  - The most commonly used join is the left join: you use this whenever you look up additional data from another table, because it preserves the original observations even when there isn’t a match.
+
+
+&lt;img src="img/left_join.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/)] 
+
+
+---
+
+class: middle
+
+### Right Join
+
+`right_join(x, y, join_by())` includes all rows from y. 
+
+  - As with left join, when it fails to find a match for a row in y, it fills in the new variables with missing value.
+  - The output still matches x as much as possible; any extra rows from y are added to the end.
+
+
+&lt;img src="img/right_join.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/)] 
+
+
+---
+
+class: middle
+
+### Inner Join
+
+`inner_join(x, y, join_by(key))` includes all rows that are in common to both x __and__ y identified by the `key`. 
+
+- The most important property of an inner join is that unmatched rows are not included in the result.
+
+&lt;img src="img/inner_join.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/)] 
+
+---
+
+class: middle
+
+### Full Join
+
+`full_join(x, y, joing_by(key))` includes all rows that are in x __or__ y. 
+
+  - The output starts with all rows from x, followed by the remaining unmatched y rows.
+
+
+&lt;img src="img/full_join.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/)] 
+
+
+---
+
+.panelset[
+.panel[
+
+.panel-name[x]
+
+
+``` r
+songs
+```
+
+```
+## # A tibble: 5 × 4
+##   name          song_name                            album_name  song_popularity
+##   &lt;chr&gt;         &lt;chr&gt;                                &lt;chr&gt;                 &lt;dbl&gt;
+## 1 Beyoncé       Savage Remix (feat. Beyoncé)         Savage Rem…              83
+## 2 Taylor Swift  cardigan                             folklore                 85
+## 3 Drake         Laugh Now Cry Later (feat. Lil Durk) Laugh Now …              95
+## 4 Beyoncé       Halo                                 I AM…SASHA…              NA
+## 5 Ariana Grande Stuck with U (with Justin Bieber)    Stuck with…              NA
+```
+
+]
+
+.panel[
+
+.panel-name[y]
+
+
+``` r
+albums
+```
+
+```
+## # A tibble: 4 × 2
+##   album_name                           album_release_date
+##   &lt;chr&gt;                                &lt;date&gt;            
+## 1 Savage Remix (feat. Beyoncé)         2020-04-29        
+## 2 I AM…SASHA FIERCE                    2008-11-14        
+## 3 Stuck with U                         2020-05-08        
+## 4 Laugh Now Cry Later (feat. Lil Durk) 2020-08-14
+```
+
+]
+
+.panel[
+
+.panel-name[left_join()]
+
+
+``` r
+left_join(songs, albums, join_by(album_name))
+```
+
+```
+## # A tibble: 5 × 5
+##   name          song_name          album_name song_popularity album_release_date
+##   &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;                &lt;dbl&gt; &lt;date&gt;            
+## 1 Beyoncé       Savage Remix (fea… Savage Re…              83 2020-04-29        
+## 2 Taylor Swift  cardigan           folklore                85 NA                
+## 3 Drake         Laugh Now Cry Lat… Laugh Now…              95 2020-08-14        
+## 4 Beyoncé       Halo               I AM…SASH…              NA 2008-11-14        
+## 5 Ariana Grande Stuck with U (wit… Stuck wit…              NA 2020-05-08
+```
+
+]
+
+]
+
+`left_join()` includes all rows from x and adds columns from y.
+
+
+
+---
+
+.panelset[
+.panel[
+
+.panel-name[x]
+
+
+``` r
+songs
+```
+
+```
+## # A tibble: 5 × 4
+##   name          song_name                            album_name  song_popularity
+##   &lt;chr&gt;         &lt;chr&gt;                                &lt;chr&gt;                 &lt;dbl&gt;
+## 1 Beyoncé       Savage Remix (feat. Beyoncé)         Savage Rem…              83
+## 2 Taylor Swift  cardigan                             folklore                 85
+## 3 Drake         Laugh Now Cry Later (feat. Lil Durk) Laugh Now …              95
+## 4 Beyoncé       Halo                                 I AM…SASHA…              NA
+## 5 Ariana Grande Stuck with U (with Justin Bieber)    Stuck with…              NA
+```
+
+]
+
+.panel[
+
+.panel-name[y]
+
+
+``` r
+albums
+```
+
+```
+## # A tibble: 4 × 2
+##   album_name                           album_release_date
+##   &lt;chr&gt;                                &lt;date&gt;            
+## 1 Savage Remix (feat. Beyoncé)         2020-04-29        
+## 2 I AM…SASHA FIERCE                    2008-11-14        
+## 3 Stuck with U                         2020-05-08        
+## 4 Laugh Now Cry Later (feat. Lil Durk) 2020-08-14
+```
+
+]
+
+.panel[
+
+.panel-name[right_join()]
+
+
+``` r
+right_join(songs, albums, join_by(album_name))
+```
+
+```
+## # A tibble: 4 × 5
+##   name          song_name          album_name song_popularity album_release_date
+##   &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;                &lt;dbl&gt; &lt;date&gt;            
+## 1 Beyoncé       Savage Remix (fea… Savage Re…              83 2020-04-29        
+## 2 Drake         Laugh Now Cry Lat… Laugh Now…              95 2020-08-14        
+## 3 Beyoncé       Halo               I AM…SASH…              NA 2008-11-14        
+## 4 Ariana Grande Stuck with U (wit… Stuck wit…              NA 2020-05-08
+```
+
+]
+
+]
+
+`right_join()` includes all rows from `y` and combines all columns from x and y. 
+
+---
+
+.panelset[
+.panel[
+
+.panel-name[x]
+
+
+``` r
+songs
+```
+
+```
+## # A tibble: 5 × 4
+##   name          song_name                            album_name  song_popularity
+##   &lt;chr&gt;         &lt;chr&gt;                                &lt;chr&gt;                 &lt;dbl&gt;
+## 1 Beyoncé       Savage Remix (feat. Beyoncé)         Savage Rem…              83
+## 2 Taylor Swift  cardigan                             folklore                 85
+## 3 Drake         Laugh Now Cry Later (feat. Lil Durk) Laugh Now …              95
+## 4 Beyoncé       Halo                                 I AM…SASHA…              NA
+## 5 Ariana Grande Stuck with U (with Justin Bieber)    Stuck with…              NA
+```
+
+]
+
+.panel[
+
+.panel-name[y]
+
+
+``` r
+albums
+```
+
+```
+## # A tibble: 4 × 2
+##   album_name                           album_release_date
+##   &lt;chr&gt;                                &lt;date&gt;            
+## 1 Savage Remix (feat. Beyoncé)         2020-04-29        
+## 2 I AM…SASHA FIERCE                    2008-11-14        
+## 3 Stuck with U                         2020-05-08        
+## 4 Laugh Now Cry Later (feat. Lil Durk) 2020-08-14
+```
+
+]
+
+.panel[
+
+.panel-name[inner_join()]
+
+
+``` r
+inner_join(songs, albums, join_by(album_name))
+```
+
+```
+## # A tibble: 4 × 5
+##   name          song_name          album_name song_popularity album_release_date
+##   &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;                &lt;dbl&gt; &lt;date&gt;            
+## 1 Beyoncé       Savage Remix (fea… Savage Re…              83 2020-04-29        
+## 2 Drake         Laugh Now Cry Lat… Laugh Now…              95 2020-08-14        
+## 3 Beyoncé       Halo               I AM…SASH…              NA 2008-11-14        
+## 4 Ariana Grande Stuck with U (wit… Stuck wit…              NA 2020-05-08
+```
+
+]
+
+]
+
+`inner_join()` includes all rows that are in x **and** y and combines all columns from x and y.
+
+---
+
+.panelset[
+.panel[
+
+.panel-name[x]
+
+
+``` r
+songs
+```
+
+```
+## # A tibble: 5 × 4
+##   name          song_name                            album_name  song_popularity
+##   &lt;chr&gt;         &lt;chr&gt;                                &lt;chr&gt;                 &lt;dbl&gt;
+## 1 Beyoncé       Savage Remix (feat. Beyoncé)         Savage Rem…              83
+## 2 Taylor Swift  cardigan                             folklore                 85
+## 3 Drake         Laugh Now Cry Later (feat. Lil Durk) Laugh Now …              95
+## 4 Beyoncé       Halo                                 I AM…SASHA…              NA
+## 5 Ariana Grande Stuck with U (with Justin Bieber)    Stuck with…              NA
+```
+
+]
+
+.panel[
+
+.panel-name[y]
+
+
+``` r
+albums
+```
+
+```
+## # A tibble: 4 × 2
+##   album_name                           album_release_date
+##   &lt;chr&gt;                                &lt;date&gt;            
+## 1 Savage Remix (feat. Beyoncé)         2020-04-29        
+## 2 I AM…SASHA FIERCE                    2008-11-14        
+## 3 Stuck with U                         2020-05-08        
+## 4 Laugh Now Cry Later (feat. Lil Durk) 2020-08-14
+```
+
+]
+
+.panel[
+
+.panel-name[full_join()]
+
+
+``` r
+full_join(songs, albums, join_by(album_name))
+```
+
+```
+## # A tibble: 5 × 5
+##   name          song_name          album_name song_popularity album_release_date
+##   &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;                &lt;dbl&gt; &lt;date&gt;            
+## 1 Beyoncé       Savage Remix (fea… Savage Re…              83 2020-04-29        
+## 2 Taylor Swift  cardigan           folklore                85 NA                
+## 3 Drake         Laugh Now Cry Lat… Laugh Now…              95 2020-08-14        
+## 4 Beyoncé       Halo               I AM…SASH…              NA 2008-11-14        
+## 5 Ariana Grande Stuck with U (wit… Stuck wit…              NA 2020-05-08
+```
+
+]
+
+]
+
+`full_join()` includes all rows and columns that are in x **or** y
+
+---
+
+
+.panelset[
+.panel[
+.panel-name[artists]
+
+
+``` r
+artists
+```
+
+```
+## # A tibble: 4 × 2
+##   name          followers
+##   &lt;chr&gt;             &lt;dbl&gt;
+## 1 Beyoncé        24757958
+## 2 Taylor Swift   33098116
+## 3 Ariana Grande  51807131
+## 4 Drake          50252529
+```
+
+]
+
+.panel[
+.panel-name[songs]
+
+
+``` r
+songs
+```
+
+```
+## # A tibble: 5 × 4
+##   name          song_name                            album_name  song_popularity
+##   &lt;chr&gt;         &lt;chr&gt;                                &lt;chr&gt;                 &lt;dbl&gt;
+## 1 Beyoncé       Savage Remix (feat. Beyoncé)         Savage Rem…              83
+## 2 Taylor Swift  cardigan                             folklore                 85
+## 3 Drake         Laugh Now Cry Later (feat. Lil Durk) Laugh Now …              95
+## 4 Beyoncé       Halo                                 I AM…SASHA…              NA
+## 5 Ariana Grande Stuck with U (with Justin Bieber)    Stuck with…              NA
+```
+
+]
+
+.panel[
+.panel-name[albums]
+
+
+``` r
+albums
+```
+
+```
+## # A tibble: 4 × 2
+##   album_name                           album_release_date
+##   &lt;chr&gt;                                &lt;date&gt;            
+## 1 Savage Remix (feat. Beyoncé)         2020-04-29        
+## 2 I AM…SASHA FIERCE                    2008-11-14        
+## 3 Stuck with U                         2020-05-08        
+## 4 Laugh Now Cry Later (feat. Lil Durk) 2020-08-14
+```
+
+]
+
+.panel[
+.panel-name[combined]
+
+
+``` r
+full_join(artists, songs, join_by(name)) |&gt; 
+  full_join(albums, join_by(album_name))
+```
+
+```
+## # A tibble: 5 × 6
+##   name         followers song_name album_name song_popularity album_release_date
+##   &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;                &lt;dbl&gt; &lt;date&gt;            
+## 1 Beyoncé       24757958 Savage R… Savage Re…              83 2020-04-29        
+## 2 Beyoncé       24757958 Halo      I AM…SASH…              NA 2008-11-14        
+## 3 Taylor Swift  33098116 cardigan  folklore                85 NA                
+## 4 Ariana Gran…  51807131 Stuck wi… Stuck wit…              NA 2020-05-08        
+## 5 Drake         50252529 Laugh No… Laugh Now…              95 2020-08-14
+```
+
+]
+
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

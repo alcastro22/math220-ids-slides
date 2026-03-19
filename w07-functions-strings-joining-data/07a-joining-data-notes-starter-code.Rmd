@@ -1,0 +1,250 @@
+---
+title: "Joining Data"
+author: "Your name here"
+date: "date here"
+output: html_document
+---
+
+
+```{r message = FALSE}
+library("tidyverse")
+library("readxl")
+
+artists <- read_xlsx("spotify.xlsx", sheet = "artist")
+songs <- read_xlsx("spotify.xlsx", sheet = "top_song")
+albums <- read_xlsx("spotify.xlsx", sheet = "album") %>% 
+  mutate(album_release_date = lubridate::ymd(album_release_date))
+```
+
+
+## Keys
+
+A key is a variable that connects two tables.
+
+- A __Primary Key__ is a variable or set of variables that uniquely identifies each observation in a table.
+
+  - A __compound key__ a set of variables needed to uniquely identify each observation. 
+
+- A __foreign key__ is a variable (or set of variables) that corresponds to a primary key in another table.
+
+The primary and foreign keys almost always have the same names, which will make your joining life much easier.
+
+
+How do we verify that a primary key has indeed uniquely identified each observation? What if it’s not possible to know from the data alone whether or not a combination of variables makes a good a primary key? What happens if it matches more than one row? What if the observations do not match even if the keys are the same in both tables?
+
+To answer these questions read the [R 4 Data Science](https://r4ds.hadley.nz/joins) book chapter 19 on Joins. 
+
+__In this class we will only look at those instances where the observations match when the key is the same in both tables.__
+
+
+## Data
+
+
+```{r}
+artists
+```
+
+
+```{r}
+songs
+```
+
+
+```{r}
+albums
+```
+
+
+### Identifying Keys
+
+```{r echo = FALSE, out.width="50%"}
+knitr::include_graphics("img/data-joins-spotify.png")
+```
+
+
+
+Primary key in `artists` dataset: `name`
+
+Primary key in `songs` dataset: `song name`
+
+Primary key in `albums` dataset: `album_name`
+
+Foreign keys in `songs` dataset: `name`, and `album_name`
+
+---
+
+## Joining data 
+
+Once we have identify a key, we have to determine how we want to `join` our tables. 
+
+
+### Types of Joins
+
+- A __mutating join__ allows you to combine variables from two data frames: it first matches observations by their keys, then copies across variables from one data frame to the other. 
+  - Like `mutate()`, the join functions add variables to the right. Note that if your dataset has many variables, you won’t see the new ones being displayed.  
+
+- A __filtering join__ filters (keeps or deletes) the rows in a table that match or don't match in another table specified by a key. 
+
+__In this class we will only look at mutating joins.__
+
+---
+
+### Mutating Joins
+
+`something_join(x, y, join_by(key))` All the join functions in dplyr package are in this fashion where x represents the first data frame and y represents the second data frame, and `key` is the variable that the two frames are connected by. 
+
+  - They take a pair of data frames (x and y) and return a data frame.
+  - It takes the variables in x and adds the variables of y to the right. 
+  - The order of the rows and columns in the output is primarily determined by x.
+  - The rows that are kept depend on the type of join you do. 
+
+
+```{r echo = FALSE, out.width="50%"}
+knitr::include_graphics("img/join_venn.png")
+```
+
+Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/)
+
+
+### Left Join
+
+`left_join(x, y, join_by(key))` includes all rows from x. 
+
+  - When it fails to find a match for a row in x, it fills in the new variables with missing values.
+  - The most commonly used join is the left join: you use this whenever you look up additional data from another table, because it preserves the original observations even when there isn’t a match.
+
+
+```{r echo = FALSE, out.width="40%"}
+knitr::include_graphics("img/left_join.png")
+```
+
+Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/) 
+
+
+### Right Join
+
+`right_join(x, y, join_by())` includes all rows from y. 
+
+  - As with left join, when it fails to find a match for a row in y, it fills in the new variables with missing value.
+  - The output still matches x as much as possible; any extra rows from y are added to the end.
+
+
+```{r echo = FALSE, out.width="40%"}
+knitr::include_graphics("img/right_join.png")
+```
+
+Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/) 
+
+### Inner Join
+
+`inner_join(x, y, join_by())` includes all rows that are in both x __and__ y identified by the `key`. 
+
+- The most important property of an inner join is that unmatched rows are not included in the result.
+
+
+```{r echo = FALSE, out.width = "50%"}
+knitr::include_graphics("img/inner_join.png")
+```
+
+ Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/)
+
+### Full Join
+
+`full_join()` includes all rows that are in x __or__ y. 
+
+  - The output starts with all rows from x, followed by the remaining unmatched y rows.
+
+
+```{r echo = FALSE, out.width = "50%"}
+knitr::include_graphics("img/full_join.png")
+```
+
+Image from [R for Data Science book](https://r4ds.had.co.nz/index.html) licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License](https://creativecommons.org/licenses/by-nc-nd/3.0/us/)
+
+---
+
+## Example
+
+Let songs data be `x`
+
+```{r}
+songs
+```
+
+
+Let albums data be `y`
+
+```{r}
+albums
+```
+
+The key here is `album_name`
+
+
+### Left Join
+
+```{r}
+
+```
+
+
+Note: `left_join()` includes all rows and variables from the `songs` data and added the variables of `albums` data to the end. `songs` had 5 rows, but albums had only 4 rows, so it added `NA` for the empty cells under `album_relate_date` that the albums did not have a match. 
+
+
+```{r}
+
+```
+
+
+
+
+### Righ Join
+
+```{r}
+
+```
+
+
+Notes: `right_join()` includes all rows and variables from `albums` and added variables from `songs`. Hence his new table only has 4 rows not 5. 
+
+
+### Inner Join
+
+```{r}
+
+```
+
+
+Notes: `inner_join()` includes all rows that are common to both `songs` **and** `album`. 
+
+
+### Full Join
+
+
+```{r}
+
+```
+
+
+Notes: `full_join()` includes all rows that are in `songs` **or** `albums`
+
+
+
+### Combining more than two data sets. 
+
+When we want to combine more than two data sets, we have to do it in pairs using the appropirate `key` at each step. 
+
+
+```{r}
+
+  
+```
+
+
+
+
+
+
+
+
+
