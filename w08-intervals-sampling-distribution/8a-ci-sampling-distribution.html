@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Confidence Intervals: Sampling Distribution</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="8a-ci-sampling-distribution_files/header-attrs-2.30/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# Confidence Intervals: Sampling Distribution
+## Alma Castro, Cypress College
+]
+
+---
+
+## Data
+
+
+
+
+
+``` r
+lapd &lt;- lapd |&gt; 
+  clean_names() |&gt; 
+  filter(year == 2018) |&gt; 
+  select(base_pay, job_class_title, overtime_pay)
+```
+
+
+We will use payroll data from the LAPD from 2018.
+
+
+
+``` r
+glimpse(lapd)   
+```
+
+```
+## Rows: 14,824
+## Columns: 3
+## $ base_pay        &lt;dbl&gt; 119321.60, 113270.70, 148116.00, 78676.87, 109373.63, …
+## $ job_class_title &lt;chr&gt; "Police Detective II", "Police Sergeant I", "Police Li…
+## $ overtime_pay    &lt;dbl&gt; 0.00, 26252.64, 21807.07, 0.00, 219.00, 14318.87, 2548…
+```
+
+---
+
+## Population Distribution
+
+.pull-left[
+
+
+``` r
+lapd |&gt; 
+  ggplot(aes(x = base_pay)) +
+  geom_histogram(binwidth = 10000) +
+  theme_bw()
+```
+
+]
+
+.pull-right[
+
+![](8a-ci-sampling-distribution_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+]
+
+---
+
+## Population Parameters
+
+
+``` r
+x &lt;- lapd$base_pay
+n &lt;- nrow(lapd)
+```
+
+Population mean:
+
+``` r
+mean(x)
+```
+
+```
+## [1] 85149.05
+```
+
+---
+
+## Population Parameters
+
+Population standard deviation: 
+
+`\(\sigma = \sqrt{\sigma^{2}} = \sqrt{\frac{\Sigma_{i = 1}^{n} (x_i - \mu )^2}{N}}\)`
+
+where `\(\mu\)` is the mean of the population.
+
+
+``` r
+sqrt(sum((x-mean(x))^2)/n)
+```
+
+```
+## [1] 38421.22
+```
+
+or 
+
+
+``` r
+sqrt(var(x)*(n-1)/n)
+```
+
+
+---
+
+## Statistical Inference
+
+In real life, we often do not know population parameters but we can **estimate** them using a **statistic**, a numerical summary of a sample. 
+
+- The sample mean `\(\bar{x}\)` is used to estimate the population mean `\(\mu\)`.
+- The sample standard deviation *s* is used to estimate the population standard deviation `\(\sigma\)`.
+- The sample proportion *p* is used to estimate the population proportion `\(\pi\)`.
+
+---
+
+## Statistical Inference
+
+We can use a sample statistic to create what is called a **confidence interval**, which is a range of plausible values that may capture the true population value.
+
+- The method used to construct an interval is determine by various factors, including population and sample assumptions, sample size, method of sampling, among others. 
+
+But one aspect that is true is that the variability of the data plays a roll in any type of interval constructed. 
+
+---
+
+### Sampling Variability
+
+When using a statistic to estimate a parameter, we need to first understand the accuracy and reliability of our estimation; that is, how well the sample statistic reflects the population.
+
+To do so, we can look at **how a statistic varies** around the parameter when many different statistics are calculated from many different samples. 
+
+- When the variability across the samples is large, we expect the interval estimate to be wide and hence less accurate.
+- When the variability across the samples is small, we expect the interval estimate to be narrow and hence more accurate.
+
+
+---
+
+## Taking Random Samples
+
+Use the function `slice_sample(dataset, n = #)` to take a random sample of size `n` rows from our `dataset`. 
+
+- This function generates a tibble with the randomly selected rows and keeps all variables of the data. 
+
+
+We can also use the base R function `sample(data$variable, n, replace = TRUE/FALSE)`. 
+
+- This function takes a vector of values and returns a vector with the randomly selected values. 
+
+
+The function `set.seed(seed#)` will be used so that you will generate the same sample as the instructor for checking work and grading purposes. The seed # will always be given.
+
+---
+
+### Sample 1
+
+
+
+``` r
+set.seed(12345)
+sample_1 &lt;- slice_sample(lapd, n = 10)
+sample_1
+```
+
+```
+## # A tibble: 10 × 3
+##    base_pay job_class_title              overtime_pay
+##       &lt;dbl&gt; &lt;chr&gt;                               &lt;dbl&gt;
+##  1       0  Maintenance Laborer                    0 
+##  2  101249. Police Officer II                    402.
+##  3  109378. Police Officer III                  2415.
+##  4  132958. Police Detective III                4861.
+##  5   90957. MUNICIPAL POLICE OFFICER III       43122.
+##  6  132744. Police Detective III               28432.
+##  7  104091. Police Officer III                 49914.
+##  8  104101. Police Officer III                  8367.
+##  9   48696  Security Aide                        416.
+## 10  125958. Police Sergeant II                  1316.
+```
+
+---
+
+### Sample 1
+
+
+``` r
+mean(sample_1$base_pay)
+```
+
+```
+## [1] 95013.16
+```
+
+Mean of sample 1 is
+
+`\(\bar{x}_1=\)` 95013.164.
+
+
+---
+
+### Sample 2
+
+
+``` r
+sample_2 &lt;- slice_sample(lapd, n = 10)
+sample_2
+```
+
+```
+## # A tibble: 10 × 3
+##    base_pay job_class_title             overtime_pay
+##       &lt;dbl&gt; &lt;chr&gt;                              &lt;dbl&gt;
+##  1   95971. Police Officer II                  2184.
+##  2   96194. Police Officer III                17884.
+##  3       0  Management Analyst II                 0 
+##  4   34479. Garage Attendant                   1145.
+##  5   90006. Police Officer II                 22347.
+##  6   66882. Senior Administrative Clerk           0 
+##  7   75343. Police Detective III               2079.
+##  8   68034. Police Officer II                 13026.
+##  9   54613. Administrative Clerk                  0 
+## 10       0  Equipment Mechanic                    0
+```
+
+---
+### Sample 2
+
+
+``` r
+mean(sample_2$base_pay)
+```
+
+```
+## [1] 58152.17
+```
+
+Mean of sample 2 is 
+
+`\(\bar{x}_2=\)` 58152.173.
+
+
+
+---
+
+### Sample 3
+
+
+``` r
+sample_3 &lt;- slice_sample(lapd, n = 10)
+sample_3
+```
+
+```
+## # A tibble: 10 × 3
+##    base_pay job_class_title                   overtime_pay
+##       &lt;dbl&gt; &lt;chr&gt;                                    &lt;dbl&gt;
+##  1  143968. Police Lieutenant II                    10729.
+##  2  109387. Police Officer III                       2871.
+##  3  119322. Police Sergeant I                         414.
+##  4  106724. Police Officer III                      32472.
+##  5   65343. Police Officer I                         3872.
+##  6   90584. Police Service Representative III        7941.
+##  7   96848. Police Officer II                       22680.
+##  8  103893. Police Officer II                           0 
+##  9   67380. Police Officer II                        3812.
+## 10   85136  Senior Equipment Mechanic                5397.
+```
+
+---
+### Sample 3
+
+
+``` r
+mean(sample_3$base_pay)
+```
+
+```
+## [1] 98858.47
+```
+
+Mean of sample 3 is 
+
+`\(\bar{x}_3=\)` 98858.466.
+
+---
+
+## Sampling Variability
+
+Note that the mean **varies** from sample to sample. Each sample's mean is not necessarily the population mean we are trying to estimate. There is variance in the sample means.
+
+ - **Sampling Distribution:** how a sample statistic is distributed when repeated trials of size n are taken.
+ 
+
+---
+
+class: inverse middle
+
+.font75[Confidence Intervals Using the Sampling Distribution of the Sample Mean]
+
+---
+
+##Generating a Sampling Distribution
+
+To generate the sampling distribution of the sample mean, we will retake 1000 samples, without replacement, from our population of values from the base pay. 
+
+We will then calculate the mean for each of the 1000 samples and create a histogram to look at their overall pattern. 
+
+---
+
+### Generating a Sampling Distribution n = 5
+
+- 1,000 samples
+- size *n* = 5 
+
+
+
+
+
+``` r
+xbars_5 &lt;- numeric(1000)
+for (i in 1:1000)
+{
+  xbars_5[i] &lt;-  
+    mean(sample(lapd$base_pay, 5, replace = FALSE))
+}
+
+xbars_5
+```
+
+```
+##    [1]  64671.55 116505.31  89043.76  63451.59  43920.09 118093.33  71046.68
+##    [8] 102545.71 104765.48  96412.76  86312.02  83018.55  58239.35  75623.36
+##   [15]  65935.34  98766.50  67730.97  99131.11  86411.90  81891.38  83038.40
+##   [22]  63258.62  99974.64  79339.96  57506.70  80877.29  91421.77  76217.17
+##   [29]  67771.58  89517.69  94544.26  92405.21  81856.97  96355.31  80119.23
+##   [36]  83526.79  98718.43  73759.37 101992.90 104034.68  76066.86  75278.35
+##   [43] 111771.97  97442.18  56926.26  93048.76  93878.27  87271.54  78754.79
+##   [50]  49060.67  92138.04 104409.29  61006.30  58502.41  78406.32 109079.26
+##   [57]  98226.33  87194.04  71481.87  74432.41 113453.98 102515.72  90056.43
+##   [64]  72962.94  99540.79  70940.60  67209.61  95293.75  53056.03  53752.57
+##   [71]  67133.12  95952.96 109476.40 100880.78  88699.84  37673.75 104086.05
+##   [78]  68402.87  97658.13  87692.56  87724.80 112682.53 103452.81  35504.61
+##   [85]  87426.14  77533.50  76194.16 113143.47  80925.38  95800.93  69669.74
+##   [92]  61385.27  82417.00  98966.50 122139.57  86717.78  61437.22  89825.03
+##   [99]  66387.51  42380.95 102968.09 101489.98  67097.95  90006.84  77843.12
+##  [106]  99448.00  70393.49  53724.48  83048.99  74558.09  81116.17  67583.71
+##  [113]  96046.03  88877.33  80536.11  60107.98  90415.96  74230.84  82465.25
+##  [120] 108590.22  96650.24  59725.55  73599.72 105961.36  95179.30 102710.90
+##  [127] 115813.46  76528.41  88403.87  87581.10  66428.96  82985.35 100735.89
+##  [134]  76147.28  92471.42  91569.45  48672.91  68305.00  83627.18  92088.86
+##  [141]  97443.27  66603.01 100564.89 124842.01  75942.70  98759.75  86948.48
+##  [148] 106473.64  54961.62  88599.95  86613.80  99449.27 104043.26  84299.37
+##  [155]  97206.70  75103.40 107853.01  99976.47  93431.95  86401.39 100004.08
+##  [162]  90194.38  77266.28  90846.32  70779.77  79193.93 106842.39  74110.95
+##  [169] 110503.82  92891.61 100406.56  70432.70 110645.09 107623.60  85087.65
+##  [176]  83890.88  70277.08  98757.56  97309.98 112929.29  90318.79  75219.67
+##  [183]  67166.03  74112.18  77104.47  63505.06 104246.83 101191.99 102376.17
+##  [190]  63519.65  56451.35  63210.29  76530.36 107221.30  92679.91 103862.31
+##  [197] 102036.19 108213.75  84003.42  90142.05  85115.68  93580.59 114940.57
+##  [204]  74500.40  92361.99  68431.27  80725.50  90022.85  88434.12  94155.14
+##  [211]  61663.31  57541.48  85616.26  90983.60 113742.37  99799.36  74820.63
+##  [218]  56320.35  86427.71  67431.11  65166.41  81443.60  81634.43  71880.32
+##  [225]  83287.40  93902.89  94724.94  78950.34  62834.28  72906.15  98658.33
+##  [232]  70369.24  73533.06  50123.01  85337.75  99211.26  73101.73  94181.79
+##  [239]  97484.67  97192.28  75804.99  78635.27  85738.36  99977.64  92887.89
+##  [246]  86181.73  68949.15  66124.42  92708.09  64202.99  63755.20  78727.29
+##  [253] 119053.87  58555.91  90331.85  69813.89 104179.14 107518.36  84220.60
+##  [260]  62366.52  77437.35 106756.08  88747.28  82179.39  89032.80  94117.52
+##  [267]  59054.89  74029.27  99798.97  93688.38  60465.28  74848.17  85592.73
+##  [274]  90996.87  85046.78  92265.10  77472.21 112693.74  97729.56  91904.45
+##  [281]  92161.11 106813.09  51155.36  91341.32  62029.42  77274.59  63060.19
+##  [288]  85665.38  65211.66  70688.23  93999.60  73906.06  93304.00 101326.45
+##  [295]  52913.76  63137.06  46071.38  87827.74  69041.70  99892.17  82804.62
+##  [302]  98438.08 106550.44  89270.40  77281.81  64072.62 120291.32  64237.82
+##  [309]  85978.98  98619.40  83709.38  88044.53 105571.87 107181.90  95881.08
+##  [316]  50018.40  71622.18  59832.29 100541.75  94854.53  63664.61  72092.15
+##  [323]  77695.01  93036.63  77695.58  82170.26  75570.65 121825.03 109683.64
+##  [330] 114469.33 118992.55  86384.32  99618.40 119946.36 102139.25  80656.59
+##  [337]  97688.07  98729.84  83303.36  72460.84  83405.56  86802.01  94494.05
+##  [344]  60765.06  74853.68  59405.32  90321.69  75689.60  70203.74  86878.47
+##  [351]  92190.55  86852.07  79304.94  82537.99 104410.22  65691.30  76916.49
+##  [358] 100771.05 117899.74  89111.23  83386.38  93824.51 104977.18  44895.43
+##  [365]  58692.53  74895.57 111679.77  71958.37  61834.00  96810.79  72855.53
+##  [372]  81286.99  77977.20  65670.74 107635.15  79067.86  71301.25  65703.87
+##  [379] 102037.88 109802.17 103939.91  87199.40  97623.20 102937.97  88991.98
+##  [386]  66066.36  99736.59  84654.76  75553.05 103468.53  36682.76  66725.30
+##  [393]  83234.69 109376.45  45200.30  64674.97  60814.91  61227.71 118117.35
+##  [400]  90438.23 119751.87  93216.84  86100.46  86725.41  98590.84  93880.85
+##  [407]  88661.91  98605.17  58180.38 124443.76  89184.78  81320.57  60420.11
+##  [414]  68437.83  81213.24 100529.08  87183.81  79784.44 118437.22 106046.08
+##  [421] 102710.91  93843.35  73495.76  68907.78 112957.31 100382.50 101867.77
+##  [428]  75352.05 117191.03  68277.62  87049.35  66171.02  90028.80 106936.09
+##  [435]  81108.98  98865.87 108120.50  64121.78  81787.81  93481.14  90744.53
+##  [442]  82602.71  97503.54 104119.56  82254.83  95064.51  69708.41  87264.28
+##  [449]  69576.46  81444.88 100432.92 102102.14  38530.65  79575.29  74443.13
+##  [456]  72979.07  77843.78  93657.19  82344.40  78605.63  86972.31  74780.43
+##  [463]  88725.54  91235.86  94652.54  76778.26  81068.01 113567.97 116078.84
+##  [470]  69919.65  81833.85  81753.10 100645.70  79997.96  94469.68  74995.92
+##  [477] 106158.69  85159.45 117307.07  78263.93  93312.55  85077.63  78051.36
+##  [484]  77026.01  76073.28  77997.87 100124.64  96357.73  89599.37 102745.68
+##  [491]  65651.34 102412.97  52890.63  76745.78  85311.23  39357.73  83764.01
+##  [498]  88699.71  61662.01 112406.76 112196.63  42538.42  93259.64 103710.59
+##  [505]  80432.63  85646.78  81013.59  89320.07  62536.95  76008.55 112173.35
+##  [512]  91791.77  72150.14  96065.36  82509.69 100174.14  84234.52  59562.45
+##  [519]  96262.44 100295.98  76606.49  96849.09  75632.60  59107.19  73780.89
+##  [526]  78694.04  55969.55  66954.15  54513.28  76712.07  68652.51 106749.54
+##  [533]  86316.04  91694.71  99374.86  75840.66 101920.49  75102.70  79359.32
+##  [540]  93789.76  88626.37 105484.84  85423.21  96874.79  99608.35 101129.58
+##  [547]  95462.65  63785.46 112783.73  65662.61  75219.22  73031.28  91459.58
+##  [554]  61194.05  81726.82  75809.84 100802.18  85234.42  67632.20 145598.31
+##  [561]  96905.11 108300.56  59446.80  77473.82  85296.76  58292.25  84412.05
+##  [568]  72780.13  92004.71  44740.25  72400.37  90581.89  59883.51  92249.54
+##  [575]  84574.99  87417.12  88621.05 107606.00  92921.95  78530.37 110616.87
+##  [582]  77110.47 101736.40  93811.35  80303.71  81360.70  92748.90  75002.77
+##  [589]  59597.01 108469.40 106070.68  67249.44  98846.88  68130.07  64545.04
+##  [596]  78012.25 116740.08  67806.40 111012.44  84705.85  87573.05  95900.84
+##  [603]  92023.63  71822.59 105057.83  78403.68  87701.44  68255.42  89411.89
+##  [610]  76759.49  64277.44 101755.92  72130.95 113183.82  74109.98  86043.68
+##  [617]  64384.31  82354.95  61727.21  78820.61  42283.40  73114.99 100529.48
+##  [624]  77032.87  72610.96  66630.95  79810.30 110072.68  65080.02  67572.18
+##  [631]  69247.72  87520.26  51991.41  96279.67  68863.20  71048.67  73180.71
+##  [638]  81905.37 137937.11  71434.03  92674.56  87495.43  68484.74  94186.13
+##  [645]  79787.95  52613.41  99883.91  54669.19  84252.50  64339.20  67707.61
+##  [652] 105747.74  68502.04  67923.80  77490.77  81878.95 105039.48  78443.40
+##  [659] 100161.51  81525.59 111952.96  84355.33 103086.78  77204.04  96823.91
+##  [666]  73685.94  45972.47 116586.01  69169.73  74029.36  69029.94  68964.09
+##  [673]  92080.26  83093.49 107998.24  96155.14 114238.61  59692.08 100791.55
+##  [680]  99416.49 109166.83  77114.97  94642.48  83334.68  83304.68 100456.51
+##  [687]  64705.76  85444.23  84759.74  95540.24  67854.75 101730.15  59603.05
+##  [694]  79572.29  74542.90  49360.44 116629.59 162088.41  76141.06  50646.19
+##  [701]  93034.48 106442.09  73545.29  97536.23 115923.15  64871.47  76230.61
+##  [708]  56890.33  55730.92  54963.29  72300.50  91761.40  94478.29  98380.29
+##  [715]  97105.14  75757.69 102569.37  92820.63  85681.31 104707.80  69101.66
+##  [722] 100581.20  80917.07  80038.39 103154.14  90051.31  89872.85  87874.06
+##  [729]  98529.31  76610.97  80094.47  97259.68  66158.05  79474.43  86447.75
+##  [736]  63660.03  79060.05  64955.32  79169.04  79727.66 101602.67  83883.03
+##  [743]  73555.36  98271.32  74908.22  68987.52  97377.13  75156.07  68830.62
+##  [750]  93354.52  81381.02 104958.82  81735.97  75338.70  68372.84  79182.45
+##  [757]  99134.29  42415.53 109747.06 104680.29 103091.37  89501.76  96257.51
+##  [764]  81353.38  91939.63  92895.43  84670.95  98570.61  98092.81  73153.12
+##  [771] 102572.31  86115.99  89475.85  81292.78  64099.77  95333.92  79514.10
+##  [778]  76833.34  96931.44  95014.23 117984.40  97685.01  78609.24  92150.51
+##  [785]  65076.91  96241.42  92049.58  75825.58  86766.46  93554.84  69461.05
+##  [792]  97768.32  84839.84  94672.39 112917.76  85171.09  95816.47  65993.93
+##  [799] 118635.26 110248.19  96133.15  88071.61  81875.20  87839.75  76550.16
+##  [806] 104379.66  79759.43  71396.24  84117.13  98349.51  69483.06  66518.21
+##  [813]  95992.55  75452.37  62841.59  40153.56  83968.62  65706.89  72726.58
+##  [820]  58813.44 120202.60 107338.53  71019.67  51728.16 111863.56  86478.55
+##  [827]  93633.12  65898.51  83652.07  85124.22  75986.70  80216.54 100110.40
+##  [834] 103272.85  98578.82 100801.60  65841.15  98534.31  79136.99  99858.73
+##  [841]  68579.23 101659.77  50009.79  80541.40  76061.03  91643.60  87958.76
+##  [848]  60646.72 102936.12  66437.45  81022.56 101290.49  97465.35  96950.58
+##  [855]  80174.28  63210.20 100867.53  77960.63  93220.99  68478.24  96374.99
+##  [862] 101852.50  82073.92  94871.98  90886.33 106847.38  77403.76 131714.24
+##  [869]  73242.57  86051.17  72430.10  25137.23  69114.41  80209.91  97132.98
+##  [876] 100251.17  72663.36  98450.83  88979.40 101301.84  81193.54 103387.27
+##  [883] 111637.72  93895.37  97760.77 102850.55  77707.76  80168.61  87902.55
+##  [890]  61534.89  87339.55  87131.76  81245.37 103644.29  78872.41  97299.17
+##  [897]  88127.63  89449.88  86885.30  91248.51  83310.29 112518.92 109172.25
+##  [904] 109519.13  84009.03  70955.15 103429.72  65309.91 124804.40  85406.06
+##  [911]  72573.53  97244.02  84664.92  83101.45  77497.05  74600.47  76662.27
+##  [918] 117573.35  96457.29  90634.81 108719.23  56970.34  89967.78  56970.87
+##  [925] 102344.47  74757.42  83143.03  80144.51  84558.80  88307.29  92919.18
+##  [932]  93792.72  77419.26 102940.17  73207.40  93872.29  92663.94  53652.25
+##  [939]  81786.75  82466.20  71517.78  85385.72 106833.80  84770.02  90844.41
+##  [946]  87802.54  94927.24  81787.10  76292.24  71966.82  96767.67 103231.65
+##  [953]  88225.36  88675.61  84399.10 109245.09 100899.44  63714.00  78614.42
+##  [960]  64274.50  77855.91  96210.72  91876.01  88612.00  82828.93  83085.45
+##  [967]  82740.81 109215.50 100134.77  96448.87 104541.78 108109.42  95174.37
+##  [974]  59076.05  96633.97  78117.33  54822.77  42611.49  60679.83  75483.82
+##  [981]  65823.78  98893.97  58809.27  81847.97  60277.97 115186.06  93277.34
+##  [988]  83038.67  79941.62  89193.61  77324.06  87283.54  98851.76  96027.54
+##  [995]  45140.08  67184.21  97183.10  83481.54  65980.65  85582.83
+```
+
+---
+
+### Sampling Distribution n = 5
+
+.pull-left[
+- 1,000 samples
+- size *n* = 5 
+
+
+``` r
+hist(xbars_5)
+```
+
+
+``` r
+mean(xbars_5)
+```
+
+```
+## [1] 85045.59
+```
+
+``` r
+sqrt(var(xbars_5)*(999)/1000)
+```
+
+```
+## [1] 17091.21
+```
+]
+
+.pull-right[
+![](8a-ci-sampling-distribution_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+]
+
+
+
+
+
+
+---
+
+
+### Generating a Sampling Distribution n = 30
+
+- 1,000 samples
+- size *n* = 30
+
+
+``` r
+xbars_30 &lt;- numeric(1000)
+for (i in 1:1000)
+{
+  xbars_30[i] &lt;-  
+    mean(sample(lapd$base_pay, 30, replace = FALSE))
+}
+```
+
+---
+
+### Sampling Distribution n = 30
+
+.pull-left[
+- 1,000 samples
+- size *n* = 30
+
+
+``` r
+hist(xbars_30)
+```
+
+
+``` r
+mean(xbars_30)
+```
+
+```
+## [1] 85169.93
+```
+
+``` r
+sqrt(var(xbars_30)*(999)/1000)
+```
+
+```
+## [1] 7161.716
+```
+]
+
+.pull-right[
+![](8a-ci-sampling-distribution_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+
+### Generating a Sampling Distribution n = 50
+
+- 1,000 samples
+- size *n* = 50
+
+
+``` r
+xbars_50 &lt;- numeric(1000)
+for (i in 1:1000)
+{
+  xbars_50[i] &lt;-  
+    mean(sample(lapd$base_pay, 50, replace = FALSE))
+}
+```
+
+---
+
+### Sampling Distribution n = 50
+
+.pull-left[
+- 1,000 samples
+- size *n* = 50
+
+
+``` r
+hist(xbars_50)
+```
+
+
+``` r
+mean(xbars_50)
+```
+
+```
+## [1] 85196.61
+```
+
+``` r
+sqrt(var(xbars_50)*(999)/1000)
+```
+
+```
+## [1] 5288.503
+```
+]
+
+.pull-right[
+![](8a-ci-sampling-distribution_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
+]
+
+---
+
+### Results from iterations
+
+*n* = 5
+
+mean = 85046 and sd = 17091
+
+*n* = 30
+
+mean = 85170 and sd = 7162
+
+*n* = 50
+
+mean = 85197 and sd = 5289
+
+
+---
+
+### Results from iterations
+
+How do our means compare to the population mean of 85149 and population standard deviation of 38421?
+
+--
+
+ - mean of sample means is similar to population mean
+ - standard deviation of sample means is smaller than population standard deviation. 
+
+--
+
+How about the shape of the distribution of the sample means?
+
+--
+
+ - symmetric bell shape
+
+---
+
+
+### Results from iterations
+
+**Main Observations:**
+
+ - No matter the sample size, n, the mean of the sample means is the same as the population mean. 
+ 
+ - As the sample size, n, increases, the standard deviation of the sampling distribution of the sample means gets smaller. 
+
+ - As the sample size, n, increases, the shape of the sampling distribution of the sample mean gets more bell shaped. 
+
+
+---
+
+### In rear life
+
+Generating many samples of the same size helped us understand how the sampling distribution behaved. 
+
+- However, in real life, taking many samples from the population is costly. We often only have one sample that we can use to estimate the population parameter.
+
+--
+
+- How can we take sampling variability into account when we only have one sample?
+
+---
+
+Under certain conditions, the variability of the sample mean is well described by the mathematical theory given by the Central Limit Theorem.
+
+### Central Limit Theorem (CTL)
+
+Suppose you have a random variable, *x*, that has a population mean, μ, and a population standard deviation, σ. If an independent sample of size *n* is taken, then the sampling distribution of the sample mean, `\(\bar{x}\)` , becomes normally distributed (bell shaped) as n increases, with
+
+- mean: `\(\mu_{\bar{x}} = \mu\)`
+- standard deviation: `\(\sigma_{\bar{x} }=\frac{\sigma}{\sqrt{n}}\)` (known as standard error)
+
+---
+
+
+Recall that the goal is to understand the distribution of `\(\bar{x}\)` to determine how we can use it to estimate the population mean `\(\mu\)`. 
+
+So if we do not know `\(\mu\)` then, in practice, we cannot directly calculate the standard error for `\(\bar{x}\)` since we do not know the population standard deviation, σ either. 
+
+Our solution is to use the sample standard deviation, *s*, in place of `\(\sigma\)` to approximate the standard error. 
+
+standard error (SE) = `\(\frac{\sigma}{\sqrt{n}} \approx \frac{s}{\sqrt{n}}\)`
+
+However, this brings in more variability since *s* also varies from sample to sample, and so the sampling distribution is no longer normal, per CLT.
+
+When σ is unknown and it is estimated from the sample standard deviation s, the sampling distribution for the sample mean is a **Student’s t distribution.**
+
+---
+
+### Student's t Distribution 
+
+.pull-left[Suppose an independent sample of size *n* is taken form a population that is normally distributed. Then the statistic 
+
+`\(t = \frac{\bar{x}-\mu}{\frac{s}{\sqrt{n}}}\)`
+
+follows a
+student's t distribution with *n-1* degrees of freedom. 
+]
+
+.pull-right[
+&lt;img src="img/normal-vs-t.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+
+The t-distribution is also bell shaped, but its tails are thicker than the normal distribution’s, and its bell curve fluctuates depending on the sample size. 
+]
+
+.footnote[Image from Intro to Modern Statistics OER textbook]
+
+---
+
+## Constructing a Confidence Interval for the Population Mean `\(\mu\)` with unknown `\(\sigma\)`
+
+**Requirements: **
+
+ 1. Independent sample or sample size is 5% or less of the population size, *n ≤ 0.05N*.
+ 2. Sample is obtained from a population that is normally distributed OR the sample size *n ≥ 30*.  
+ 
+**Confidence Interval:** 
+
+Suppose a random sample is obtained from a population with unknown `\(\mu\)` and unknown `\(\sigma\)`, then the CL% confidence interval for `\(\mu\)` is 
+
+`\(\bar{x}\pm t^{\ast}\frac{s}{\sqrt{n}}\)`
+
+where `\(\bar{x}\)` is the sample mean, *s* is the sample mean, and `\(t^{\ast}\)` is a multiplier based on the confidence level.  
+
+---
+
+## Constructing a Confidence Interval for the Population Mean `\(\mu\)` using R
+
+In this class, instead of using the formula, we will use the function `t.test(variable, conf.int = CL)` to help us find the interval for a population mean. 
+
+- The first argument is a variable vector.
+- CL is the confidence level in decimal form. 
+
+---
+
+### 95% Confidence Interval Example
+
+Suppose we had the following SRS of n = 35 from the 2018 LAPD salaries, and that we wanted to find the 95% confidence interval for the average salary of all employees at the LAPD in 2018.
+
+
+``` r
+salary &lt;- sample(lapd$base_pay, 35, replace = FALSE)
+salary
+```
+
+```
+##  [1]  99768.31 101744.64 106607.88  90943.21  98500.68 131999.17  36972.01
+##  [8]  52009.60 119321.60 101475.82 119321.60  90312.82 109378.40  72774.09
+## [15] 103142.28  34761.06  67620.00  65592.34 103969.65 101248.80  84692.20
+## [22]  73387.72  98376.44 148129.88   6048.79 103854.17 126967.03 111946.13
+## [29]  78580.92      0.00 109378.40  64292.96  45841.40 112954.85 125958.41
+```
+ 
+---
+
+#### Verifying requirements:
+
+  - random sample
+  - `\(n = 35 &gt; 30\)`
+  - `\(35 \le 0.05(14,824)\)` is true (independent sample)
+  
+
+``` r
+mean(salary)
+```
+
+```
+## [1] 88510.66
+```
+
+The sample mean based on the sample of 35 employees is `\(\bar{x}=\)` 88511. 
+
+---
+
+#### Using `t.test()` function to find the interval:
+
+
+``` r
+t.test(salary, conf.level = .95)
+```
+
+```
+## 
+## 	One Sample t-test
+## 
+## data:  salary
+## t = 15.35, df = 34, p-value &lt; 0.00000000000000022
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##   76792.13 100229.20
+## sample estimates:
+## mean of x 
+##  88510.66
+```
+
+
+
+
+---
+
+&lt;img src="img/t-95ci.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+Lower bound = 76792 and upper bound = 100229
+
+---
+
+## Interpretation of Confidence Intervals
+
+**Warning**: Calculating a confidence interval does not guarantee that we will capture the true value of a population parameter in the interval. 
+
+--
+
+If we were to take considerable large number of samples (we only had one sample) and construct 95% confidence intervals for each of the samples we would expect about 95% of the confidence intervals to capture the true value of the population parameter in the interval.
+
+--
+
+**Interpretation**: We are 95% confident that the true population mean of base pay salary for LAPD employees in 2018 is between $76,792 and $100,229.
+
+--
+
+- This confidence interval captures the true mean of 85149.
+
+Note: Commonly used confidence levels in practice are 90%, 95%, and 99%.
+
+
+
+---
+
+However, what if we wanted to construct an interval for the median or the standard deviation, or the mean and we did not have access to the population or did not know assumptions are satisfied to use their mathematical model.  
+
+**Bootstrapping** is a method for capturing the variability of any statistic when the mathematical model is unknown.
+
+ - The bootstrap is a statistical method that allows us to approximate the sampling distribution even without access to the population.
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

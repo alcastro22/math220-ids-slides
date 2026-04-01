@@ -1,0 +1,76 @@
+---
+title: "CI: Sampling Distribution Activity KEY (15 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+---
+
+```{r echo = FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+options(scipen=999)
+
+```
+
+
+Assume that the `mpg` data is the population of all vehicles.
+
+1. (2 pts) Construct a histogram of the highway mpg using a binwidth of 4. What is the shape?
+```{r}
+ggplot(mpg, 
+       aes(x = hwy)) +
+  geom_histogram(binwidth = 4)
+```
+
+
+2. (2 pts) Find the population mean and population standard deviation for highway mpg.
+```{r}
+mean(mpg$hwy)
+n <-length(mpg$hwy)
+sqrt(var(mpg$hwy)*(n-1)/n)
+```
+
+
+3. (3 pts) Generate 1000 random samples of size 40, and find the mean highway mpg for each sample. Use seed 2024. Save all means under ave_mpg_40.
+```{r}
+set.seed(2024)
+ave_mpg_40 <- numeric(1000)
+for (i in 1:1000)
+{
+  ave_mpg_40[i] <- mean(sample(mpg$hwy, size = 40, replace = FALSE))
+}
+
+```
+
+
+4. (2 pts) Visualize the sampling distribution. What shape does it have?
+```{r}
+hist(ave_mpg_40)
+```
+
+
+5. (2 pts) Compute the mean of all the 1000 sample means. How does it compare to the population mean. 
+```{r}
+mean(ave_mpg_40)
+```
+
+
+6. (1 pts) Generate a random sample of size 40.
+```{r}
+samp <- sample(mpg$hwy, size = 40, replace = FALSE)
+```
+
+
+7. (2 pts) Construct a 90% confidence interval to estimate the true highway mpg. Interpret interval in the context of the problem. 
+```{r}
+t.test(samp, conf.level = .90)
+```
+
+
+8. (1 pts) Does your interval captured the true population mean highway mpg?
+```{r}
+##yes
+```
+
+
+
+

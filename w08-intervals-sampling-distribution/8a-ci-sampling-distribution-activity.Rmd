@@ -1,0 +1,66 @@
+---
+title: "CI: Sampling Distribution Activity (15 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+---
+
+```{r echo = FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+options(scipen=999)
+
+```
+
+
+Assume that the `mpg` data is the population of all vehicles.
+
+1. (2 pts) Construct a histogram of the highway mpg using a binwidth of 4. What is the shape?
+```{r}
+
+```
+
+
+2. (2 pts) Find the population mean and population standard deviation for highway mpg. 
+```{r}
+
+```
+
+
+3. (3 pts) Generate 1000 random samples of size 40, and find the mean highway mpg for each sample. Use seed 2026. Save all means under ave_mpg_40.
+```{r}
+
+```
+
+
+4. (2 pts) Visualize the sampling distribution. What shape does it have? 
+```{r}
+
+```
+
+
+5. (2 pts) Compute the mean of all the 1000 sample means. How does it compare to the population mean. 
+```{r}
+
+```
+
+
+6. (1 pts) Generate one random sample of size 40.
+```{r}
+
+```
+
+
+7. (2 pts) Construct a 90% confidence interval to estimate the true highway mpg. Interpret interval in the context of the problem. 
+```{r}
+
+```
+
+
+8. (1 pts) Does your interval captured the true population mean highway mpg?
+```{r}
+
+```
+
+
+
+
