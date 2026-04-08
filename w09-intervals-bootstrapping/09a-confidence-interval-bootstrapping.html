@@ -4,7 +4,7 @@
     <title>Confidence Interval: Bootstrapping</title>
     <meta charset="utf-8" />
     <meta name="author" content="Alma Castro, Cypress College" />
-    <script src="09a-confidence-interval-bootstrapping_files/header-attrs-2.29/header-attrs.js"></script>
+    <script src="09a-confidence-interval-bootstrapping_files/header-attrs-2.30/header-attrs.js"></script>
     <link rel="stylesheet" href="slide-style.css" type="text/css" />
   </head>
   <body>
@@ -58,7 +58,7 @@ glimpse(lapd)
 ## Population Distribution
 
 
-&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-4-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -81,7 +81,7 @@ class: inverse middle
 ]
 
 .pull-right[
-&lt;img src="img/bootstrap.jpg" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bootstrap.jpg" alt="" width="50%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -96,20 +96,20 @@ The **bootstrap** is a statistical method that allows us to approximate the samp
 
 ---
 
-&lt;img src="img/bootstrap_step0.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bootstrap_step0.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="img/bootstrap_step1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bootstrap_step1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="img/bootstrap_step2.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bootstrap_step2.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 
-&lt;img src="img/bootstrap_step3.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bootstrap_step3.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -135,7 +135,7 @@ But what if we only had access to a sample and we wanted to estimate the true me
 
 ## Taking random samples for bootstrap
 
-When using bootstrap method, we use the function `sample_n(dataset, n)` to take a random sample of size `n` from our `dataset`. Recall that this generates a tibble with the randomly selected values (rows).  
+When using bootstrap method, we use the function `slice_sample(dataset, n = #)` to take a random sample of size `n` from our `dataset`. Recall that this generates a tibble with the randomly selected values (rows).  
 
 - Again, `set.seed(seed #)` will be used so that you will generate the same sample as the instructor for checking work and grading purposes. The seed # will always be given. 
 
@@ -148,7 +148,7 @@ Using a seed of 12345, we will take a random sample of size n = 30 from the `lap
 
 ``` r
 set.seed(12345)
-lapd_sample &lt;- sample_n(lapd, 30)
+lapd_sample &lt;- slice_sample(lapd, n = 30)
 lapd_sample$base_pay
 ```
 
@@ -198,7 +198,7 @@ visualize(boot) +
 ]
 
 .pull-right[
-&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-15-1.png" width="90%" /&gt;
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-15-1.png" alt="" width="90%" /&gt;
 ]
 
 ---
@@ -209,11 +209,11 @@ visualize(boot) +
 .pull-right[
 
 
-&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-17-1.png" width="99%" /&gt;
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-17-1.png" alt="" width="99%" /&gt;
 ]
 
 .pull-left[
-&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-18-1.png" width="90%" /&gt;
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-18-1.png" alt="" width="90%" /&gt;
 ]
 
 
@@ -261,7 +261,7 @@ Commonly used confidence levels in practice are 90% (blue), 95% (red), and 99% (
 
 
 
-&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-22-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 

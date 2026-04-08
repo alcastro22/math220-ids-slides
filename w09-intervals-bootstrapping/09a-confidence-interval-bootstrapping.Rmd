@@ -143,7 +143,7 @@ But what if we only had access to a sample and we wanted to estimate the true me
 
 ## Taking random samples for bootstrap
 
-When using bootstrap method, we use the function `sample_n(dataset, n)` to take a random sample of size `n` from our `dataset`. Recall that this generates a tibble with the randomly selected values (rows).  
+When using bootstrap method, we use the function `slice_sample(dataset, n = #)` to take a random sample of size `n` from our `dataset`. Recall that this generates a tibble with the randomly selected values (rows).  
 
 - Again, `set.seed(seed #)` will be used so that you will generate the same sample as the instructor for checking work and grading purposes. The seed # will always be given. 
 
@@ -155,7 +155,7 @@ Using a seed of 12345, we will take a random sample of size n = 30 from the `lap
 
 ```{r}
 set.seed(12345)
-lapd_sample <- sample_n(lapd, 30)
+lapd_sample <- slice_sample(lapd, n = 30)
 lapd_sample$base_pay
 
 ```
