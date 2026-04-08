@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Confidence Interval: Bootstrapping</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="09a-confidence-interval-bootstrapping_files/header-attrs-2.29/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# Confidence Interval: Bootstrapping
+## Alma Castro, Cypress College
+]
+
+---
+
+## Data
+
+
+``` r
+lapd &lt;- read_csv("Police_Payroll.csv") |&gt; 
+  clean_names() |&gt; 
+  filter(year == 2018) |&gt; 
+  select(base_pay, job_class_title, overtime_pay)
+```
+
+
+We will use payroll data from the LAPD from 2018.
+
+
+
+``` r
+glimpse(lapd)   
+```
+
+```
+## Rows: 14,824
+## Columns: 3
+## $ base_pay        &lt;dbl&gt; 119321.60, 113270.70, 148116.00, 78676.87, 109373.63, …
+## $ job_class_title &lt;chr&gt; "Police Detective II", "Police Sergeant I", "Police Li…
+## $ overtime_pay    &lt;dbl&gt; 0.00, 26252.64, 21807.07, 0.00, 219.00, 14318.87, 2548…
+```
+
+---
+
+## Population Distribution
+
+
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Sampling Variability
+
+In the previous examples, we had access to the population data and so we could find the sampling distribution by repeatedly sampling from the population. Or we had satisfied certain assumptions from the population or sample that allowed us to use a mathematical model, such as the CLT. 
+
+However, in real life, taking many samples from the population is costly. We often only have one sample that we can use to estimate the population parameter and we do not know much about the population.  
+
+---
+
+class: inverse middle
+
+.pull-left[
+
+&lt;br&gt;
+
+.font75[Bootstrapping]
+
+]
+
+.pull-right[
+&lt;img src="img/bootstrap.jpg" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+## Bootstrap
+
+The **bootstrap** is a statistical method that allows us to approximate the sampling distribution even without access to the population.
+
+ - Help us model how a statistic varies from one sample to another taken from the population.
+ - Instead of taking many samples from the population, we will take many new samples from our original sample. This process is called **resampling**.
+ - When sampling from a population, the sampling is done without replacement. When resampling, however, we do allow such duplication (in fact, this is what allows us to estimate the variability of the sample). Therefore, we sample with replacement.
+ - For moderate to large sample sizes and sufficient number of bootstraps it has been proven that the bootstrap distribution approximates the sampling distribution. 
+
+---
+
+&lt;img src="img/bootstrap_step0.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/bootstrap_step1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/bootstrap_step2.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+&lt;img src="img/bootstrap_step3.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+Let's say we wanted to estimate the population mean. 
+
+If we have access to the population, we can simply compute it.
+
+
+``` r
+mean(lapd$base_pay)
+```
+
+```
+## [1] 85149.05
+```
+
+This is a **population parameter**, a numerical summary of a population. 
+
+But what if we only had access to a sample and we wanted to estimate the true mean? 
+
+
+---
+
+## Taking random samples for bootstrap
+
+When using bootstrap method, we use the function `sample_n(dataset, n)` to take a random sample of size `n` from our `dataset`. Recall that this generates a tibble with the randomly selected values (rows).  
+
+- Again, `set.seed(seed #)` will be used so that you will generate the same sample as the instructor for checking work and grading purposes. The seed # will always be given. 
+
+---
+
+### Random Sample (`\(n\)` = 30)
+
+Using a seed of 12345, we will take a random sample of size n = 30 from the `lapd` dataset. 
+
+
+``` r
+set.seed(12345)
+lapd_sample &lt;- sample_n(lapd, 30)
+lapd_sample$base_pay
+```
+
+```
+##  [1]      0.00 101248.80 109378.40 132957.60  90956.57 132743.97 104091.10
+##  [8] 104100.80  48696.00 125958.40  95971.20  96193.81      0.00  34479.44
+## [15]  90005.56  66881.94  75342.80  68034.18  54612.80      0.00 143967.89
+## [22] 109386.56 119321.60 106724.41  65343.46  90583.56  96848.28 103892.80
+## [29]  67380.10  85136.00
+```
+
+---
+
+## Bootstrap Samples
+
+We will retake 1000 samples, with replacement, from our sample of size n = 30 from base pay, and then calculate the mean for each of the 1000 samples.  
+
+
+``` r
+boot &lt;- lapd_sample |&gt; 
+  specify(response = base_pay) |&gt; ## pulls the variable of interest 
+  generate(reps = 1000, type = "bootstrap") |&gt; ## generated 1000 samples of size 30
+  calculate(stat = "mean") ##computes the mean for each of the 1000 samples
+```
+
+ - The function `specify()` is used to specify which columns in the supplied data set are the relevant response (and, if applicable, explanatory) variables. 
+ - The function `generate()` creates a simulated distribution by re-sampling based on the type of samples specified.
+ - The function `calculate()` will calculate the specified statistic for each replicate sample from `generate()`.
+ 
+ 
+
+
+ 
+---
+
+## Bootstrap Distribution
+
+.pull-left[
+To create a quick histogram of the bootstrap sample means, we use the function `visualize()`. Note that you can add a theme, color, and labels as desired. 
+
+
+``` r
+visualize(boot) +
+  theme_bw()
+```
+
+]
+
+.pull-right[
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-15-1.png" width="90%" /&gt;
+]
+
+---
+
+### Bootstrap Distribution vs Sampling Distribution
+
+
+.pull-right[
+
+
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-17-1.png" width="99%" /&gt;
+]
+
+.pull-left[
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-18-1.png" width="90%" /&gt;
+]
+
+
+
+---
+
+## 95% Bootstrap Confidence Interval
+
+We can construct the 95% confidence interval by calculating the 2.5th and 97.5th percentiles of the bootstrap distribution.
+
+
+``` r
+boot |&gt; 
+  summarize(lower_bound = quantile(stat, 0.025),
+            upper_bound = quantile(stat, 0.975))
+```
+
+```
+## # A tibble: 1 × 2
+##   lower_bound upper_bound
+##         &lt;dbl&gt;       &lt;dbl&gt;
+## 1      69279.      96887.
+```
+
+---
+
+
+## Interpretation of Confidence Intervals
+
+**Warning**: Calculating a confidence interval does not guarantee that we will capture the true value of population parameter in the interval. 
+
+
+**Interpretation**: We are 95% confident that the true mean base pay salary for LAPD employees in 2018 is between $69,279 and $96,887.
+
+--
+
+- This confidence interval captures the true mean ($85,149).
+
+
+---
+
+Commonly used confidence levels in practice are 90% (blue), 95% (red), and 99% (black).
+
+
+
+
+
+&lt;img src="09a-confidence-interval-bootstrapping_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Take-Away Messages
+
+- Sample statistics `\(\neq\)` population parameter.
+
+--
+
+- Different samples can have different statistics, thus there is sampling variability.
+
+--
+
+- We have constructed a confidence interval to infer about a mean but we could do this for median, proportion, standard deviation, difference between two group means etc. 
+
+--
+
+- More on constructing confidence intervals (and hypothesis testing) in other statistics classes. In this class, we will focus on using and interpreting confidence intervals. R will do the calculations for us. 
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

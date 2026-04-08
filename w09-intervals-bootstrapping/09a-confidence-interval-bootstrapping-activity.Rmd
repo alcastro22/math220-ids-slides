@@ -1,0 +1,58 @@
+---
+title: "Confidence Interval: Bootstrapping Activity (12 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+
+---
+
+```{r echo = FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+library(janitor)
+library(infer) # for bootstrap related functions
+options(scipen=999) # to avoid scientific notation
+
+```
+
+
+```{r message=FALSE, warning = FALSE}
+lapd <- read_csv("Police_Payroll.csv") |> 
+  clean_names() |> 
+  filter(year == 2018) |> 
+  select(base_pay)
+```
+
+
+
+1. (2 pts) Take a random sample of size 30 from base pay. Use seed of 2026.
+```{r}
+
+```
+
+
+
+2. (4 pts) Take 1000 bootstrap samples of size 30, and find the median base pay.
+```{r}
+
+```
+
+
+3. (2 pts) Visualize the bootstrap distribution. What shape does it have? 
+```{r}
+
+```
+
+
+4. (2 pts) Using the bootstrap samples from question 1, build a bootstrap 90% confidence interval to estimate the median base pay. Interpret your result. 
+```{r}
+
+```
+
+
+5. (2 pts) What is the true median for the population. Does your interval contain the true median base pay? 
+```{r}
+
+```
+
+
+

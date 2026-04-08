@@ -1,0 +1,149 @@
+---
+title: "Confidence Interval: Bootstrapping"
+author: "Your name"
+date: "date here"
+output: html_document
+---
+
+
+
+```{r message=FALSE, warning = FALSE}
+library(tidyverse)
+library(janitor)
+library(infer) # for bootstrap related functions
+options(scipen=999) # to avoid scientific notation
+
+```
+
+
+## Data
+
+We will be using payroll data from Los Angeles Police Department (LAPD) from 2018.
+
+```{r message=FALSE}
+lapd <- read_csv("Police_Payroll.csv") |> 
+  clean_names() |> 
+  filter(year == 2018) |> 
+  select(base_pay, job_class_title, overtime_pay)
+```
+
+```{r echo = TRUE}
+glimpse(lapd)   
+```
+
+
+## Population Distribution
+
+```{r out.width = "50%"}
+lapd |> 
+  ggplot(aes(x = base_pay)) +
+  geom_histogram(binwidth = 10000) +
+  theme_bw()
+```
+
+---
+
+## Sampling Variability
+
+In the previous examples, we had access to the population data and so we could find the sampling distribution by repeatedly sampling from the population. Or we had satisfied certain assumptions from the population or sample that allowed us to use a mathematical model, such as the CLT. 
+
+However, in real life, taking many samples from the population is costly. We often only have one sample that we can use to estimate the population parameter and we do not know much about the population.  
+
+## Bootstrapping
+
+The **bootstrap** is a statistical method that allows us to approximate the sampling distribution even without access to the population.
+
+ - Help us model how a statistic varies from one sample to another taken from the population.
+ - Instead of taking many samples from the population, we will take many new samples from our original sample. This process is called **resampling**.
+ - When sampling from a population, the sampling is done replacement. When resampling, however, we do allow such duplication (in fact, this is what allows us to estimate the variability of the sample). Therefore, we sample with replacement.
+ - For moderate to large sample sizes and sufficient number of bootstraps it has been proven that the bootstrap distribution approximates the sampling distribution. 
+
+
+```{r fig.align='center', out.width="100%"}
+knitr::include_graphics("bootstrap_step3.png")
+```
+
+
+Let's say we wanted to estimate the population mean. 
+
+If we have access to the population, we can simply compute it.
+
+```{r}
+
+```
+
+This is a **population parameter**, a numerical summary of a population. 
+
+But what if we only had access to a sample and we wanted to estimate the true mean? 
+
+
+## Taking random samples for bootstrap
+
+When using bootstrap method, we use the function `sample_n(dataset, n)` to take a random sample of size `n` from our `dataset`. Recall that this generates a tibble with the randomly selected values (rows).  
+
+- Again, `set.seed(seed #)` will be used so that you will generate the same sample as the instructor for checking work and grading purposes. The seed # will always be given. 
+
+
+### Random Sample (n = 30)
+Using a seed of 12345, we will take a random sample of size n = 30 from the `lapd` dataset. 
+
+```{r}
+
+```
+
+
+### Bootstrap Samples
+
+We will retake 1000 samples, with replacement, from our sample of size n = 30 that we picked from base pay, and then we will calculate the mean for each of the 1000 samples. This will help us model the distribution of the mean. 
+
+```{r}
+
+```
+
+ - The function `specify()` is used to specify which columns in the supplied data set are the relevant response (and, if applicable, explanatory) variables. 
+ - The function `generate()` creates a simulated distribution by re-sampling based on the type of samples specified.
+ - The function `calculate()` will calculate the specified statistic for each replicate sample from `generate()`.
+
+### Bootstrap Distribution
+
+To create a quick histogram of the bootstrap sample means, we use the function `visualize()`. Note that you can add a theme, color, and labels as desired. 
+
+```{r }
+
+```
+
+
+The bootstrap distribution is very similar to the sampling distribution.
+
+
+## 95% Bootstrap Confidence Interval
+
+We can construct the 95% confidence interval by calculating the 2.5th and 97.5th percentiles of the bootstrap distribution.
+
+```{r}
+
+```
+
+
+
+### Interpretation of Confidence Intervals
+
+**Warning**: Calculating a confidence interval does not guarantee that we will capture the true value of population parameter in the interval. 
+
+
+**Interpretation**: We are 95% confident that the true mean base pay salary for LAPD employees in 2018 is between \$69,279 and $96,887.
+
+- This confidence interval captures the true mean ($85,149).
+
+
+## Take-Away Messages
+
+- Sample statistics $\neq$ population parameter.
+
+- Different samples can have different statistics, thus there is sampling variability.
+
+- We have constructed a confidence interval to infer about a mean but we could do this for median, proportion, standard deviation, difference between two group means etc. 
+
+- More on constructing confidence intervals (and hypothesis testing) in other statistics classes. In this class, we will focus on using and interpreting confidence intervals. R will do the calculations for us. 
+
+
