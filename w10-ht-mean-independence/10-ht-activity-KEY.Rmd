@@ -1,0 +1,96 @@
+---
+title: "Hypothesis Test Activity KEY (20 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+
+---
+
+```{r echo = FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+library(openintro)
+library(titanic)
+library(janitor)
+data(mpg)
+options(scipen=999) # to avoid scientific notation
+titanic <- titanic_train |> 
+  clean_names() |> 
+  select(survived, pclass, sex, fare) |> 
+  mutate(pclass = case_when(pclass == 1 ~ "First", 
+                            pclass == 2 ~ "Second",
+                            pclass == 3 ~ "Third"),
+         pclass = as.factor(pclass))
+
+```
+
+1. Using the `mpg` data as a sample, is there enough evidence to determine that the average mpg in highway of compact cars in the past is less than the average 30 mpg of compact cars nowadays? Use a significance level of 1%.
+
+a) (2 pts) Filter the data to contain information for compact cars only and save it under "comp". 
+```{r}
+comp <- mpg |> 
+  filter(class == "compact")
+glimpse(comp)
+```
+
+
+b) (2 pts) State the null and alternative hypotheses.
+x = highway mpg
+mu = average highway mpg 
+
+Ho: mu = 30 
+Ha: mu < 30
+
+c) (2 pts) Check conditions. 
+ - 47 < 0.05(all compact cars)
+ - 47 > 30
+
+d) (2 pts) Ignoring outliers, find the test statistic and the p-value. Round to 4 decimal places.
+```{r}
+t.test(comp$hwy, mu = 30, alternative = "less")
+```
+
+t = -3.086
+p-value = 0.0017
+
+e) (2 pts) Make a decision to reject the null hypothesis and write conclusion in the context of the problem.
+
+p-value = 0.0017 < 0.01, we reject H0. 
+
+We have enough evidence to conclude that the average mpg in highway of compact cars in the past is less than the average 30 mpg of compact cars nowadays.
+
+
+
+
+2. Using the `titanic` data, and assuming conditions are satisfied, is there enough evidence to conclude that surviving and class are independent? Test at the 5% level of significance.
+
+a) (2 pts) Find the contingency table.
+```{r}
+survive <- table(titanic$pclass, titanic$survive)
+survive
+```
+
+b) (2 pts) What are the expected counts?
+```{r}
+chisq.test(survive, correct = FALSE)$expected
+```
+
+
+c) (2 pts) State the hypotheses.
+
+Ho: surviving and class are independent
+
+Ha: surviving and class are dependent
+
+d) (2 pts) Find the test statistic and p-value.
+```{r}
+chisq.test(survive, correct = FALSE)
+```
+
+
+e) (2 pts) Make a decision and write conclusion in the context of the problem.
+
+p-value < 0.05, so we reject the null. 
+
+We have strong evidence to reject the null hypothesis that class and surviving are independent. We can conclude that surviving highly dependent on the class. 
+
+

@@ -1,0 +1,63 @@
+---
+title: "Hypothesis Test Activity (20 pts) "
+author: "name here"
+date: "date here"
+output: html_document
+
+---
+
+```{r echo = FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+library(openintro)
+library(titanic)
+library(janitor)
+data(mpg)
+options(scipen=999) # to avoid scientific notation
+titanic <- titanic_train |> 
+  clean_names() |> 
+  select(survived, pclass, sex, fare) |> 
+  mutate(pclass = case_when(pclass == 1 ~ "First", 
+                            pclass == 2 ~ "Second",
+                            pclass == 3 ~ "Third"),
+         sex = as.factor(sex))
+
+```
+
+1. Using the `mpg` data as a sample, is there enough evidence to determine that the average mpg in highway of compact cars in the past is less than the average 30 mpg of compact cars nowadays? Use a significance level of 1%.
+
+a) (2 pts) Filter the data to contain information for compact cars only and save it under "comp". 
+```{r}
+
+```
+
+
+b) (2 pts) State the null and alternative hypotheses.
+
+
+c) (2 pts) Check conditions. 
+
+
+d) (2 pts) Ignoring outliers, find the test statistic and the p-value. Round to 4 decimal places.
+```{r}
+
+```
+
+
+e) (2 pts) Make a decision to reject the null hypothesis and write conclusion in the context of the problem.
+
+
+
+
+2. Using the `titanic` data, and assuming conditions are satisfied, is there enough evidence to conclude that surviving and class are independent? Test at the 5% level of significance.
+
+a) (2 pts) Find the contingency table.
+
+b) (2 pts) What are the expected counts?
+
+c) (2 pts) State the hypotheses.
+
+d) (2 pts) Find the test statistic and p-value.
+
+e) (2 pts) Make a decision and write conclusion in the context of the problem.
+
+

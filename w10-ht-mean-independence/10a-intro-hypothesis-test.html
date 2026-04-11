@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Intro to Hypothesis Testing</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="10a-intro-hypothesis-test_files/header-attrs-2.30/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# Intro to Hypothesis Testing
+## Alma Castro, Cypress College
+]
+
+---
+
+## Inferential Statistics
+
+Statistical inference is primarily concerned with understanding and quantifying the uncertainty of parameter estimates. In other words, it is the process of analyzing sample data to make conclusions about the population and reporting the reliability of the result.
+
+There are two branches of inferential statistics:
+
+  - Hypothesis Testing: testing a claim and making a decision about a population parameter(s) based on a statistic(s).
+  - Confidence Interval: estimating a population parameter(s) based on a statistic(s).
+
+---
+
+## Basics of Hypothesis Testing
+
+  - A claim/statement is made about a population
+  - Sample data is collected
+  - The data are analyzed to determine the plausibility of the claim
+  - Make a decision about the claim
+
+---
+
+### Determining Hypotheses
+
+__Null hypothesis__: statement of no change (equality), no association, no difference, claim about a parameter.
+
+  - Assumed to be true until we find evidence against it.
+  - Denoted `\(H_0\)`
+   
+__Alternative hypothesis__: statement that some change has occurred, that there is an association; statement challenging the null hypothesis.
+
+  - Often represented by a range of possible values for the variable of interest. 
+  -This is the statement we are trying to prove with the data collected.
+  - Denoted `\(H_a\)`
+
+---
+
+### Data collection and analysis
+
+The data collected and the analysis will depend on the population parameter(s) of interest. 
+
+The type of variables and statements about those variables and conditions we have will dictate the possible procedures to be used for analyzing the data. 
+
+---
+
+In general, a sampling distribution will be used to asses the plausibility of collecting such data if the null hypothesis is true. And the results will determine if the data collected is good evidence against the null, in favor of the alternative hypothesis. 
+
+- If the null is true, then the data collected is expected to be similar and close to what the null is claiming to be. 
+
+- Any data collected that falls far away or that is very different from what is expected would count as evidence against the null.
+
+---
+
+Data has natural variability and would not be exactly the same as that of the null hypothesis (`\(H_0\)`) claim, so how do we determine that the data collected is statistically different (far way) from what is expected.
+
+To determine this, we ask: 
+
+If the `\(H_0\)` is true, what is the probability that we will observe the data as we have collected? 
+
+__P-value__ is a probability quantifying the strength of the
+ evidence against the null hypothesis, given the observed data. 
+ 
+  - It is the probability of observing a sample statistic (data) at least as extreme as the one that has been observed if the null hypothesis were true.
+
+  - If the p-value is small, we reject the null hypothesis. 
+
+
+
+---
+
+But how small does a p-value need to be in order to reject the null hypothesis?
+
+The threshold is called the **significance  level**  represented by 𝛼 (the Greek letter alpha). The value of 𝛼 represents how rare an event needs to be in order for the null hypothesis to be rejected.
+
+  - The value of 𝛼 can vary depending on the field or the
+ application.
+ 
+  - The most commonly used value is 𝛼 = 0.05. Why 0.05? https://www.openintro.org/book/stat/why05/
+
+---
+
+### Conclusion and Decision
+
+The main point here to understand is that the data collected is to be used as proof of the alternative and against the null.  
+
+We never accept the null hypothesis. We either reject it or fail to reject it.
+
+
+- __Reject the null hypothesis__ if the analysis tell us that the data was good evidence against the null, i.e p-value &lt; 0.05. In this case we can conclude the alternative hypothesis. 
+
+- __Fail to reject the null hypothesis__ if the data was not good evidence against the null, i.e p-value &gt; 0.05. We do not accept the null, we simply say that the data was not good enough to conclude the alternative. 
+
+**Failing to find evidence in favor of the alternative hypothesis is not equivalent to finding evidence that the null hypothesis is true.** 
+
+---
+
+## Example 1: 
+
+Research Question: 
+
+Are there any pink cows in the world?
+
+---
+
+### Hypotheses
+
+**Null** hypothesis: There are __no__ pink cows in the world.  
+
+**Alternative** hypothesis: There is at least one pink cow in the world.
+
+--
+
+### Hypothesis Testing Procedure
+
+We go looking for a pink cow as evidence against the null. 
+
+---
+
+### Decision and conclusion
+
+Possible outcomes: 
+
+1. We find at least one pink cow.
+
+  - We have found evidence against the null then we can say that the null is false. We decide to **reject the null** hypothesis. We can conclude that there are pink cows in the world. 
+
+--
+
+2. We do not find any pink cows
+
+  - We have not found any evidence against the null then **we fail to reject the null**. We can say that our evidence is not good enough to conclude that there are pink cows in the world. 
+  - We can keep searching for more evidence against the null (i.e. continue looking for a pink cow). We will never be able to say the null is true so we never accept the null. All we can do is keep looking for a pink cow.
+
+---
+
+## Example 2
+
+Suppose a manufacturer of a battery claims the mean life of the battery is 50 days. The quality control manager at a tech company that relies on that battery thinks this claim is inflated because he's seen some batteries lasting less than that. 
+
+The manager would like the tech company to end the contract with the manufacturer to go with another one, but without a good reason, he cannot do so or it would be a breach of contract. 
+
+The manufacturer stands by their claim and agrees for an independent agency to randomly select 30 batteries and look at their lasting life. Is the data collected by the agency good evidence against the manufacturer's claim, allowing the tech company to end the contract? 
+
+
+---
+
+### Hypotheses
+
+
+`\(H_0\)`: Average life of battery is 50 days.
+
+`\(H_a\)`: Average life of battery is less than 50 days.
+
+--
+
+###  Hypothesis Testing Procedure
+
+The independent agency randomly selects 30 batteries and notes their lasting life. They assesses the plausibility of the data (find a p-value) and decide on a significant level of `\(\alpha\)` = 0.05 
+
+---
+
+### Decision and Conclusion
+
+Possible outcomes: 
+
+1. Assume that p-value is 0.0267
+
+--
+
+  Since p-value = 0.0267 &lt;  𝛼  = 0.05, we can reject the null hypothesis and conclude the alternative. In other words, the manufacture's claim is false. The average life of their battery is actually less than 50 days. The tech company has good evidence to be able to end the contract. 
+  
+--
+
+2. Assume that p-value is 0.0654
+
+--
+
+  Since p-value = 0.0654 &gt;  𝛼  = 0.05, we fail to reject the null hypothesis. In other words, we cannot reject the manufacture's claim that the average life of their battery is 50 days. The tech company does not have good evidence that the manufacturer is lying and hence has not good reason to end the contract.
+
+---
+
+## Steps of Hypotheses Testing
+
+1. Determine variable and parameter of interest: mean, proportion, comparing groups, association, ...
+
+2. State hypotheses regarding parameter 
+
+3. Verify requirements or conditions.
+
+4. Analyze collected data and use corresponding distribution to find the test statistic and p-value
+
+5. Compare p-value with stated significance level and decide to reject or fail to reject the null hypothesis. 
+
+6. Write a conclusion in the context of the problem.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

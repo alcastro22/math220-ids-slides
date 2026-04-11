@@ -1,0 +1,446 @@
+---
+title: "Hypothesis Test: Categorical Data - Test for Independence"
+author: "Alma Castro"
+output: 
+  xaringan::moon_reader:
+    css: slide-style.css
+    seal: false
+    nature:
+      ratio: 16:9
+      highlightStyle: "pygments"
+      highlightLines: true
+      highlightLanguage: "r"
+    anchor_sections: FALSE
+---
+
+class: title-slide
+
+
+<br>
+<br>
+.pull-right[ 
+
+# `r rmarkdown::metadata$title`
+## `r rmarkdown::metadata$author`
+]
+
+---
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(broom)
+library(openintro)
+
+```
+
+
+## The $\chi^2$ Test of Independence
+
+We have tested a hypothesis about a mean, which relates to numerical data.  
+
+What if a statement is about categorical data? More specifically, what if we wanted to know if two categorical variables were related in some way?
+ 
+ - We can perform what is called a test for independence.
+
+**The $\chi^2$ test of independence** is a statistical test used to determine whether there is a significant association between two categorical variables.
+
+- It helps to assess whether the occurrence of one categorical variable is related to the occurrence of another categorical variable.
+
+---
+### Chi-squared Distribution
+
+To test hypotheses regarding the relationship between two categorical variables we use the **Chi-squared distribution**.
+
+If conditions are satisfied, the $\chi^2$ statistic 
+$$
+\chi^2 = \sum \frac{
+(\text{observed count - expected count})^2
+}{
+\text{expected count}
+}
+$$
+follows a Chi-square distribution with (r-1)(c-1) degrees fo freedom, where *r* is the number of rows, and *c* is the number of columns.
+
+
+---
+
+.pull-left[
+In general, the Chi-squared distribution is skewed to the right, but its shape varies depending on the degrees of freedom. It gets more symmetric as the degrees of freedom increase.
+]
+
+.pull-right[
+```{r echo = FALSE}
+x_vals <- 0:20
+df_vals <- seq(2,10,2)
+
+df_dat <- map_df(df_vals, ~ tibble(
+  l = paste(.),
+  x = x_vals,
+  y = dchisq(x_vals, .)
+))
+
+ggplot(df_dat, aes(x, y, color = factor(l, levels = df_vals))) +
+  geom_line(data = df_dat, 
+             aes(x, y, color = factor(l, levels = df_vals))) +
+  labs(title = "Chi-square Distribution",
+       subtitle = "various degrees of freedom",
+       x = "",y = 'Density',color = "Degrees of Freedom")
+```
+]
+
+---
+
+
+## Contingency Tables
+
+In order to determine an association between two categorical variables, we first need to have the data organized in a table.
+
+A **contingency table** shows the joint distribution of two categorical variables. It displays the frequencies of the different combinations of categories for the two variables. 
+
+- Variables are identified as the row variable and the column variable.
+- Each cell gives the number of individuals that fall under two categories, one from each variable.
+- Contingency tables are also called two-way tables.
+
+---
+
+### Creating a Contingency Table in RStudio
+
+We can create a two-way contingency table in two ways depending on the way the data is given to us: 
+
+1. Data is given as **raw data** where each row represents an observation.
+
+  The function `table(data$row_variable, data$column_variable)` will count how many observations fall under each category. 
+ 
+2. Data is already given as **counts in a two-way table**. 
+
+  We enter data in the form of column vectors, x, y, z, …,  as many columns as the table has. Then use the function `data.frame(x,y,z,…)`, which will organize the data in the same way it is organized in the two-way table.
+
+---
+
+## Hypotheses for a Test of Independence
+
+**Step 1:** The null and alternative hypotheses for a $\chi^2$ test of independence are as follows:
+
+  - $H_0$: The row and column variables are not associated; they are independent
+  - $H_a$: The row and column variables are associated; they are dependent
+
+ 
+---
+
+### Expected Counts
+
+The idea behind this test is to compare observed counts to the expected counts if the null hypothesis were true (if the variables are independent).
+
+To calculate the expected count for the cell in the $i^{th}$ row and $j^{th}$ column, compute
+$$
+\text{Expected Count}_{\,row \, i,\, \;col \, j } = 
+\frac{
+(\text{row}\,\; i \; \text{total}) \times (\text{column}\,\; j \; \text{total}) 
+}{
+\text{table total}
+}
+$$
+
+In terms of counts, if there was no relationship, the observed counts should be similar to the expected counts. 
+
+---
+
+**Step 2:** Verify Requirements or Conditions.
+
+- Independent observations (within the sample)
+- Large samples: At least 5 expected counts in each cell
+
+---
+
+**Step 3:** Finding the Chi-squared **test statistic and the p-value**.
+
+To check how different the observed counts are from the expected counts, we compute a test statistic known as the chi-square test static. 
+
+**The $\chi^2$ test statistic** is found by computing the ratio of how far the observed counts are from the expected counts.
+
+$$
+\chi^2 = \sum_{ij} \frac{
+(\text{observed count - expected count})^2
+}{
+\text{expected count}
+}
+$$
+
+We can find this value following the formula, but we will use a function in R to find it. 
+
+---
+
+
+
+
+```{r eval = FALSE, echo = FALSE}
+library(infer)
+ observed_indep_statistic <- resume |> 
+   specify(received_callback ~ race,  success = "TRUE") |> 
+   hypothesize(null = "independence") |> 
+ calculate(stat = "Chisq")
+
+
+resume |> 
+  specify(received_callback ~ race, success = "TRUE") |> 
+  assume(distribution = "Chisq") |> 
+  visualize() + 
+  shade_p_value(observed_indep_statistic,
+                direction = "greater")
+
+### this code finds test statistic and draws a distribution with corresponding p-value
+```
+
+
+Recall, the p-value is the probability of observing a sample statistic at least as extreme as the one that has been observed if the null hypothesis was true.
+
+Hence it is the area under the Chi-squared distribution to the right hand side of the test statistic. 
+
+
+To find the test statistic and the p-value we use the function `chisq.test(contingency_table, correct = FALSE)`
+
+---
+
+**Step 4**: **Compare** p-value with stated significance level $\alpha$ and decide to reject or fail to reject the null hypothesis. 
+
+  - If P-value < $\alpha$, reject the null hypothesis, $H_0$.
+  - If the P-value > $\alpha$ , fail to reject the null hypothesis, $H_0$.
+
+--
+
+**Step 5**: Write a **conclusion in the context** of the problem. 
+
+  - $H_0$ is rejected: There is sufficient evidence to conclude “alternative hypothesis in context.” 
+  - $H_0$ is not rejected: There is insufficient evidence to conclude “alternative hypothesis in context.”
+
+---
+
+## Example 1
+
+[Are Emily and Greg More Employable than Lakisha and Jamal? A Field Experiment on Labor Market Discrimination](https://www.nber.org/papers/w9873). 
+
+```{r message=FALSE, echo = FALSE}
+data(resume) #from openintro package
+resume <- resume |> 
+  mutate(received_callback = as.logical(received_callback)) |> 
+  select(received_callback, race)
+
+```
+
+```{r}
+glimpse(resume)
+```
+
+
+Research question: Is getting a callback associated with the race of the (fictitious) job candidate? Use significance level of 5%.
+
+Explanatory variable: race,  Response variable: received_callback 
+
+---
+
+**Step 1.** State hypotheses
+
+  - $H_0$: Receiving a callback and race are independent
+  - $H_a$: Receiving a callback and race are dependent
+
+
+
+```{r}
+two_way_table <- table(resume$race, 
+                       resume$received_callback)
+two_way_table
+```
+
+```{r eval = FALSE, echo = FALSE}
+two_way_table <- resume |> 
+  select(received_callback, race) |> 
+  table()
+two_way_table
+
+## another way to find two-way table
+```
+
+---
+
+We can also visualize the data with a graph.  
+
+```{r fig.height = 4}
+ggplot(resume, aes(x = race, fill = received_callback)) +
+  geom_bar(position = "fill") +
+  labs(x = "Race", y = "Proportion")
+```
+
+If there was no relationship, we would expect to see the blue bars reaching to the same height, regardless of the race.
+
+---
+
+We can use the function `addmargins()` to add the totals (sums) of the rows and columns to our contingency table.   
+
+ 
+```{r}
+ addmargins(two_way_table)
+```
+
+
+---
+
+
+$\text{Expected Count}_{\,row \, 1,\, \;col \, 1 } =$
+
+$$
+\frac{(\text{row 1 total}) \times (\text{column 1 total}) }{
+(\text{table total})
+} = $$
+
+
+$$\frac{2435 \times 4478}{4870} = 2239$$
+
+
+$\text{Expected Count}_{\,row \, 1,\, \;col \, 2 } =$
+
+$$
+\frac{(\text{row 1 total}) \times (\text{column 2 total}) }{
+(\text{table total})
+} =
+$$
+
+
+
+$$
+\frac{2435 \times 392}{4870} = 196
+$$
+ Similarly, you can compute the expected counts for the remaining cells.
+
+---
+
+**Step 2.** Verify conditions
+
+  - We will assume observations are independent
+  - Expected counts in each cell are more than 5
+
+
+If we want to see the expected table, we can also do that with the `chisq.test()` function.
+
+```{r}
+chisq.test(two_way_table, correct = FALSE)$expected
+```
+
+
+
+```{r eval = FALSE, echo = FALSE}
+expected_counts <- tibble::tribble(
+  ~`Question Type`, ~`Disclose (Expected)`, ~`Hide (Expected)`, ~Total,
+  'General','2  (20.33)','71  (52.67)','73',
+  'Positive assumption','23  (20.33)','50  (52.67)', '73',
+  'Negative assumption','36  (20.33)','37   (52.67)', '73',
+  'Total', '61', '158', '219'
+)
+expected_counts ## is code creates a table with both observed and expected counts. 
+```
+
+
+```{r eval = FALSE, echo = FALSE}
+knitr::kable(expected_counts) ## displays the table in a much nicer way
+```
+
+
+---
+
+**Step 3.** Find the test statistic and p-value
+
+
+```{r}
+chisq.test(two_way_table, correct = FALSE)
+
+```
+
+---
+
+**Step 4.** Compare p-value with stated significance level and decide to reject or fail to reject the null hypothesis. 
+
+Using a significance level of $\alpha = 0.05$, we can see that the p-value of 0.00004 is smaller than 0.05. Hence we reject the null hypothesis in favor of the alternative.
+
+--
+
+**Step 5.** Write a conclusion in the context of the problem.
+
+
+We have enough evidence to conclude that receiving a callback and race are dependent.  
+
+---
+
+## Example 2
+
+A professor at a community college conducted a study to assess the effectiveness of delivering an introductory statistics course via traditional lecture-based method, online delivery, and hybrid instruction methods. The grades received for a random sample of students in each of the courses were tallied. 
+
+
+| Grade | Traditional | Online | Hybrid |
+|-------|-------------|-----------------|
+| A | 36 | 39 | 24 |
+| B | 52 | 55 | 66 |
+| C | 57 | 68 | 90 |
+| D | 46 | 38 | 41 |
+| F | 46 | 54 | 31 |
+
+At the 0.05 level of significance, test the claim that grade earned is independent of the type of course.
+
+---
+
+**Step 1.** State hypotheses
+
+  - $H_0$: Grade earned is independent of the type of course.
+  - $H_a$: Grade earned depends on the type of course.
+
+---
+
+### data
+Data is already given as counts in a two-way table, so we crate the table using vectors and the function `data.frame()`. 
+```{r}
+t <- c(36, 52, 57, 46, 46)
+o <- c(39, 55, 68, 38, 54)
+h <- c(24, 66, 90, 41, 31)
+grades <- data.frame(t, o, h)
+grades
+```
+
+
+---
+  
+**Step 2.** Verify conditions
+
+  - We will assume observations are independent
+  - Expected counts in each cell are more than 5
+
+```{r}
+chisq.test(grades, correct = FALSE)$expected
+```
+
+---
+
+**Step 3.** Find the test statistic and p-value
+
+
+```{r}
+chisq.test(grades, correct = FALSE)
+
+```
+
+$\chi^2$ = 19.785
+
+p-value = 0.0112
+
+---
+
+**Step 4.** Compare p-value with stated significance level 
+
+Using a significance level of $\alpha = 0.05$, we can see that the p-value of 0.0112 is smaller than 0.05. Hence we reject the null hypothesis in favor of the alternative.
+
+--
+
+**Step 5.** Write a conclusion in the context of the problem.
+
+
+We have enough evidence to reject the claim that grade earned is independent of the type of course, and conclude that the grade received does depends on the type of course.
+  
+  
+  
