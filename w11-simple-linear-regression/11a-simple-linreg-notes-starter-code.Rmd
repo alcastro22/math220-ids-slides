@@ -1,0 +1,649 @@
+---
+title: "Simple Linear Regression"
+author: "Your Name"
+date: "date here"
+output: html_document
+---
+
+```{r message = FALSE}
+library(tidyverse)
+library(openintro)
+library(broom)
+
+```
+
+## Relationship Between two Variables
+
+Recall, that when exploring the relationship between two variables, the response variable (*y*) records the outcome of the study, and the explanatory variable (*x*), also know as the predictor variable, is one that can explain changes in the response variable. 
+
+Often times, the goal is to model their association. A model is a mathematical relationship, such as a function, between variables. 
+
+There are two main reasons why we may wish to find a model: 
+- to make predictions about a response variable.
+- to make inferences regarding associations.
+
+---
+
+## Models
+
+There are two common statistical models: 
+
+**Linear regression** is a model used to help us understand the relationship between a **quantitative response variable, $y$**, and one or more explanatory (predictor) variables, $x_i$. 
+
+- *Simple linear regression* is using one predictor variable to estimate a response variable. The resulting model is the equation of a line. 
+
+- *Multiple linear regression* is using two or more predictor variables to estimate a response variable. 
+
+
+
+**Classification** is a model used to analyze a **categorical response variable** with the goal of predicting or classifying the response category using one or more explanatory variables. 
+
+---
+
+## Simple Linear Regression
+
+Simple linear regression is a method for fitting a line to data where the relationship between two variables, explanatory (predictor), x, and response, y, can be modeled by a straight line.
+
+```{r  echo = FALSE, message = FALSE, out.width = "50%"}
+set.seed(84735)
+x <- seq(-2, 2, by = 0.01)
+y <- 4*x + 5 + rnorm(length(x), 0 , 1.5)
+
+data_good <- data.frame(x = x, y = y) |>   sample_n(50)
+
+data_good |> 
+  ggplot() +
+  aes(x = x, y = y) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+---
+
+## Strenght of a Linear Relationship
+
+Before we model the linear relationship, it's a good idea to look at its strength. 
+
+**Correlation** describes the strength and direction of the linear relationship between two variables. We denote the correlation by r.
+
+- It takes values between -1 and 1.
+- r < 0 means there is a negative linear relationship.
+- r > 0 means there is a positive linear relationship.
+- r close to 0 means there is a weak or no linear relationship.
+- r close to 1 means there is a strong linear relationship. 
+- r = -1 or +1 means there is perfect negative or positive linear relationship, respectively. 
+- It has no units.
+- It is not be affected by a linear change in the units (e.g., going from inches to centimeters).
+
+### Finding the Correlation Coefficient r
+
+To find the correlation r, we use the function `cor(data$x, data$y, use = "pairwise.complete.obs")`. 
+
+Where *x* and *y* are vectors and "use = pairwise.complete.obs" ignores NA values. 
+
+Rule of thumb to determine strength of correlation: 
+
+  - Between -1 and -0.7: strong 
+  - Between -0.7 and -0.4: moderate
+  - Between -0.4 and 0.4 : weak
+  - Between 0.4 and 0.7: moderate
+  - between 0.7 and 1: strong
+
+Here are examples of scatter plots and their correlations.
+
+```{r echo=FALSE, out.width='50%', fig.align='center'}
+knitr::include_graphics('cor-plots.png')
+```
+
+
+Image from [Intro to Modern Statistics 1st ed](https://openintro-ims.netlify.app/) licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported United States License.
+
+
+
+---
+
+## Linear Equations Review
+
+Recall from your previous math classes
+
+$y = mx + b$
+
+where $m$ is the slope and $b$ is the y-intercept
+
+e.g. $y = 2x -1$
+
+
+```{r echo = FALSE, out.width = "50%", message = FALSE}
+x <- c(0, 1, 2, 3, 4, 5)
+y <- c(-1, 1, 3, 5, 7, 9)
+
+as.data.frame(x = x, y = y) |> 
+  ggplot() +
+  aes(x = x, y = y) +
+  geom_point() +
+  scale_y_continuous(breaks = c(-1, 1, 3, 5, 7, 9)) +
+  scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5)) +
+  geom_smooth(method = "lm", se = FALSE)
+
+```
+
+
+## Simple Linear Regression
+
+A simple linear regression model for a response variable $y$ as a function of a predictor variable $x$ has the form: 
+$$y_i = \beta_0 +\beta_1x_i + \epsilon_i$$
+
+where, 
+
+- $n$ is the number of observations in the data set
+- $\beta_0$ is the y-intercept
+- $\beta_1$ is the slope
+- $\epsilon_i$ is the error/residual
+
+
+Note that $\beta_0$ and $\beta_1$ are population **parameters** that are unknown and need to be estimated using sample data. 
+
+There are a lot of lines with different slopes and y-intercepts that can model the linear relationship. 
+
+However, the line that we chose has to be the one that best fits the data. That is, we have to find the best estimates for $\beta_0$ and $\beta_1$ so that we reduce the errors $\epsilon_i$ as much as possible. 
+
+
+---
+
+## Least-Squares Regression Line
+
+The **least-squares regression line** is the line that minimizes the sum of the squared residuals. 
+
+$\hat {y}_i = b_0 + b_1 x_i$
+
+- $\hat{y}_i$ is the predicted (estimated/expected) value of the response, y, for a given value of $x_i$. 
+- $b_0$ is the y-intercept  
+- $b_1$ is the slope
+
+
+The coefficients $b_0$ and $b_1$ are the estimates of $\beta_0$ and $\beta_1$, respectively.
+
+### Finding Least-Squares Regression Line
+
+To find the coefficients for our linear regression model, we use the `lm()` function which stands for **linear model**. 
+
+```{r eval = FALSE}
+model_name <- lm(y ~ x, data = data_name)
+```
+
+- The first argument **y ~ x** stands for "y is a function of x". 
+- Then we state the data set.
+- It is always a good idea to save your model. 
+
+---
+
+#### Data `babies` in `openintro` package
+
+```{r}
+glimpse(babies)
+
+```
+
+
+###  Baby Weights
+
+We would like to look at the relationship between days of gestation and birth weight.
+
+
+| y | Response    | Birth weight | Numeric |
+|---|-------------|-----------------|---------|
+| x | Explanatory | Gestation           | Numeric |
+
+```{r fig.align='center', message = FALSE, warning = FALSE}
+
+
+```
+
+
+### Modeling Baby Weights
+
+Correlation between gestation period and baby weight.
+
+```{r}
+
+```
+
+There is a _____________________.
+
+
+Since we want to use days of gestation to predict birth weight, we run the model: 
+
+```{r}
+
+```
+
+Note that here we saved the model to the object `model_g`.
+
+We simply run the name of our model to display the results. 
+
+```{r}
+
+```
+
+The values of the output are in the order $b_0, b_1$. 
+
+Hence $b_0 = _____________$ and $b_1 = _________$.
+
+Our least-squares regression line to model the relationship between gestation length and baby weight is then: 
+
+$\hat {y}_i = b_0 + b_1 x_i$
+
+<mark> $\hat {y}_i = _____ + ______ x_i$ </mark>
+
+
+You can also write it using the variables involved: 
+
+$\hat {\text{bwt}_i} = b_0 + b_1 \text{ gestation}_i$
+
+<mark> $\hat {\text{bwt}_i} = ______ + ______\text{ gestation}_i$ </mark>
+
+
+### Plotting the linear model through the scatter plot
+
+```{r message = FALSE, warning = FALSE}
+
+
+```
+
+Add `geom_smooth` function to `ggplot`.
+
+
+`lm` stands for linear model  
+`se` stands for standard error
+
+
+
+### Interpretation of estimates
+$\hat {y}_i = b_0 + b_1 x_i$
+
+$\hat {y}_i = -10.064 + 0.464 x_i$
+
+**Slope**: $b_1$
+- For each one unit increase in the explanatory variable (predictor), $x$, there will be an average (expected)
+increase or decrease in the response variable, $y$, of $b_1$ units.
+
+
+$b_1 = 0.464$ which means for __________________________.
+
+**y-intercept**: $b_0$ 
+- The value of the response variable, $y$, when the value of the explanatory variable, $x$, is 0.
+- Not always interpretable.  
+
+$b_0 = -10.064$ which means for ____________________________.
+
+
+## Extrapolation
+
+- There is no such thing as 0 days of gestation.
+
+- Birth weight cannot possibly be -10.064 ounces.
+
+- **Extrapolation** happens when we use a model outside the range of the x-values that are observed. After all, we cannot really know how the model behaves (e.g. may be non-linear) outside of the scope of what we have observed. 
+
+
+## Using regression line to make predictions
+
+Find the expected birth weight for a baby with 300 days of gestation.
+
+$\hat {\text{bwt}_i} = -10.064 + 0.464\text{ gestation}_i$
+
+$\hat {\text{bwt}} = -10.064 + 0.464(_______)$
+
+$\hat {\text{bwt}} = ________$
+
+
+For a baby with 300 days of gestation the expected birth weight is ______________ ounces.
+
+## Baby number 148
+
+```{r}
+babies |> 
+  filter(case == 148) |> 
+  select(bwt, gestation)
+
+```
+
+
+```{r message = FALSE, out.width = "50%", warning = FALSE}
+
+baby_148 <- subset(babies, case == 148)
+
+babies |> 
+  ggplot() +
+  aes(x = gestation, y = bwt) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_point(data = baby_148, color = "red")
+```
+
+
+**Expected**
+
+$\hat y_{148} = b_0 +b_1x_{148}$
+
+$\hat y_{148} = -10.064 + 0.464(300)$
+
+$\hat y_{148}$ = `r -10.064 + 0.464*300`
+
+
+**Observed**
+
+$y_{148} =$ 160
+
+
+## Residuals
+
+_________________ is the difference between observed and predicted (expected) values.
+
+The residual, $e_i$, of the $i^{th}$ observation $(x_i, y_i)$ is the difference of the observed value, $y_i$, and the predicted value, $\hat{y}_i$, based on the linear model for the corresponding $x_i$. 
+
+- $e_i = y_i - \hat y_i$
+
+We find $\hat y_i$ by plugging $x_i$ into the model. 
+
+
+## Residual for `i = 148`
+
+
+
+```{r  message=FALSE, warning = FALSE, out.width = "50%"}
+babies |> 
+  ggplot() +
+  aes(x = gestation, y = bwt) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_point(data = baby_148, color = "red") +
+  geom_segment(x = 300, xend = 300, y = 128.94, yend = 160, color = "red")
+```
+
+
+$y_{148} = 160$
+
+<hr>
+
+$\hat y_{148}$ = `r -10.064 + 0.464*300`
+
+<hr>
+
+$e_{148} = y_{148} - \hat y_{148}$
+
+$e_{148} = 160 - 129.136$ 
+
+$e_{148} =$ `r 160 -(-10.064 + 0.464*300)`
+
+
+
+### Calculating residuals for all cases
+
+Use the function `residuals(model_name)` to find the residuals of all observation. Note that `model_name` is the object under which you saved your linear model.  
+
+```{r}
+
+```
+
+
+
+## Residual Sum of Squares
+
+The least squares approach chooses $b_0$ and $b_1$ to minimize the _residual sum of squares_ (RSS).
+
+$$RSS = e_1^2 + e_2^2 + ... + e_n^2 = \sum_{i = 1}^n e_i^2$$
+
+
+The RSS for our data is: 
+
+```{r}
+
+```
+
+This is the smallest possible. The least-squares regression line tries to get as close as possible to all points on average. 
+Which means that any other linear model would give us a greater RSS. 
+
+
+## Conditions for Least Squares Regression
+
+To determine if a linear model is indeed appropriate, we look at certain conditions.
+
+We use the residuals to verify:  
+
+- Linearity
+- Constant Variance
+- Normality of Residuals
+
+We look at the study design to verify:
+
+- Independence
+
+
+
+### Linearity
+Look for an overall linear trend in scattered plot. 
+
+**Linear**
+
+```{r  echo = FALSE, message = FALSE, out.width = "50%"}
+set.seed(84735)
+x <- seq(-2, 2, by = 0.01)
+y <- 4*x + 5 + rnorm(length(x), 0 , 1.5)
+
+data_good <- data.frame(x = x, y = y) |>   sample_n(50)
+
+data_good |> 
+  ggplot() +
+  aes(x = x, y = y) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+**Non-linear**
+
+```{r  echo = FALSE, message = FALSE, out.width = "50%"}
+set.seed(84735)
+x <- seq(-2, 2, by = 0.01)
+y <- 3*x^2 + x + 5 + rnorm(length(x), 0 , 2)
+
+data_bad<- data.frame(x = x, y = y) |> sample_n(50)
+
+data_bad |> 
+  ggplot() +
+  aes(x = x, y = y) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  stat_function(fun = function(x)3*x^2 + x + 5 )
+```
+
+
+
+A **residual plot** is one where the residuals are plotted against the explanatory variable. 
+ 
+- Points in the residual plot must be randomly scattered, with no pattern, and "close" to 0.
+
+
+**Linear model appropriate**
+
+```{r echo = FALSE, message = FALSE, out.width = "50%"}
+
+model_good <- lm(y ~ x, data = data_good)
+
+data_good <- 
+  data_good |>
+  sample_n(50) |> 
+  modelr::add_residuals(model_good)
+
+data_good |> 
+  ggplot(aes(x = x, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+```
+
+
+**Linear model not appropriate**
+
+```{r echo = FALSE, message = FALSE, out.width = "50%"}
+model_bad <- lm(y ~ x, data = data_bad)
+
+data_bad <- 
+  data_bad |> 
+  modelr::add_residuals(model_bad) 
+
+data_bad |> 
+  ggplot(aes(x = x, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+```
+
+
+
+### Constant Variance
+The variability (scattered-ness) of the residual plot must be about the same throughout the plot.
+
+- A change in the variability as the explanatory variable increases means that predictions are not reliable. 
+
+**Constant Variance**
+
+```{r echo = FALSE, message = FALSE, out.width = "50%"}
+
+data_good |> 
+  ggplot(aes(x = x, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+
+```
+
+
+**Non-constant variance**
+
+```{r echo = FALSE, message = FALSE, out.width = "50%"}
+
+data_bad |> 
+  ggplot(aes(x = x, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+
+```
+
+
+### Normality of Residuals
+
+The residuals must follow an overall bell curve pattern, also known as Normal. 
+
+**Nearly normal**
+
+```{r echo = FALSE, message = FALSE, out.width = "50%"}
+model_good <- lm(y ~ x, data = data_good)
+
+data_good <- 
+  data_good |>
+  sample_n(50) |> 
+  modelr::add_residuals(model_good) 
+
+data_good |> 
+  ggplot(aes(x = resid)) +
+  geom_density()
+
+```
+
+
+**Not normal**
+
+```{r echo = FALSE, message = FALSE, out.width = "50%"}
+model_bad <- lm(y ~ x, data = data_bad)
+
+data_bad <- 
+  data_bad |> 
+  modelr::add_residuals(model_bad) 
+
+data_bad |> 
+  ggplot(aes(x = resid)) +
+  geom_density()
+
+```
+
+
+
+### Independence
+
+Cases must be independent of one-another. 
+
+- Individuals must not be related (associated) to other individuals. 
+- Harder to check because we need to know how the data were collected.
+
+
+
+### Verifying Conditions for the Baby Weights Example
+
+**Linearity**: Using scattered plot
+
+```{r message = FALSE, warning = FALSE, eval = FALSE}
+
+```
+
+
+**Linearity and constant variance**: Using residual plot
+- First, add residuals to your data.
+```{r message = FALSE, warning = FALSE }
+
+```
+
+- Plot the explanatory variable against the residuals. 
+- Add a line through `y = 0`. 
+```{r message = FALSE, warning = FALSE}
+
+```
+
+
+
+**Normality of residuals**
+
+Construct a histogram of the residuals to look at their overall shape. 
+
+```{r}
+
+```
+
+
+
+**Independence**
+
+In the description of the dataset it says _[a study]considered all pregnancies between 1960 and 1967 among women in the Kaiser Foundation Health Plan in the San Francisco East Bay area._
+
+It is possible that babies born in the same hospital may have similar birth weight. 
+
+
+Correlated data examples: patients within hospitals, students within schools, people within neighborhoods, time-series data. 
+
+
+
+## Inference: Confidence Interval
+
+Using sample data, we can construct a confidence interval to estimate the parameters, slope $\beta_1$ or intercept $\beta_0$ (when appropriate).
+
+To do so, we use the function `confint(model, level = CL)`, with the linear model as the first argument, followed by `level = 0.90, 0.95, or 0.99` to indicate the level of confidence we want to use. If left blank, the default is 95%. 
+
+
+## Confidence Interval
+
+Types of intervals for the **slope $\beta_1$**, and interpretation: 
+
+- $(-, -)$: all values in the interval are negative indicating a possible negative relationship.
+
+- $(+, +)$: all values in the interval are positive indicating a possible positive relationship.
+
+- $(-, +)$: interval contains 0, indicating that there is no clear relationship. 
+
+### Confidence Interval for baby weights example
+
+```{r}
+
+```
+
+"We are 95% confident that the interval for the slope is between _____ and _____." 
+
+Note that the interval ________________ zero and all the values in the interval are ______________ indicating a possible _____________ relationship between gestation and birth weight.
