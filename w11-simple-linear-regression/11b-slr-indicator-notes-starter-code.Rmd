@@ -1,0 +1,180 @@
+---
+title: "SLR: Indicator Variables"
+author: "Your Name"
+date: "date here"
+output: html_document
+---
+
+
+```{r echo = FALSE, message = FALSE}
+library(tidyverse)
+library(openintro)
+```
+
+
+## Indicator Variables
+
+In regression analysis, explanatory variables are treated as a numerical. What if we want to include a categorical variable?
+
+**______________________**, also known as dummy variables, take on the values of `0` or `1` to represent the presence or absence of an attribute of a categorical variable. 
+
+- Dummy variables allow us to convert categorical variables into numerical ones. 
+- For example, a logical variable that takes the values, TRUE or FALSE are assigned the values 1 for TRUE and 0 for FALSE. 
+
+For more information and examples of categorical variables with more than 2 categories, see https://www.sjsu.edu/faculty/guangliang.chen/Math261a/Ch8slides-indicator-variables.pdf
+
+.footnote[Source: https://en.wikipedia.org/wiki/Dummy_variable_(statistics)]
+
+
+
+## Simple Linear Regression model
+
+$y_i = \beta_0 +\beta_1x_i + \epsilon_i$
+
+$\beta_0$ is y-intercept  
+$\beta_1$ is slope  
+$\epsilon_i$ is error/residual  
+$i = 1, 2, ...n$ identifier for each point
+
+The explanatory variable, $x_i$, can either be **_____________** or **__________________**.
+
+In this case, we will let $x_i$ be **categorical with 2 categories.** 
+
+---
+
+#### Data `babies` in `openintro` package
+
+```{r echo = FALSE}
+glimpse(babies)
+```
+
+
+
+This time we are going to look at the linear relationship between `birth weight`, as the response, and `smoke`, as the explanatory variable. 
+
+
+| y | Response    | Birth weight | Numeric |
+|---|-------------|-----------------|---------|
+| x | Explanatory | Smoke           | Categorical |
+
+
+
+
+The variable `smoke` indicates whether the mother of a baby smoke during her pregnancy. Note that the variable is assigned as `integer`, and hence we have 1 for yes and 0 for no. 
+
+Even is this variable was converted to `logical`, the model would still treat the variable as "integer", assigning 1 for TRUE and 0 for FALSE when calculating the slope and y-intercept. 
+
+```{r}
+babies |> 
+select(bwt, smoke)
+```
+
+### Scatter plot of smoke vs birthweight
+```{r}
+
+```
+
+
+### Finding the least-squares regression line
+
+Recall, that to find the coefficients $b_0$ and $b_1$ of the model $\hat {y}_i = b_0 + b_1 x_i$, we use the function `lm(y ~ x, data = data_name)`.
+
+```{r}
+
+```
+
+
+
+$\hat {y}_i = b_0 + b_1 x_i$
+
+
+$\hat {\text{bwt}_i} = b_0 + b_1 \text{ smoke}_i$
+
+$\hat {\text{bwt}_i} = _______ + (________\text{smoke}_i)$
+
+
+---
+
+#### Expected bwt for a baby with a non-smoker mother
+
+x = ________
+
+$\hat {\text{bwt}_i} = 123 + (-8.94\text{ smoke}_i)$
+
+$\hat {\text{bwt}_i} = 123 + (-8.94\times 0)$
+
+$\hat {\text{bwt}_i} = _________$
+
+$E[bwt_i | smoke_i = 0] = b_0$
+
+Interpretation: _______
+
+
+#### Expected bwt for a baby with a smoker mother
+
+x = _________
+
+$\hat {\text{bwt}_i} = 123 + (-8.94\text{ smoke}_i)$
+
+$\hat {\text{bwt}_i} = 123 + (-8.94\times 1)$
+
+$\hat {\text{bwt}_i} = ___________$
+
+$E[bwt_i | smoke_i = 1] = b_0 + b_1$
+
+Interpretation: _____________
+
+
+Since we are using a categorical variable, `smoke`, individuals are then classified under one of two categories: non-smoker mother vs smoker mother. That means we have two groups. 
+
+
+- Difference between groups: _______________________
+
+When the predictor variable is categorical, with two categories the **slope**, $b_1$, is no longer described as a rate of change, but as the **expected difference between the two groups.**
+
+---
+
+#### Plotting the regression line on the scatter plot
+
+```{r}
+
+```
+
+
+---
+
+## Inference: Confidence Intervals
+
+Recall, that we can use sample data to construct a confidence interval to estimate the parameters, $\beta_1$ or $\beta_0$. 
+
+Use the function `confint(model, level = CL)`, with the linear model as the first argument, followed by `level = 0.90, 0.95, or 0.99` to indicate the level of confidence we want to use. 
+
+
+```{r}
+
+```
+
+
+
+### Interval for slope $\beta_1$
+
+Interval: (_____ , ______)
+
+Note that the confidence interval for the "slope" does not contain 0 and all the values in the interval are negative. 
+
+We can't say that smoke is the cause for a lower birth weight, as there may be other factors that may cause a mother to smoke, such as stress. However, we can say that smoke has a negative relationship with birth weight.
+
+We are 95% confident that ____________________.
+
+
+
+
+### Interval for y-intercept $\beta_0$
+
+Interval: (______ , ______)
+
+Note that, in this example, the y-intercept is interpretable. That is, $\hat{y} = 123$ when $x = 0$ indicates the birth weight for a baby whose mother did not smoke during pregnancy. Hence an interval would also make sense. 
+
+**We are 95% confident to conclude that ________________________.
+
+

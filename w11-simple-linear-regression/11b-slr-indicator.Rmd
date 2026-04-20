@@ -1,0 +1,278 @@
+---
+title: "SLR: Indicator Variables"
+author: "Alma Castro, Cypress College"
+output: 
+  xaringan::moon_reader:
+    css: slide-style.css
+    seal: false
+    nature:
+      ratio: 16:9
+      highlightStyle: "pygments"
+      highlightLines: true
+      highlightLanguage: "r"
+    anchor_sections: FALSE
+---
+
+class: title-slide
+
+
+<br>
+<br>
+.pull-right[ 
+
+# `r rmarkdown::metadata$title`
+## `r rmarkdown::metadata$author`
+]
+
+---
+
+```{r echo = FALSE, message = FALSE}
+library(tidyverse)
+library(openintro)
+library(broom)
+
+```
+
+
+## Indicator Variables
+
+In linear regression analysis, explanatory variables are treated as numerical. What if we want to include a categorical variable?
+
+**Indicator variables**, also known as dummy variables, take on the values of `0` or `1` to represent the presence or absence of an attribute of a categorical variable. 
+
+- Dummy variables allow us to convert categorical variables into numerical ones. 
+- For example, a logical variable that takes the values, TRUE or FALSE are assigned the values 1 for TRUE and 0 for FALSE. 
+
+For more information and examples of categorical variables with more than 2 categories, see https://www.sjsu.edu/faculty/guangliang.chen/Math261a/Ch8slides-indicator-variables.pdf
+
+.footnote[Source: https://en.wikipedia.org/wiki/Dummy_variable_(statistics)]
+
+---
+
+## Simple Linear Regression model
+
+$y_i = \beta_0 +\beta_1x_i + \epsilon_i$
+
+$\beta_0$ is y-intercept  
+$\beta_1$ is slope  
+$\epsilon_i$ is error/residual  
+$i = 1, 2, ...n$ identifier for each point
+
+The explanatory variable, $x_i$, can either be **numerical** or **categorical**.
+
+In this case, we will let $x_i$ be categorical with 2 categories. 
+
+---
+
+#### Data `babies` in `openintro` package
+
+```{r echo = FALSE}
+glimpse(babies)
+```
+
+---
+
+This time we are going to look at the linear relationship between `birth weight`, as the response, and `smoke`, as the explanatory variable. 
+
+
+| y | Response    | Birth weight | Numeric |
+|---|-------------|-----------------|---------|
+| x | Explanatory | Smoke           | Categorical |
+
+
+.pull-left[
+The variable `smoke` indicates whether the mother of a baby smoke during her pregnancy. Note that the variable is assigned as `integer`, and hence we have 1 for yes and 0 for no. 
+
+Even is this variable was converted to `logical`, the model would still treat the variable as "integer", assigning 1 for TRUE and 0 for FALSE when calculating the slope and y-intercept.
+]
+
+.pull-right[
+```{r}
+babies |> 
+select(bwt, smoke)
+```
+]
+
+---
+
+### Scatter plot of smoke vs birthweight
+
+.pull-left[
+```{r eval = FALSE}
+babies |> 
+  ggplot(
+    aes(x = smoke, 
+        y = bwt)) +
+  geom_point()
+```
+]
+
+.pull-right[
+```{r echo = FALSE, warning = FALSE}
+babies |> 
+  ggplot(aes(x = smoke, y = bwt)) +
+  geom_point()
+```
+
+]
+
+
+---
+
+### Finding the least-squares regression line
+
+Recall, that to find the coefficients $b_0$ and $b_1$ of the model $\hat {y}_i = b_0 + b_1 x_i$, we use the function `lm(y ~ x, data = data_name)`.
+
+```{r}
+model_s <- lm(bwt ~ smoke, data = babies)
+model_s
+```
+
+
+---
+
+### Least-squares Regression Line
+
+$\hat {y}_i = b_0 + b_1 x_i$
+
+$\hat {\text{bwt}_i} = b_0 + b_1 \text{ smoke}_i$
+
+$\hat {\text{bwt}_i} = 123 + (-8.94\text{ smoke}_i)$
+
+
+---
+
+.pull-left[
+
+#### Expected bwt for a baby with a non-smoker mother
+
+**x = smoke = 0**
+
+$\hat {\text{bwt}_i} = 123 + (-8.94\text{ smoke}_i)$
+
+$\hat {\text{bwt}_i} = 123 + (-8.94\times 0)$
+
+$\hat {\text{bwt}_i} = 123$
+
+
+The expected birth weight of a baby with a non-smoker mother is 123 ounces. 
+
+]
+
+--
+
+.pull-right[
+#### Expected bwt for a baby with a smoker mother
+
+ **x = smoke = 1**.
+
+$\hat {\text{bwt}_i} = 123 + (-8.94\text{ smoke}_i)$
+
+$\hat {\text{bwt}_i} = 123 + (-8.94\times 1)$
+
+$\hat {\text{bwt}_i} = 114.06$
+
+
+The expected birth weight of a baby with a smoker mother is 114 ounces.
+
+]
+
+---
+
+.pull-left[
+
+#### Expected bwt for a baby with a non-smoker mother
+
+
+$E[bwt_i | smoke_i = 0] = 123 = b_0$
+
+
+#### Expected bwt for a baby with a smoker mother
+
+$E[bw t_i | smoke_i = 1] = 114$ 
+$= 123 + (-8.94)$ 
+$= b_0 + b_1$
+]
+
+--
+
+.pull-right[
+
+Since we are using a categorical variable, `smoke`, babies are then classified under one of two categories: non-smoker mother vs smoker mother. That means we have two groups.
+
+- Difference between groups: 123 - 114 = -9 which is the $b_1$ (slope)
+
+When the predictor variable is categorical, with two categories the **slope**, $b_1$, is no longer described as a rate of change, but as **the expected difference between the two groups.**
+
+]
+
+---
+
+### Plotting the regression line on the scatter plot
+
+.pull-left[
+```{r eval = FALSE, message = FALSE, warning = FALSE}
+ggplot(babies,
+         aes(x = smoke, 
+             y = bwt)) +
+  geom_point() +
+  geom_smooth(method = "lm", 
+              se = FALSE)
+```
+]
+
+.pull-right[
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(babies,
+         aes(x = smoke, y = bwt)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+]
+
+---
+## Inference: Confidence Intervals
+
+Recall, that we can use sample data to construct a confidence interval to estimate the parameters, $\beta_1$ or $\beta_0$. 
+
+Use the function `confint(model, level = CL)`, with the linear model as the first argument, followed by `level = 0.90, 0.95, or 0.99` to indicate the level of confidence we want to use. 
+
+
+```{r}
+confint(model_s, level = 0.95)
+```
+
+---
+
+### Interval for slope $\beta_1$
+
+(-10.96  -6.91)
+
+Note that the confidence interval for the "slope" does not contain 0 and all the values in the interval are negative. 
+
+We can't say that smoke is the cause for a lower birth weight, as there may be other factors that may cause a mother to smoke, such as stress. However, we can say that smoke has a negative relationship with birth weight.
+
+--
+
+In fact, we are 95% confident that the expected difference in birth weight for babies of mothers who smoke and don't smoke is between 7 to 11 ounces. 
+
+More specifically, **the expected birth weight for babies of mothers who smoke is between 7 to 11 ounces less than babies of mothers who don't smoke.** 
+
+---
+
+### Interval for y-intercept $\beta_0$
+
+(121.77 124.32)
+
+Note that, in this example, the y-intercept is interpretable. That is, $\hat{y} = 123$ when $x = 0$ indicates the birth weight for a baby whose mother did not smoke during pregnancy. Hence an interval would also make sense. 
+
+--
+
+**We are 95% confident to conclude that the expected birth weight for babies of mothers who do not smoke during their pregnancy is between 121.8 and 124.3 ounces.**
+
+
+
+
+

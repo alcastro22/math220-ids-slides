@@ -1,0 +1,40 @@
+---
+title: "Simple Linear Regression Activity (22 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+
+---
+
+```{r}
+library(tidyverse)
+library(bayesrules)
+weather <- weather_australia
+```
+
+In this activity we will be using the `weather_australia` data frame from the `bayesrules` package. You may run `?weather_australia` to find out more information about the data set and its variables. I have renamed the data frame as `weather` for simplicity.
+
+We are interested in predicting `temp3pm` by utilizing `temp9am`.
+
+1. (2 pts) Construct a scatter plot. 
+
+
+2. (3 pts) Find the correlation coefficient and comment on the form, direction, and strength of the relationship. 
+
+
+3. (4 pts) Model the relationship and write the equation of the model.
+
+
+4. (2 pts) Fit the model to the scatter plot. 
+
+
+5. (4 pts) Interpret the slope coefficient and the y-intercept coefficient. 
+
+
+6. (2 pts) What is the expected temperature at 3pm if the temperature at 9am is 10.5 degrees Celsius? 
+
+
+7. (2 pts) What is the residual for the prediction in question 6. 
+
+
+8. (3 pts) Construct a confidence interval for the slope coefficient with 90% confidence. Interpret it.

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>SLR: Indicator Variables</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="11b-slr-indicator_files/header-attrs-2.30/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# SLR: Indicator Variables
+## Alma Castro, Cypress College
+]
+
+---
+
+
+
+
+## Indicator Variables
+
+In linear regression analysis, explanatory variables are treated as numerical. What if we want to include a categorical variable?
+
+**Indicator variables**, also known as dummy variables, take on the values of `0` or `1` to represent the presence or absence of an attribute of a categorical variable. 
+
+- Dummy variables allow us to convert categorical variables into numerical ones. 
+- For example, a logical variable that takes the values, TRUE or FALSE are assigned the values 1 for TRUE and 0 for FALSE. 
+
+For more information and examples of categorical variables with more than 2 categories, see https://www.sjsu.edu/faculty/guangliang.chen/Math261a/Ch8slides-indicator-variables.pdf
+
+.footnote[Source: https://en.wikipedia.org/wiki/Dummy_variable_(statistics)]
+
+---
+
+## Simple Linear Regression model
+
+`\(y_i = \beta_0 +\beta_1x_i + \epsilon_i\)`
+
+`\(\beta_0\)` is y-intercept  
+`\(\beta_1\)` is slope  
+`\(\epsilon_i\)` is error/residual  
+`\(i = 1, 2, ...n\)` identifier for each point
+
+The explanatory variable, `\(x_i\)`, can either be **numerical** or **categorical**.
+
+In this case, we will let `\(x_i\)` be categorical with 2 categories. 
+
+---
+
+#### Data `babies` in `openintro` package
+
+
+```
+## Rows: 1,236
+## Columns: 8
+## $ case      &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1…
+## $ bwt       &lt;int&gt; 120, 113, 128, 123, 108, 136, 138, 132, 120, 143, 140, 144, …
+## $ gestation &lt;int&gt; 284, 282, 279, NA, 282, 286, 244, 245, 289, 299, 351, 282, 2…
+## $ parity    &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ age       &lt;int&gt; 27, 33, 28, 36, 23, 25, 33, 23, 25, 30, 27, 32, 23, 36, 30, …
+## $ height    &lt;int&gt; 62, 64, 64, 69, 67, 62, 62, 65, 62, 66, 68, 64, 63, 61, 63, …
+## $ weight    &lt;int&gt; 100, 135, 115, 190, 125, 93, 178, 140, 125, 136, 120, 124, 1…
+## $ smoke     &lt;int&gt; 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, …
+```
+
+---
+
+This time we are going to look at the linear relationship between `birth weight`, as the response, and `smoke`, as the explanatory variable. 
+
+
+| y | Response    | Birth weight | Numeric |
+|---|-------------|-----------------|---------|
+| x | Explanatory | Smoke           | Categorical |
+
+
+.pull-left[
+The variable `smoke` indicates whether the mother of a baby smoke during her pregnancy. Note that the variable is assigned as `integer`, and hence we have 1 for yes and 0 for no. 
+
+Even is this variable was converted to `logical`, the model would still treat the variable as "integer", assigning 1 for TRUE and 0 for FALSE when calculating the slope and y-intercept.
+]
+
+.pull-right[
+
+``` r
+babies |&gt; 
+select(bwt, smoke)
+```
+
+```
+## # A tibble: 1,236 × 2
+##      bwt smoke
+##    &lt;int&gt; &lt;int&gt;
+##  1   120     0
+##  2   113     0
+##  3   128     1
+##  4   123     0
+##  5   108     1
+##  6   136     0
+##  7   138     0
+##  8   132     0
+##  9   120     0
+## 10   143     1
+## # ℹ 1,226 more rows
+```
+]
+
+---
+
+### Scatter plot of smoke vs birthweight
+
+.pull-left[
+
+``` r
+babies |&gt; 
+  ggplot(
+    aes(x = smoke, 
+        y = bwt)) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](11b-slr-indicator_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+]
+
+
+---
+
+### Finding the least-squares regression line
+
+Recall, that to find the coefficients `\(b_0\)` and `\(b_1\)` of the model `\(\hat {y}_i = b_0 + b_1 x_i\)`, we use the function `lm(y ~ x, data = data_name)`.
+
+
+``` r
+model_s &lt;- lm(bwt ~ smoke, data = babies)
+model_s
+```
+
+```
+## 
+## Call:
+## lm(formula = bwt ~ smoke, data = babies)
+## 
+## Coefficients:
+## (Intercept)        smoke  
+##     123.047       -8.938
+```
+
+
+---
+
+### Least-squares Regression Line
+
+`\(\hat {y}_i = b_0 + b_1 x_i\)`
+
+`\(\hat {\text{bwt}_i} = b_0 + b_1 \text{ smoke}_i\)`
+
+`\(\hat {\text{bwt}_i} = 123 + (-8.94\text{ smoke}_i)\)`
+
+
+---
+
+.pull-left[
+
+#### Expected bwt for a baby with a non-smoker mother
+
+**x = smoke = 0**
+
+`\(\hat {\text{bwt}_i} = 123 + (-8.94\text{ smoke}_i)\)`
+
+`\(\hat {\text{bwt}_i} = 123 + (-8.94\times 0)\)`
+
+`\(\hat {\text{bwt}_i} = 123\)`
+
+
+The expected birth weight of a baby with a non-smoker mother is 123 ounces. 
+
+]
+
+--
+
+.pull-right[
+#### Expected bwt for a baby with a smoker mother
+
+ **x = smoke = 1**.
+
+`\(\hat {\text{bwt}_i} = 123 + (-8.94\text{ smoke}_i)\)`
+
+`\(\hat {\text{bwt}_i} = 123 + (-8.94\times 1)\)`
+
+`\(\hat {\text{bwt}_i} = 114.06\)`
+
+
+The expected birth weight of a baby with a smoker mother is 114 ounces.
+
+]
+
+---
+
+.pull-left[
+
+#### Expected bwt for a baby with a non-smoker mother
+
+
+`\(E[bwt_i | smoke_i = 0] = 123 = b_0\)`
+
+
+#### Expected bwt for a baby with a smoker mother
+
+`\(E[bw t_i | smoke_i = 1] = 114\)` 
+`\(= 123 + (-8.94)\)` 
+`\(= b_0 + b_1\)`
+]
+
+--
+
+.pull-right[
+
+Since we are using a categorical variable, `smoke`, babies are then classified under one of two categories: non-smoker mother vs smoker mother. That means we have two groups.
+
+- Difference between groups: 123 - 114 = -9 which is the `\(b_1\)` (slope)
+
+When the predictor variable is categorical, with two categories the **slope**, `\(b_1\)`, is no longer described as a rate of change, but as **the expected difference between the two groups.**
+
+]
+
+---
+
+### Plotting the regression line on the scatter plot
+
+.pull-left[
+
+``` r
+ggplot(babies,
+         aes(x = smoke, 
+             y = bwt)) +
+  geom_point() +
+  geom_smooth(method = "lm", 
+              se = FALSE)
+```
+]
+
+.pull-right[
+
+![](11b-slr-indicator_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+]
+
+---
+## Inference: Confidence Intervals
+
+Recall, that we can use sample data to construct a confidence interval to estimate the parameters, `\(\beta_1\)` or `\(\beta_0\)`. 
+
+Use the function `confint(model, level = CL)`, with the linear model as the first argument, followed by `level = 0.90, 0.95, or 0.99` to indicate the level of confidence we want to use. 
+
+
+
+``` r
+confint(model_s, level = 0.95)
+```
+
+```
+##                 2.5 %     97.5 %
+## (Intercept) 121.77391 124.320430
+## smoke       -10.96413  -6.911199
+```
+
+---
+
+### Interval for slope `\(\beta_1\)`
+
+(-10.96  -6.91)
+
+Note that the confidence interval for the "slope" does not contain 0 and all the values in the interval are negative. 
+
+We can't say that smoke is the cause for a lower birth weight, as there may be other factors that may cause a mother to smoke, such as stress. However, we can say that smoke has a negative relationship with birth weight.
+
+--
+
+In fact, we are 95% confident that the expected difference in birth weight for babies of mothers who smoke and don't smoke is between 7 to 11 ounces. 
+
+More specifically, **the expected birth weight for babies of mothers who smoke is between 7 to 11 ounces less than babies of mothers who don't smoke.** 
+
+---
+
+### Interval for y-intercept `\(\beta_0\)`
+
+(121.77 124.32)
+
+Note that, in this example, the y-intercept is interpretable. That is, `\(\hat{y} = 123\)` when `\(x = 0\)` indicates the birth weight for a baby whose mother did not smoke during pregnancy. Hence an interval would also make sense. 
+
+--
+
+**We are 95% confident to conclude that the expected birth weight for babies of mothers who do not smoke during their pregnancy is between 121.8 and 124.3 ounces.**
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
