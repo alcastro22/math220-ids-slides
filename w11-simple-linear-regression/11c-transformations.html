@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>SLR: Transformations</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="11c-transformations_files/header-attrs-2.30/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# SLR: Transformations
+## Alma Castro, Cypress College
+
+]
+
+---
+
+
+
+
+We know that in order to use a linear model there are certain conditions that needed to be met: 
+
+  - linearity
+  - constant variance
+  - normality of residuals 
+
+What if the condition of linearity is not met? 
+
+--
+
+We can transform the data so that the relationship gets close to a linear trend. 
+
+---
+
+#### Data `cars93` in `openintro` package
+
+
+``` r
+cars &lt;- cars93
+glimpse(cars)
+```
+
+```
+## Rows: 54
+## Columns: 6
+## $ type        &lt;fct&gt; small, midsize, midsize, midsize, midsize, large, large, m…
+## $ price       &lt;dbl&gt; 15.9, 33.9, 37.7, 30.0, 15.7, 20.8, 23.7, 26.3, 34.7, 40.1…
+## $ mpg_city    &lt;int&gt; 25, 18, 19, 22, 22, 19, 16, 19, 16, 16, 21, 17, 20, 20, 29…
+## $ drive_train &lt;fct&gt; front, front, front, rear, front, front, rear, front, fron…
+## $ passengers  &lt;int&gt; 5, 5, 6, 4, 6, 6, 6, 5, 6, 5, 6, 6, 6, 6, 5, 5, 6, 5, 6, 4…
+## $ weight      &lt;int&gt; 2705, 3560, 3405, 3640, 2880, 3470, 4105, 3495, 3620, 3935…
+```
+
+---
+## Example
+
+.pull-left[
+Let's find a model to predict city miles per gallon using the weight of the car.
+
+| y | Response    | mpg_city  | Numeric |
+|---|-------------|---------|---------|
+| x | Explanatory | weight | Numeric |
+
+
+
+``` r
+ggplot(cars, 
+       aes(x = weight, 
+           y = mpg_city)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+
+The heavier the car, the fewer miles per gallon you get, but they do not have a linear association. It's curved!
+
+
+]
+
+.pull-right[
+&lt;img src="11c-transformations_files/figure-html/unnamed-chunk-4-1.png" alt="" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+### Using residual plot to verify linearity condition
+
+- Run model:
+
+
+``` r
+model_city &lt;- 
+  lm(mpg_city ~ weight, data = cars)
+```
+
+- Add residuals to data: 
+
+
+``` r
+cars &lt;- cars |&gt; 
+  modelr::add_residuals(model_city)
+```
+
+---
+
+- Create residual plot:
+
+.pull-left[
+
+``` r
+ggplot(cars, 
+       aes(x = weight, 
+           y = resid)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  geom_hline(yintercept = 0)
+```
+
+
+The residual plot reveals a clear curve trend, hence a **linear model is not appropriate**. 
+
+What can we do then?
+]
+
+.pull-right[
+
+
+
+![](11c-transformations_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+]
+---
+
+## Transformations of response variable (*y*)
+
+When the relationship between an explanatory variable *x* and the response variable *y* is not linear and instead follows a curve, then one thing we can do is transform the data of *y*. 
+
+The transformed data then lessens the curve and approaches it closer to a linear relationship with the explanatory variable. 
+
+---
+
+### Log transformation of *y*
+
+One of the most common transformations is the log transformation where we take the log of the response variable values, `log(y)`.
+
+  - Note that log is natural log in R.
+  - Data values cannot be negative. 
+  - Check data for 0's and negative values. 
+  - If there are a few 0's then we can add a small amount before taking the log, e. g. `log(y + 1)`.
+  - If y has many zero values, or any negative values, a log-transformation might not be the best choice.
+
+
+
+---
+
+In our example, *y* = mpg_city, which is all positive, so we would take the log of `mpg_city` and plot it on the y-axis.
+
+.pull-left[
+
+
+``` r
+ggplot(cars, 
+       aes(x = weight, 
+*          y = log(mpg_city))) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](11c-transformations_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+]
+
+---
+.pull-left[
+
+![](11c-transformations_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+![](11c-transformations_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+]
+
+---
+
+## Modeling transformed data
+
+`\({log(\hat y_i)} = b_0 + b_1x_{i}\)`
+
+Note that the linear model now has *log(y)* not just *y*.
+
+We continue using `lm` as our main function to find the slope and y-intercept coefficients, but the argument is now `log(y) ~ x`.
+
+`lm(log(y) ~ x, data = data_name)`
+
+---
+
+### Modeling log(mpg_city)
+
+
+``` r
+model_mpg &lt;- lm(log(mpg_city) ~ weight, data = cars)
+model_mpg
+```
+
+```
+## 
+## Call:
+## lm(formula = log(mpg_city) ~ weight, data = cars)
+## 
+## Coefficients:
+## (Intercept)       weight  
+##   4.1920879   -0.0003545
+```
+
+
+`\({log(\hat y_i)} = b_0 + b_1x_{i}\)`
+
+`\({log(\hat y_i)} = 4.192 + (-0.000355)x_{i}\)`
+
+---
+
+Use the model to estimated the city miles per gallon for a car that weighs 3,200 pounds.
+
+`\({log(\hat y_i)} = 4.192 + (-0.000355)x_{i}\)`
+
+`\({log(\hat y_i)} = 4.192 + (-0.000355)(3200)\)`
+
+--
+
+`\({log(\hat y_i)} = 3.056\)` This result is for `log(y)`, so we have to solve for y to determine the mpg's.
+
+--
+
+`\(e^{log(\hat y_i)} = e^{3.056}\)`
+
+--
+
+`\(\hat y_i = e^{3.056}\)` 
+
+`\(\hat y_i = 21.24\)`
+
+A car that weighs 3,200 pounds is expected to give you 21.24 city miles per gallon. 
+
+---
+
+### Interpretation of y-intercept and slope
+
+`\({log(\hat y_i)} = b_0 + b_1x_{i}\)`
+
+--
+
+`\(e^{log(\hat y_i)} = e^{b_0 + b_1x_{i}}\)`
+
+--
+
+`\(\hat y_i = e^{b_0} \times e^ {b_1x_i}\)`
+
+
+y-intercept: When `\(x = 0\)`, the expected response value (y) is `\(e^{b_0}\)`
+
+Slope: For one-unit increase in x, the y is multiplied by `\(e^{b_1}\)`.
+
+---
+
+In our example, 
+
+`\({log(\hat y_i)} = 4.192 + (-0.000355)x_{i}\)`
+
+`\(\hat y_i = e^{4.192} \times e^ {-0.000355x_i}\)`
+
+For one-pound increase in weight, the miles per gallon is multiplied by `\(e^{-0.000355}\)`.
+
+The y-intercept cannot be interpreted as there is no such car that weighs 0 pounds.
+
+---
+
+### Other Common Transformations
+
+  - `\(\sqrt{y}\)`
+  - `\(\frac{1}{y}\)`
+  - `\(y^n\)`
+  
+__If we transform our data using a function then we need to change the linear equation according to the function that we used.__ 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

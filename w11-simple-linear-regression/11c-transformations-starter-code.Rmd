@@ -1,0 +1,175 @@
+---
+title: "Transformations"
+author: "You name"
+date: "Date here"
+output: html_document
+
+---
+
+
+```{r echo = FALSE, message = FALSE}
+library(tidyverse)
+library(broom)
+library(openintro)
+
+```
+
+We know that in order to use a linear model there are certain conditions that needed to be met: 
+
+  - linearity
+  - constant variance
+  - normality of residuals 
+
+What if the condition of linearity is not met? 
+
+We can transform the data so that the relationship gets close to a linear trend.
+
+---
+
+#### Data `car93` in `openintro` package
+
+```{r}
+cars <- cars93
+glimpse(cars)
+```
+
+## Example
+
+Let's say we wanted a model to predict city miles per gallon using the weight of the car. 
+
+| y | Response    | weight  | Numeric |
+|---|-------------|---------|---------|
+| x | Explanatory | mpg_city| Numeric |
+
+
+```{r message=FALSE, out.width = "50%"}
+ 
+  
+```
+
+The heavier the car, the fewer miles per gallon you get, but they do not have a linear association. It's curved!
+
+- Linear regression is not appropriate. 
+
+### Using residual plot to verify linearity condition
+
+- Run model:
+```{r message = FALSE, warning = FALSE}
+
+```
+
+- Add residuals to data: 
+```{r message = FALSE, warning = FALSE}
+
+```
+
+- Create residual plot:
+```{r message = FALSE, warning = FALSE, out.width = "50%"}
+
+```
+
+The residual plot reveals a clear curve trend, hence a **linear model is not appropriate**. 
+
+What can we do then?
+
+
+---
+
+### Transformations of response variable (*y*)
+
+When the relationship between an explanatory variable *x* and the response variable *y* is not linear and is curved, then one thing we can do is transform the data of *y*. 
+
+The transformed data then lessens the curve and approaches it closer to a linear relationship with the explanatory variable.  
+
+One of the most common transformations is done by taking the log of the response variable values, `log(y)`. 
+
+  - Note that log is natural log in R.
+  - Data values cannot be negative. 
+  - Check data for 0's and negative values. 
+  - If there are a few 0's then we can add a small amount before taking the log, e. g. `log(y + 1)`.
+  - If y has many zero values, or any negative values, a log-transformation might not be the best choice.
+  
+
+
+In our example, *y* = mpg_city, so we would take the log of `mpg_city` and plot it on the y-axis.
+
+
+```{r }
+
+```
+
+
+### Modeling transformed data
+
+${log(\hat y_i)} = b_0 + b_1x_{i}$
+
+Note that the linear model now has *log(y)* not just *y*.
+
+We continue using `lm` as our main function to find the slope and y-intercept coefficients, but the argument is now `log(y) ~ x`.
+
+`lm(log(y) ~ x, data = data_name)`
+
+---
+
+### Modelin log(mpg_city)
+
+```{r}
+
+```
+
+
+${log(\hat y_i)} = b_0 + b_1x_{i}$
+
+${log(\hat y_i)} = ______ + (_______)x_{i}$
+
+
+Use the model to estimate the city miles per gallon for a car that weighs 3,200 pounds.
+
+${log(\hat y_i)} = 4.192 + (-0.000355)x_{i}$
+
+${log(\hat y_i)} = 4.192 + (-0.000355)(3200)$
+
+${log(\hat y_i)} = 3.056$ This result is for `log(y)`, so we have to solve for y to determine the mpg's.
+
+$e^{log(\hat y_i)} = e^{3.056}$
+
+$\hat y_i = e^{3.056}$
+
+$\hat y_i = ________$
+
+A car that weighs 3,200 pounds is expected to give you _______ city miles per gallon. 
+
+---
+
+### Interpretation of y-intercept and slope
+
+${log(\hat y_i)} = b_0 + b_1x_{i}$
+
+$\hat y_i = e^{b_0} \times e^ {b_1x_i}$
+
+
+y-intercept: When ______, the expected response value (y) is _______
+
+Slope: For one-unit increase in ______, the ______ is multiplied by _______
+
+---
+
+In our example,
+
+${log(\hat y_i)} = 4.192 + (-0.000355)x_{i}$
+
+$\hat y_i = e^{4.192} \times e^ {-0.000355x_i}$
+
+For one ________ increase in _______, the _______ is multiplied by ________.
+
+The y-intercept cannot be interpreted as there is no such car that weighs 0 pounds.
+
+---
+
+### Other Common Transformations
+
+  - $\sqrt{y}$
+  - $\frac{1}{y}$
+  - $y^n$
+  
+__If we transform our data using a function then we need to change the linear equation according to the function that we used.__ 
