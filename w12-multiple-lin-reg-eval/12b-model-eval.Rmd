@@ -1,0 +1,357 @@
+---
+title: "Model Evaluation and Validation"
+author: "Alma Castro"
+output: 
+  xaringan::moon_reader:
+    css: slide-style.css
+    seal: false
+    nature:
+      ratio: 16:9
+      highlightStyle: "pygments"
+      highlightLines: true
+      highlightLanguage: "r"
+    anchor_sections: FALSE
+---
+
+class: title-slide
+
+
+<br>
+<br>
+.pull-right[ 
+
+# `r rmarkdown::metadata$title`
+## `r rmarkdown::metadata$author`
+]
+
+---
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(openintro)
+library(broom)
+library(modelr)
+
+```
+
+
+When creating a model for a linear regression, how do we know if we should only include one predictor variable, or two, or three, or all predictor variables in the data set? 
+
+The best model is not always the most complicated or the one with all possible predictor variables. Sometimes, including variables that are not evidently important can actually reduce the accuracy of predictions. 
+
+
+- **Full model**: the model that includes all available predictors. The full model may not be the best model, and if it isn’t, we want to identify a smaller model that is preferable.
+
+
+---
+
+## Strength of Fit using $R^2$
+
+One way to measure the strength of the linear relationship between two variables was to use the correlation coefficient, *r*. However, r could only be used when you have one explanatory variable. 
+
+A more common way to determine if we have a good model is to look at the coefficient of determination $R^2$.
+
+The **coefficient of determination $R^2$** measures the proportion (percent) of variation in the response variable, y, that can be explained by the linear model. It is a number between 0 and 1. 
+
+We use the function `glance(model_name)`, from the package `broom`, to display the $R^2$ value of the model.
+
+---
+
+## Strength of Fit using $R^2$
+
+The calculations for $R^2$ depend on the number of explanatory variables. 
+
+- One explanatory variable: $R^2$ is simply, *r* squared, the correlation squared.
+
+$$R^2 = r^2 = 1 - \frac{var(e_i)}{var(y_i)}$$ 
+--
+
+- Two or more explanatory variables: For a model with *k* explanatory variables we use what is called the **adjusted $R^2$**. It takes into account the number of explanatory variables. 
+
+$$R^2 = 1 - \frac{var(e_i)(n - 1)}{var(y_i)(n - k - 1)}$$
+
+---
+
+### Data `babies` in `openintro` package
+
+```{r}
+glimpse(babies)
+```
+
+---
+
+### Example 1
+
+Recall the linear relationship between gestation days and birth weigth of a baby. 
+
+```{r}
+model_g <- lm(bwt ~ gestation, data = babies)
+model_g
+```
+
+---
+
+```{r}
+glance(model_g)
+```
+
+---
+
+```{r}
+glance(model_g)$r.squared
+```
+
+There is a lot of variation in babies' birth weight and we want try to explain this variation. We know that gestation is one factor that can help explain this variation.
+
+In fact, 16.6% of the variation in birth weight is explained by gestation. Higher values of R squared is preferred.
+
+```{r echo = FALSE, fig.align='center', message=FALSE, warning = FALSE, fig.height = 4}
+babies |> 
+  ggplot() +
+  aes(x = gestation, y = bwt) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) 
+    
+```
+
+---
+
+### Example 2
+
+Let's look at another model where we consider three explanatory variables.
+
+```{r}
+model_gsa <- lm(bwt ~ gestation + smoke + age, data = babies)
+model_gsa
+```
+
+Is this model better than the one where we only use gestation as the predictor?
+
+
+---
+
+## Comparing Models: Looking at $R^2$
+
+
+.pull-left[
+```{r}
+glance(model_g)
+
+```
+
+$R^2$ = `r glance(model_g)$r.squared`
+]
+
+.pull-right[
+```{r}
+glance(model_gsa)
+```
+
+$R^2$ = `r glance(model_gsa)$adj.r.squared`
+
+]
+
+---
+
+## Comparing Models: Looking at $R^2$
+
+- model_g: $R^2$ = `r round(glance(model_g)$r.squared, 4)`
+
+`r round((glance(model_g)$r.squared)*100,2)` % of the variation in birth weight is explained by gestation length. 
+
+- model_gsa: $R^2$ = `r round(glance(model_gsa)$adj.r.squared, 4)`
+
+`r round((glance(model_gsa)$adj.r.squared)*100, 2)` % of the variation in birth weight is explained by gestation length, age of mother, and whether the mother is a smoker.
+
+The difference is 4.4%. Based on $R^2$, the second model would be best. 
+
+---
+
+## Root Mean Squared Error (RMSE) 
+
+To compare models, we can also look at errors (residuals).
+
+The **root mean squared error (RMSE)** is the average difference between values predicted by a model and the actual values.
+
+The RMSE has several desirable properties. Namely, it has the same units as the response variable, y; it captures both overestimates and underestimates equally; and it penalizes large misses heavily.
+
+$RMSE = \sqrt{\frac{\Sigma_{i=1}^n(y_i-\hat y_i)^2}{n}}$
+
+To find RMSE we can use the formula above or we can use the function `rmse(model_name, data = data_name)` from the package `modelr`. 
+
+---
+
+### Predictions and residuals of model_g
+
+```{r}
+babies |> 
+  add_predictions(model_g) |> 
+  add_residuals(model_g) |> 
+  select(bwt, gestation, pred, resid)
+```
+
+---
+
+### Predictions and residuals of model_gsa
+
+```{r}
+babies |> 
+  add_predictions(model_gsa) |> 
+  add_residuals(model_gsa) |> 
+  select(bwt, gestation, smoke, age, pred, resid)
+```
+
+ 
+---
+
+## Comparing Models: Looking at residuals (RMSE)
+
+For some babies, the first model would be better at predicting their birth weight, but for other babies, the second model would be best. However, we don't want to focus on individual observations, we need to look at error in general. 
+
+```{r}
+rmse(model_g, babies)
+```
+
+```{r}
+rmse(model_gsa, babies)
+```
+
+The difference is half an ounce, so based on RMSE either model would be ok. 
+
+---
+
+### Full Model
+
+```{r}
+model_full <- lm(bwt ~ gestation + parity + age +
+                   height + weight + smoke, 
+                 data = babies)
+```
+
+```{r}
+rmse(model_full, babies)
+```
+
+```{r}
+glance(model_full)$adj.r.squared
+```
+
+Can we keep adding all the variables and try to get an EXCELLENT model fit?
+
+---
+
+## Overfitting
+
+- You can add all the variables and try to get an excellent model fit, but the variables that you add to your model don't just have to give you a good $R^2$ and smallest RMSE, they should also make sense to be used as explanatory variables to predict the response variable. 
+
+- Adding all variables can lead to overfitting the model. 
+
+---
+
+## Overfitting
+
+- We are fitting the model to sample data.
+
+- Our goal is to understand the population data.
+
+- If we make our model too perfect for our sample data, the model may not perform as well with other sample data from the population.
+
+- In this case we would be overfitting the data.
+
+- We can use **model validation** techniques.
+
+---
+
+## Model Validation
+
+One technique to validate our model is to take some of the observations from our data and create a model that we can then test it on the other observations. 
+
+### Splitting the Data (Train vs. Test)
+
+We take out sample data and split observations into two parts: 
+  - training data (75% of data): used to generate model
+  - testing data (25% of data): used to test the model made with training data. 
+
+We first set a seed, then use the function `initial_split(data_name)` from the package `rsample`, which by default splits the data into 75% and 25%.
+
+---
+
+### Spliting Data
+
+First, we set a seed and split data. 
+
+```{r message=FALSE}
+set.seed(12345)
+babies_split <- rsample::initial_split(babies)
+babies_split
+```
+
+---
+
+Then save training data and testing data separately. 
+
+train data:
+
+```{r}
+babies_train <- rsample::training(babies_split)
+dim(babies_train)
+```
+
+test data:
+
+```{r}
+babies_test <- rsample::testing(babies_split)
+dim(babies_test)
+```
+
+---
+
+Let's assume that we tried different models using train data and decided that the model using gestation, smoke, and age gave us the best model for the test data. 
+
+First, we fit the model to train data.
+
+```{r}
+model_gsa_train <- lm(bwt ~ gestation + smoke + age, 
+                      data = babies_train) #<<
+```
+
+
+Then we fit the same model to test data.
+
+```{r}
+model_gsa_test <- lm(bwt ~ gestation + smoke + age, 
+                     data = babies_test) #<<
+```
+
+---
+
+### Comparing $R^2$ for train and test data
+
+.pull-left[
+```{r}
+glance(model_gsa_train)
+```
+]
+
+.pull-right[
+```{r}
+glance(model_gsa_test)
+```
+]
+
+Look for similar $R^2$ values and not one where it gets worse using the test data. 
+---
+
+### Comparing RMSE for train and test data
+
+```{r}
+rmse(model_gsa_train, data = babies)
+```
+
+
+```{r}
+rmse(model_gsa_test, data = babies)
+```
+
+
+Look for similar RMSE values and not one where it gets worse using the test data. 

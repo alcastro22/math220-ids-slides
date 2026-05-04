@@ -1,0 +1,140 @@
+---
+title: "Multiple Linear Regression"
+author: "Your Name"
+date: "date here"
+output: html_document
+---
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(openintro)
+library(broom)
+```
+
+## Simple Linear Regression 
+So far, we have only considered the linear regression model in one explanatory variable.
+
+$y_i = \beta_0 +\beta_1x_{i}  + \epsilon_i$
+
+However, oftentimes in real life, more complex linear models are needed. There are many problems in which a knowledge of more than one explanatory variable is necessary in order to obtain a better understanding and a better prediction of a particular response. 
+
+---
+
+## Multiple Linear Regression Model
+
+In general, we have data on `n cases` and `k explanatory variables`.
+
+$y_i = \beta_0 +\beta_1x_{1i}  + \beta_2x_{2i} + ...+ \beta_kx_{ki} + \epsilon_i$
+
+$\beta_0$ is intercept  
+$\beta_1$ is the slope for first explanatory variable  
+$\beta_2$ is the slope for second explanatory variable
+
+$\beta_p$ is the slope for kth explanatory variable
+
+$\epsilon_i$ is error/residual  
+$i = 1, 2, ...n$ identifier for each point
+
+### Finding a Multiple Regression Model
+
+To find the estimates of the $\beta_i$ coefficients, we continue to use the linear model function. But now *y* is a function of the sum of the explanatory variables.
+
+`lm(y ~ x_1 + x_2 + ... + x_k, data = data_name)`
+
+---
+
+#### Data `babies` in `openintro` package
+
+```{r echo = FALSE}
+glimpse(babies)
+```
+
+
+Let's look at the relationship between `birth weight` as the response, and `gestation` and `smoke` as the explanatory variables.
+
+
+| y | Response    | Birth weight | Numeric |
+|---|-------------|-----------------|---------|
+| $x_1$ | Explanatory | Gestation           | Numeric |
+| $x_2$ | Explanatory | Smoke           | Categorical |
+
+
+Scatter plot of `gestation (x_1)` and `birthweight (y)`, grouping points with color using `smoke (x_2)`.
+
+```{r}
+
+```
+
+
+### Regression Model for birthweight
+
+$y_i = \beta_0 +\beta_1x_{1i}  + \beta_2x_{2i} + \epsilon_i$
+
+$y_i$ is birthweight
+
+$\beta_0$ is the intercept  
+$\beta_1$ is the slope for **gestation**  
+$\beta_2$ is the slope for **smoke** 
+
+$\epsilon_i$ is error/residual  
+$i = 1, 2, ...n$ identifier for each point
+
+
+
+```{r}
+
+```
+
+
+$\hat {\text{bwt}_i} = b_0 + b_1 \text{ gestation}_i + b_2 \text{ smoke}_i$
+
+$\hat {\text{bwt}_i} = _________ + ________\text{gestation}_i + (_________)\text{smoke}_i$
+
+
+### Making predictions
+
+
+Find the expected birth weight for a baby who had 250 days of gestation with a **smoker** mother.
+
+$\hat {\text{bwt}_i} = -0.932 + (0.443 \times 250) + (-8.088 \times 1) = ________$
+
+Find the expected birth weight for a baby who had 250 days of gestation with a **non-smoker** mother.
+
+$\hat {\text{bwt}_i} = -0.932 + (0.443 \times 250) + (-8.088 \times 0) = ________$
+
+
+For all pregnancies with a gestation of 250 days, the difference in birth weight between babies of smokers and non smoker mothers is _______ ounces. 
+
+Overall the difference in birth weight between the two groups is about 8 ounces when controlling for gestation period.
+
+```{r}
+
+```
+
+
+### Making predictions for all existing values in the data set
+
+```{r}
+
+```
+
+
+And we can also add the residuals.
+
+```{r}
+
+```
+
+
+
+## Inference: Confidence Interval
+
+```{r}
+
+```
+
+Neither of the confidence intervals for the slopes contain _____.
+
+We can conclude that ____________________________
+

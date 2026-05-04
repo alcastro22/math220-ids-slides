@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Model Evaluation and Validation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro" />
+    <script src="12b-model-eval_files/header-attrs-2.31/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# Model Evaluation and Validation
+## Alma Castro
+]
+
+---
+
+
+
+
+When creating a model for a linear regression, how do we know if we should only include one predictor variable, or two, or three, or all predictor variables in the data set? 
+
+The best model is not always the most complicated or the one with all possible predictor variables. Sometimes, including variables that are not evidently important can actually reduce the accuracy of predictions. 
+
+
+- **Full model**: the model that includes all available predictors. The full model may not be the best model, and if it isn’t, we want to identify a smaller model that is preferable.
+
+
+---
+
+## Strength of Fit using `\(R^2\)`
+
+One way to measure the strength of the linear relationship between two variables was to use the correlation coefficient, *r*. However, r could only be used when you have one explanatory variable. 
+
+A more common way to determine if we have a good model is to look at the coefficient of determination `\(R^2\)`.
+
+The **coefficient of determination `\(R^2\)`** measures the proportion (percent) of variation in the response variable, y, that can be explained by the linear model. It is a number between 0 and 1. 
+
+We use the function `glance(model_name)`, from the package `broom`, to display the `\(R^2\)` value of the model.
+
+---
+
+## Strength of Fit using `\(R^2\)`
+
+The calculations for `\(R^2\)` depend on the number of explanatory variables. 
+
+- One explanatory variable: `\(R^2\)` is simply, *r* squared, the correlation squared.
+
+`$$R^2 = r^2 = 1 - \frac{var(e_i)}{var(y_i)}$$` 
+--
+
+- Two or more explanatory variables: For a model with *k* explanatory variables we use what is called the **adjusted `\(R^2\)`**. It takes into account the number of explanatory variables. 
+
+`$$R^2 = 1 - \frac{var(e_i)(n - 1)}{var(y_i)(n - k - 1)}$$`
+
+---
+
+### Data `babies` in `openintro` package
+
+
+``` r
+glimpse(babies)
+```
+
+```
+## Rows: 1,236
+## Columns: 8
+## $ case      &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1…
+## $ bwt       &lt;int&gt; 120, 113, 128, 123, 108, 136, 138, 132, 120, 143, 140, 144, …
+## $ gestation &lt;int&gt; 284, 282, 279, NA, 282, 286, 244, 245, 289, 299, 351, 282, 2…
+## $ parity    &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ age       &lt;int&gt; 27, 33, 28, 36, 23, 25, 33, 23, 25, 30, 27, 32, 23, 36, 30, …
+## $ height    &lt;int&gt; 62, 64, 64, 69, 67, 62, 62, 65, 62, 66, 68, 64, 63, 61, 63, …
+## $ weight    &lt;int&gt; 100, 135, 115, 190, 125, 93, 178, 140, 125, 136, 120, 124, 1…
+## $ smoke     &lt;int&gt; 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, …
+```
+
+---
+
+### Example 1
+
+Recall the linear relationship between gestation days and birth weigth of a baby. 
+
+
+``` r
+model_g &lt;- lm(bwt ~ gestation, data = babies)
+model_g
+```
+
+```
+## 
+## Call:
+## lm(formula = bwt ~ gestation, data = babies)
+## 
+## Coefficients:
+## (Intercept)    gestation  
+##    -10.0642       0.4643
+```
+
+---
+
+
+``` r
+glance(model_g)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik    AIC    BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1     0.166         0.166  16.7      244. 3.22e-50     1 -5175. 10356. 10371.
+## # ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+---
+
+
+``` r
+glance(model_g)$r.squared
+```
+
+```
+## [1] 0.1663449
+```
+
+There is a lot of variation in babies' birth weight and we want try to explain this variation. We know that gestation is one factor that can help explain this variation.
+
+In fact, 16.6% of the variation in birth weight is explained by gestation. Higher values of R squared is preferred.
+
+&lt;img src="12b-model-eval_files/figure-html/unnamed-chunk-6-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Example 2
+
+Let's look at another model where we consider three explanatory variables.
+
+
+``` r
+model_gsa &lt;- lm(bwt ~ gestation + smoke + age, data = babies)
+model_gsa
+```
+
+```
+## 
+## Call:
+## lm(formula = bwt ~ gestation + smoke + age, data = babies)
+## 
+## Coefficients:
+## (Intercept)    gestation        smoke          age  
+##     -4.6037       0.4455      -8.0143       0.1069
+```
+
+Is this model better than the one where we only use gestation as the predictor?
+
+
+---
+
+## Comparing Models: Looking at `\(R^2\)`
+
+
+.pull-left[
+
+``` r
+glance(model_g)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik    AIC    BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1     0.166         0.166  16.7      244. 3.22e-50     1 -5175. 10356. 10371.
+## # ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+`\(R^2\)` = 0.1663449
+]
+
+.pull-right[
+
+``` r
+glance(model_gsa)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik    AIC    BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1     0.212         0.210  16.2      108. 3.45e-62     3 -5089. 10187. 10213.
+## # ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+`\(R^2\)` = 0.2104155
+
+]
+
+---
+
+## Comparing Models: Looking at `\(R^2\)`
+
+- model_g: `\(R^2\)` = 0.1663
+
+16.63 % of the variation in birth weight is explained by gestation length. 
+
+- model_gsa: `\(R^2\)` = 0.2104
+
+21.04 % of the variation in birth weight is explained by gestation length, age of mother, and whether the mother is a smoker.
+
+The difference is 4.4%. Based on `\(R^2\)`, the second model would be best. 
+
+---
+
+## Root Mean Squared Error (RMSE) 
+
+To compare models, we can also look at errors (residuals).
+
+The **root mean squared error (RMSE)** is the average difference between values predicted by a model and the actual values.
+
+The RMSE has several desirable properties. Namely, it has the same units as the response variable, y; it captures both overestimates and underestimates equally; and it penalizes large misses heavily.
+
+`\(RMSE = \sqrt{\frac{\Sigma_{i=1}^n(y_i-\hat y_i)^2}{n}}\)`
+
+To find RMSE we can use the formula above or we can use the function `rmse(model_name, data = data_name)` from the package `modelr`. 
+
+---
+
+### Predictions and residuals of model_g
+
+
+``` r
+babies |&gt; 
+  add_predictions(model_g) |&gt; 
+  add_residuals(model_g) |&gt; 
+  select(bwt, gestation, pred, resid)
+```
+
+```
+## # A tibble: 1,236 × 4
+##      bwt gestation  pred  resid
+##    &lt;int&gt;     &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1   120       284  122.  -1.79
+##  2   113       282  121.  -7.86
+##  3   128       279  119.   8.53
+##  4   123        NA   NA   NA   
+##  5   108       282  121. -12.9 
+##  6   136       286  123.  13.3 
+##  7   138       244  103.  34.8 
+##  8   132       245  104.  28.3 
+##  9   120       289  124.  -4.11
+## 10   143       299  129.  14.2 
+## # ℹ 1,226 more rows
+```
+
+---
+
+### Predictions and residuals of model_gsa
+
+
+``` r
+babies |&gt; 
+  add_predictions(model_gsa) |&gt; 
+  add_residuals(model_gsa) |&gt; 
+  select(bwt, gestation, smoke, age, pred, resid)
+```
+
+```
+## # A tibble: 1,236 × 6
+##      bwt gestation smoke   age  pred  resid
+##    &lt;int&gt;     &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1   120       284     0    27  125.  -4.80
+##  2   113       282     0    33  125. -11.5 
+##  3   128       279     1    28  115.  13.3 
+##  4   123        NA     0    36   NA   NA   
+##  5   108       282     1    23  115.  -7.47
+##  6   136       286     0    25  125.  10.5 
+##  7   138       244     0    33  108.  30.4 
+##  8   132       245     0    23  107.  25.0 
+##  9   120       289     0    25  127.  -6.81
+## 10   143       299     1    30  124.  19.2 
+## # ℹ 1,226 more rows
+```
+
+ 
+---
+
+## Comparing Models: Looking at residuals (RMSE)
+
+For some babies, the first model would be better at predicting their birth weight, but for other babies, the second model would be best. However, we don't want to focus on individual observations, we need to look at error in general. 
+
+
+``` r
+rmse(model_g, babies)
+```
+
+```
+## [1] 16.6512
+```
+
+
+``` r
+rmse(model_gsa, babies)
+```
+
+```
+## [1] 16.1687
+```
+
+The difference is half an ounce, so based on RMSE either model would be ok. 
+
+---
+
+### Full Model
+
+
+``` r
+model_full &lt;- lm(bwt ~ gestation + parity + age +
+                   height + weight + smoke, 
+                 data = babies)
+```
+
+
+``` r
+rmse(model_full, babies)
+```
+
+```
+## [1] 15.78198
+```
+
+
+``` r
+glance(model_full)$adj.r.squared
+```
+
+```
+## [1] 0.2541383
+```
+
+Can we keep adding all the variables and try to get an EXCELLENT model fit?
+
+---
+
+## Overfitting
+
+- You can add all the variables and try to get an excellent model fit, but the variables that you add to your model don't just have to give you a good `\(R^2\)` and smallest RMSE, they should also make sense to be used as explanatory variables to predict the response variable. 
+
+- Adding all variables can lead to overfitting the model. 
+
+---
+
+## Overfitting
+
+- We are fitting the model to sample data.
+
+- Our goal is to understand the population data.
+
+- If we make our model too perfect for our sample data, the model may not perform as well with other sample data from the population.
+
+- In this case we would be overfitting the data.
+
+- We can use **model validation** techniques.
+
+---
+
+## Model Validation
+
+One technique to validate our model is to take some of the observations from our data and create a model that we can then test it on the other observations. 
+
+### Splitting the Data (Train vs. Test)
+
+We take out sample data and split observations into two parts: 
+  - training data (75% of data): used to generate model
+  - testing data (25% of data): used to test the model made with training data. 
+
+We first set a seed, then use the function `initial_split(data_name)` from the package `rsample`, which by default splits the data into 75% and 25%.
+
+---
+
+### Spliting Data
+
+First, we set a seed and split data. 
+
+
+``` r
+set.seed(12345)
+babies_split &lt;- rsample::initial_split(babies)
+babies_split
+```
+
+```
+## &lt;Training/Testing/Total&gt;
+## &lt;927/309/1236&gt;
+```
+
+---
+
+Then save training data and testing data separately. 
+
+train data:
+
+
+``` r
+babies_train &lt;- rsample::training(babies_split)
+dim(babies_train)
+```
+
+```
+## [1] 927   8
+```
+
+test data:
+
+
+``` r
+babies_test &lt;- rsample::testing(babies_split)
+dim(babies_test)
+```
+
+```
+## [1] 309   8
+```
+
+---
+
+Let's assume that we tried different models using train data and decided that the model using gestation, smoke, and age gave us the best model for the test data. 
+
+First, we fit the model to train data.
+
+
+``` r
+model_gsa_train &lt;- lm(bwt ~ gestation + smoke + age, 
+*                     data = babies_train)
+```
+
+
+Then we fit the same model to test data.
+
+
+``` r
+model_gsa_test &lt;- lm(bwt ~ gestation + smoke + age, 
+*                    data = babies_test)
+```
+
+---
+
+### Comparing `\(R^2\)` for train and test data
+
+.pull-left[
+
+``` r
+glance(model_gsa_train)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.204         0.201  16.4      76.8 2.87e-44     3 -3815. 7641. 7665.
+## # ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+]
+
+.pull-right[
+
+``` r
+glance(model_gsa_test)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.243         0.236  15.8      32.2 4.21e-18     3 -1272. 2553. 2572.
+## # ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+]
+
+Look for similar `\(R^2\)` values and not one where it gets worse using the test data. 
+---
+
+### Comparing RMSE for train and test data
+
+
+``` r
+rmse(model_gsa_train, data = babies)
+```
+
+```
+## [1] 16.17448
+```
+
+
+
+``` r
+rmse(model_gsa_test, data = babies)
+```
+
+```
+## [1] 16.21873
+```
+
+
+Look for similar RMSE values and not one where it gets worse using the test data. 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
