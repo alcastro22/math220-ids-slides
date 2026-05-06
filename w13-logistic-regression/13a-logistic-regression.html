@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Logistic Regression</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alma Castro, Cypress College" />
+    <script src="13a-logistic-regression_files/header-attrs-2.31/header-attrs.js"></script>
+    <link rel="stylesheet" href="slide-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide
+
+
+&lt;br&gt;
+&lt;br&gt;
+.pull-right[ 
+
+# Logistic Regression
+## Alma Castro,
+Cypress College
+]
+
+
+
+---
+
+
+
+
+
+
+## (Normal) Linear Regression Response Variables
+
+In all our models, we have worked with numerical response variables. 
+
+- Birth weight of babies (5-176 ounces)
+- Number of miles per gallon (16-46 mpg)
+- Flipper length of penguins (172-231 millimeters)
+
+---
+
+## Logistic Regression Response Variables
+
+We will now consider categorical response variables with two levels.
+
+
+- Will it rain tomorrow? (Yes/No)
+- Is email spam? (Yes/No)
+- Does the candidate receive a callback? (Yes/No)
+
+When the response variable is binary a logistic regression model can be utilized.
+
+---
+
+## Logistic Regression
+
+Logistic regression is a type of generalized linear model (GLM) for response variables where regular multiple regression does not work well. 
+
+Two stages of modeling approach: 
+
+- Model response variable using a probability distribution, such as binomial or Poisson distribution.
+
+- Model parameter of the distribution using a collection of predictors. 
+
+---
+
+## Notation
+
+`\(y_i\)` = response variable with binary outcomes: TRUE (yes) or FALSE (no).
+
+`\(p_i\)` = probability that the value of the response variable for the `\(i\)`th observation will be TRUE. Also known as probability of success. 
+
+`\(1-p_i\)` = probability that the value of the response variable for the `\(i\)`th observation will be FALSE. Also known as probability of failure.
+
+---
+
+## The Linear Model
+
+Instead of finding a model for the response variable, we find a linear model for the **probability**, `\(p\)`, that the response variable will be TRUE.
+
+`\(\text{transformation}(p_i) = \beta_0 + \beta_1x_{1i}+\beta_2x_{2i} +.... \beta_kx_{ki}\)`
+
+But `\(p_i\)` being a probability means that it could only take values between 0 and 1, yet the right hand side could take values outside of this range, in the whole number line. Hence we need a transformation of `\(p_i\)` that makes the range of possibilities on the left hand side equal to the range of possibilities for the right hand side.  
+
+---
+
+## The Linear Model
+
+A common transformation for p is the logit transformation. The precise choice of a logit function is based on theory that underpins generalized linear models, which is beyond the scope of this class. 
+
+`\(logit(p_i) = \beta_0 + \beta_1x_{1i}+\beta_2x_{2i} +.... \beta_kx_{ki}\)`
+
+- Definition of `logit` function
+
+`\(logit(p_i) = log(\frac{p_i}{1-p_i})\)`
+
+Hence,
+
+`\(log(\frac{p_i}{1-p_i}) = \beta_0 + \beta_1x_{1i}+\beta_2x_{2i} +.... \beta_kx_{ki}\)`
+
+Note that log is natural log and not base 10.
+
+---
+
+## Logistic Regression model 
+
+**Logit form:** 
+
+`\(log(\frac{p_i}{1-p_i}) = \beta_0 + \beta_1x_{1i}+\beta_2x_{2i} +.... \beta_kx_{ki}\)`, range - `\(\infty\)` to `\(\infty\)`.
+
+--
+
+**Odds form:** 
+
+`\(\large{\frac{p_i}{1-p_i} = e^{\beta_0 + \beta_1x_{1i}+\beta_2x_{2i} +.... \beta_kx_{ki}}}\)`, range 0 to `\(\infty\)`
+
+--
+
+**Probability form:**
+
+`\(\large{p_i = \frac{e^{\beta_0 + \beta_1x_{1i}+\beta_2x_{2i} +.... \beta_kx_{ki}}}{1+e^{\beta_0 + \beta_1x_{1i}+\beta_2x_{2i} +.... \beta_kx_{ki}}}}\)`, range 0 to 1. 
+
+Note you can use `exp()` function in R for exponentiating number e.
+
+---
+
+## Finding the Logistic Regression Model
+
+The model we are trying to find is then,
+
+`\(log(\frac{\hat p_i}{1-\hat p_i}) = b_0 + b_1x_{1i} + b_2x{2i} + ... + b_kx{ki}\)`
+
+To find the coefficients of the model we use the general linear model, `glm()` function.
+
+`glm(y ~ x_1 + x_2 + x_3 + ... + x_k, data = data_name, family = binomial)`
+
+Note that the distribution used is **bi**nomial because the response is **bi**nary. 
+
+---
+
+## Data
+
+[Are Emily and Greg More Employable than Lakisha and Jamal? A Field Experiment on Labor Market Discrimination](https://www.nber.org/papers/w9873). 
+
+
+- Researchers respond to help-wanted ads in Boston and Chicago newspapers with fictitious resumes.
+
+--
+
+- They randomly assign White sounding names to half the resumes and African American sounding names to the other half.
+
+--
+
+- They create high quality resumes (more experience, likely to have an email address etc.) and low quality resumes. 
+
+- For each job ad they send four resumes (two high quality and two low quality.)
+
+---
+
+## Data
+
+
+
+
+``` r
+resume &lt;- resume |&gt; 
+  select(received_callback, race, years_experience, 
+         job_city)
+
+glimpse(resume)
+```
+
+```
+## Rows: 4,870
+## Columns: 4
+## $ received_callback &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FAL…
+## $ race              &lt;chr&gt; "white", "white", "black", "black", "white", "white"…
+## $ years_experience  &lt;int&gt; 6, 6, 6, 6, 22, 6, 5, 21, 3, 6, 8, 8, 4, 4, 5, 4, 5,…
+## $ job_city          &lt;chr&gt; "Chicago", "Chicago", "Chicago", "Chicago", "Chicago…
+```
+
+---
+
+### Response variable of interest: `received_callback`
+
+.pull-left[
+
+``` r
+tabyl(resume, received_callback)
+```
+
+```
+##  received_callback    n    percent
+##              FALSE 4478 0.91950719
+##               TRUE  392 0.08049281
+```
+
+`\(y_i\)` = received_callback
+
+`\(p_i\)` = probability of received_callback = TRUE
+]
+
+.pull-right[
+![](13a-logistic-regression_files/figure-html/out-1.png)&lt;!-- --&gt;
+
+]
+
+---
+
+###  Example 1: Modeling callback (y) using race (x)
+
+.pull-left[
+
+Since the explanatory variable, **race**, is categorical, we can find the probability of receiving a callback for each group.
+
+
+``` r
+resume |&gt; 
+  ggplot(aes(x = race,
+         fill = received_callback)) +
+  geom_bar(position = "fill") +
+  ylab("proportion")
+```
+
+]
+
+.pull-right[
+&lt;img src="13a-logistic-regression_files/figure-html/unnamed-chunk-7-1.png" alt="" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+``` r
+table(resume$race, resume$received_callback)
+```
+
+```
+##        
+##         FALSE TRUE
+##   black  2278  157
+##   white  2200  235
+```
+
+
+
+
+
+Probability of receiving a callback when the candidate has a Black sounding name is 157/2435 = 0.0645.
+
+Probability of receiving a callback when the candidate has a white sounding name is 235/2435 = 0.0965.
+
+---
+
+### Modeling callback using race
+
+#### Where is the line?
+
+
+``` r
+ggplot(resume, aes(x = race, y = received_callback)) +
+  geom_point()
+```
+
+&lt;img src="13a-logistic-regression_files/figure-html/unnamed-chunk-10-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Modeling callback using race
+
+`\(log(\frac{\hat p_i}{1-\hat p_i}) = b_0 + b_1x_{1i}\)`
+
+`\(log(\frac{\hat p_i}{1-\hat p_i}) = b_0 + b_1racewhite_i\)`
+
+
+``` r
+model_r &lt;- glm(received_callback ~ race,
+               data = resume,
+               family = binomial)
+```
+
+Note that R assigns 0 an 1 to levels of categorical variables in alphabetical order. In this case black (0) and white(1)
+---
+     
+
+``` r
+model_r
+```
+
+```
+## 
+## Call:  glm(formula = received_callback ~ race, family = binomial, data = resume)
+## 
+## Coefficients:
+## (Intercept)    racewhite  
+##     -2.6748       0.4382  
+## 
+## Degrees of Freedom: 4869 Total (i.e. Null);  4868 Residual
+## Null Deviance:	    2727 
+## Residual Deviance: 2710 	AIC: 2714
+```
+
+`$$log(\frac{\hat p_i}{1-\hat p_i}) = -2.6744 + 0.4382\times racewhite_i$$`
+---
+
+What is the logit for the black group (callback = 0)? 
+
+`$$logit_b =log(\frac{\hat p_i}{1-\hat p_i}) = -2.6744 + 0.4382\times (0) = -2.6744$$`
+  - Note that this would be the intercept. 
+
+What is the logit for the white group (callback = 1)?
+
+`$$logit_w =log(\frac{\hat p_i}{1-\hat p_i}) = -2.6744 + 0.4382\times (1) = -2.2362$$`
+---
+
+Since race (x) is categorical, we can also compute the logit for each group based on their probabilities of being called back. 
+
+.pull-left[
+
+### Logit for black group
+
+
+``` r
+p_b &lt;- 0.0645
+
+logit_b &lt;- log(p_b/(1 - p_b))
+logit_b
+```
+
+```
+## [1] -2.674416
+```
+
+]
+
+--
+
+.pull-right[
+
+### Logit for white group
+
+
+``` r
+p_w &lt;- 0.0965
+
+logit_w &lt;- log(p_w/(1 - p_w))
+logit_w
+```
+
+```
+## [1] -2.236733
+```
+]
+
+---
+
+
+
+
+
+
+## The line of the linear model
+
+&lt;img src="13a-logistic-regression_files/figure-html/unnamed-chunk-17-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+This is THE LINE of the linear model. As x increases by 1 unit, the expected change in the logit of receiving call back is 0.438. In this case, this is just the difference between logit for the white group and the black group. And the intercept is the logit of the black group.  
+
+---
+
+### Example 2: Modeling callback (y) using years of experience (x)
+
+Now, we will consider years of experience as an explanatory variable. 
+
+&lt;img src="13a-logistic-regression_files/figure-html/unnamed-chunk-18-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Modeling callback using years of experience
+
+`\(log(\frac{\hat p_i}{1-\hat p_i}) = b_0 + b_1x_{1i}\)`
+
+`\(log(\frac{\hat p_i}{1-\hat p_i}) = b_0 + b_1experience_i\)`
+
+
+``` r
+model_y &lt;- glm(received_callback ~ years_experience,
+               data = resume,
+               family = binomial)
+```
+
+
+---
+
+
+
+``` r
+model_y
+```
+
+```
+## 
+## Call:  glm(formula = received_callback ~ years_experience, family = binomial, 
+##     data = resume)
+## 
+## Coefficients:
+##      (Intercept)  years_experience  
+##         -2.75960           0.03908  
+## 
+## Degrees of Freedom: 4869 Total (i.e. Null);  4868 Residual
+## Null Deviance:	    2727 
+## Residual Deviance: 2710 	AIC: 2714
+```
+
+`$$log(\frac{\hat p_i}{1-\hat p_i}) = -2.7596 + 0.0391\times experience_i$$`
+
+
+
+
+---
+
+
+What is the logit for a Candidate with 1 year of experience.
+
+`$$logit(p_i) = log(\frac{\hat p_i}{1-\hat p_i}) = -2.7596 +  0.0391 \times 1 = -2.7205$$`
+
+--
+
+What are the odds for a candidate with 1 year of experience
+
+
+
+`$$\frac{\hat p_i}{1-\hat p_i} = e^{-2.7596 + 0.0391 \times 1} = 0.0658$$`
+
+
+---
+
+### Estimating callback probabilities using years of experience
+
+
+What is the probability of a candidate with 0 years of experience receiving a callback?
+
+--
+
+`$$\hat p_i = \frac{e^{-2.7596 + 0.0391 \times 0}}{1+e^{-2.7596 + 0.0391 \times 0}} = 0.0595$$`
+
+--
+
+What is the probability of a candidate with 1 year of experience receiving a callback?
+
+--
+
+`$$\hat p_i = \frac{e^{-2.7596 + 0.0391 \times 1}}{1+e^{-2.7596 + 0.0391 \times 1}} = 0.0618$$`
+
+
+---
+
+### Example 3: Modeling callback (y) using race (x1), years of experience (x2), and city of recidence (x3)
+
+`$$log(\frac{\hat p_i}{1-\hat p_i}) = b_0 + b_1x_{1i} + b_2x_{2i} + b_3x_{3i}$$`
+
+
+``` r
+model_ryc &lt;- glm(received_callback ~ race + 
+                  years_experience + job_city,
+               data = resume,
+               family = binomial)
+```
+
+
+---
+
+
+
+``` r
+model_ryc
+```
+
+```
+## 
+## Call:  glm(formula = received_callback ~ race + years_experience + job_city, 
+##     family = binomial, data = resume)
+## 
+## Coefficients:
+##      (Intercept)         racewhite  years_experience   job_cityChicago  
+##          -2.7816            0.4398            0.0332           -0.3293  
+## 
+## Degrees of Freedom: 4869 Total (i.e. Null);  4866 Residual
+## Null Deviance:	    2727 
+## Residual Deviance: 2684 	AIC: 2692
+```
+
+
+`\(\log\left(\frac{\hat p_i}{1-\hat p_i}\right)= -2.7816 +  0.4398race + 0.0332experience + (-0.3293)city\)`
+
+---
+
+What is the estimated probability that a Black candidate with 10 years of experience, residing in Boston, would receive a callback?
+
+`$$\large{\hat p_i = \frac{e^{-2.7816 + (0.4398 \times 0) + (0.0332\times10) + (-0.3293\times 0)}}{1+e^{-2.7816 + (0.4398 \times 0) + (0.0332\times10) + (-0.3293\times 0)}} = 0.0795}$$`
+
+--
+
+What is the estimated probability that a white candidate with 10 years of experience, residing in Boston, would receive a callback?
+
+`$$\large{\hat p_i = \frac{e^{-2.7816 + (0.4398 \times 1) + (0.0332\times10) + (-0.3293\times 0)}}{1+e^{-2.7816 + (0.4398 \times 1) + (0.0332\times10) + (-0.3293\times 0)}} = 0.1182}$$`
+
+---
+
+## How can you evaluate Logistic Regression model
+
+In Linear Regression, we check adjusted R² to evaluate model fit. But, Logistic Regression has a different sets of metrics. Here, we deal with probabilities and categorical values. 
+
+---
+
+### Akaike Information Criteria (AIC)
+
+You can look at AIC as counterpart of adjusted r square in multiple regression. 
+
+It follows the rule: Smaller the better. AIC penalizes increasing number of coefficients in the model. In other words, adding more variables to the model wouldn't let AIC increase. It helps to avoid overfitting.
+
+
+Looking at the AIC value of one model wouldn't really help. It is more useful in comparing models. So, build 2 or 3 Logistic Regression models and compare their AIC. The model with the lowest AIC will be relatively better.
+
+
+---
+
+### Examples:
+
+
+``` r
+model_r &lt;- glm(received_callback ~ race,
+               data = resume,
+               family = binomial)
+glance(model_r)
+```
+
+```
+## # A tibble: 1 × 8
+##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
+##           &lt;dbl&gt;   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
+## 1         2727.    4869 -1355. 2714. 2727.    2710.        4868  4870
+```
+
+AIC = 2713.9377142 
+
+---
+
+
+``` r
+model_ry &lt;- glm(received_callback ~ race + 
+                  years_experience,
+               data = resume,
+               family = binomial)
+glance(model_ry)
+```
+
+```
+## # A tibble: 1 × 8
+##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
+##           &lt;dbl&gt;   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
+## 1         2727.    4869 -1347. 2699. 2719.    2693.        4867  4870
+```
+
+
+AIC = 2699.2496455
+
+---
+
+
+``` r
+model_ryc &lt;- glm(received_callback ~ race + 
+                  years_experience + job_city,
+               data = resume,
+               family = binomial)
+glance(model_ryc)
+```
+
+```
+## # A tibble: 1 × 8
+##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
+##           &lt;dbl&gt;   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
+## 1         2727.    4869 -1342. 2692. 2718.    2684.        4866  4870
+```
+
+
+AIC = 2691.9700762
+
+---
+
+We have used the data for educational purposes. The original study considers many other variables that may influence whether someone receives a callback or not. Read the original study for other considerations.
+
+[Are Emily and Greg More Employable than Lakisha and Jamal? A Field Experiment on Labor Market Discrimination](https://www.nber.org/papers/w9873). 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "pygments",
+  "highlightLines": true,
+  "highlightLanguage": "r"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

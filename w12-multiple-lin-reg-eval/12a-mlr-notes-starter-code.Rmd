@@ -10,6 +10,7 @@ output: html_document
 library(tidyverse)
 library(openintro)
 library(broom)
+library(janitor)
 ```
 
 ## Simple Linear Regression 
