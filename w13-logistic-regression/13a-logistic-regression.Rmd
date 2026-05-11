@@ -309,12 +309,12 @@ model_r
 $$log(\frac{\hat p_i}{1-\hat p_i}) = -2.6744 + 0.4382\times racewhite_i$$
 ---
 
-What is the logit for the black group (callback = 0)? 
+What is the logit for the black group (race = 0)? 
 
 $$logit_b =log(\frac{\hat p_i}{1-\hat p_i}) = -2.6744 + 0.4382\times (0) = -2.6744$$
   - Note that this would be the intercept. 
 
-What is the logit for the white group (callback = 1)?
+What is the logit for the white group (race = 1)?
 
 $$logit_w =log(\frac{\hat p_i}{1-\hat p_i}) = -2.6744 + 0.4382\times (1) = -2.2362$$
 ---

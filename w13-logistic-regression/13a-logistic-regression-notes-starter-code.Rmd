@@ -11,7 +11,7 @@ library(tidyverse)
 library(broom)
 library(openintro)
 library(modelr)
-theme_set(theme_gray(base_size = 18))
+library(janitor)
 ```
 
 ## (Normal) Linear Regression Response Variables
@@ -201,12 +201,12 @@ Note that R assigns 0 an 1 to levels of categorical variables in alphabetical or
 
 $$log(\frac{\hat p_i}{1-\hat p_i}) = ______ + _______\times racewhite_i$$
 
-What is the logit for the black group (callback = 0)? 
+What is the logit for the black group (race = 0)? 
 
 $$logit_b =log(\frac{\hat p_i}{1-\hat p_i}) = -2.6744 + 0.4382\times (0) = ________$$
   - Note that this would be the intercept. 
 
-What is the logit for the white group (callback = 1)?
+What is the logit for the white group (race = 1)?
 
 $$logit_w =log(\frac{\hat p_i}{1-\hat p_i}) = -2.6744 + 0.4382\times (1) = ________$$
 ---
