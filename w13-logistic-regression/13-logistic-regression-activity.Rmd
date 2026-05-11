@@ -1,0 +1,50 @@
+---
+title: "Logistic Regression Activity (24 pts)"
+author: "name here"
+date: "date here"
+output: html_document
+---
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(bayesrules)
+library(tidyverse)
+library(modelr)
+library(broom)
+data(weather_perth)
+
+weather <- weather_perth %>% 
+  select(day_of_year, raintomorrow, humidity9am, humidity3pm, raintoday)
+```
+
+```{r}
+glimpse(weather)
+```
+
+
+Using the `weather` data from Perth, Australia, fit a logistic regression model where the response variable is `raintomorrow` and the explanatory variable is `humidity9am` (measured in hpa).
+
+1. (2 pts) Visualize the data. 
+
+
+2. (3 pts) Fit a logistic regression model, and write out the equation of your line. Round values to 3 decimals.
+
+3. (2 pts) write model in odds form. 
+
+4. (2 pts) write the model in probability form. 
+
+5. (1 pts) What is the probability of rain tomorrow if humidity at 9 am is 0 hpa?  
+
+6. (2 pts) Use result from question 5 to interpret the intercept coefficient.
+
+7. (2 pts) What is the probability of rain tomorrow if humidity at 9 am is 1 hpa? 2 hpa? 
+
+8. (2 pts) Use results from question 7 to interpret the slope coefficient. 
+
+9. (2 pts) Add `raintoday`to the model from question 1. Write the equation of the model. Round values to 3 decimals. 
+
+10. (2 pts) write model in probability form. 
+
+11. (2 pts) What is the probability of rain tomorrow if humidity at 9 am is at 20 hpa and it did not rain today? 
+
+12. (2 pts) Compare models and determining which one is best. 
+
